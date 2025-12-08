@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudySpace · 桌面端-日历（日视图）</title>
+    <link rel="stylesheet" href="../assets/css/day-view.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo"></div>
+          <div class="name">StudySpace</div>
+        </div>
+        <div class="top-actions">
+          <div class="user-area">
+            <div class="user-avatar">Se</div>
+            <div>
+              <div style="font-weight: 700">user1</div>
+              <div class="subtitle">个人中心 · 登录</div>
+            </div>
+          </div>
+          <button class="primary-btn">今日计划</button>
+        </div>
+      </header>
+
+      <aside class="sidebar">
+        <div class="pill">
+          <div class="icon">✚</div>
+          <div>
+            <strong>预约设置</strong>
+            <span class="subtitle">默认预约日期：4月18日</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>预约日期</h3>
+          <div class="info-grid">
+            <span class="badge">4月17日</span>
+            <span class="badge">4月18日</span>
+            <span class="badge">4月19日</span>
+            <span class="badge">···</span>
+          </div>
+          <div class="full-width-field" style="margin-top: 12px">设置预约时间</div>
+        </div>
+
+        <div class="section">
+          <h3>默认预约座位</h3>
+          <div class="small-card">
+            <div>位置：105</div>
+            <div class="subtitle">亮亮图书馆 · 南区</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>图书馆</h3>
+          <div class="small-card">
+            <div class="badge">新建图书馆</div>
+            <div class="badge">默认图书馆</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>协作</h3>
+          <div class="badge">创建双人协作空间</div>
+        </div>
+
+        <div class="section">
+          <h3>时区</h3>
+          <div class="info-grid">
+            <div class="small-card">
+              <div>默认</div>
+              <div class="subtitle">亚洲/上海</div>
+            </div>
+            <div class="small-card">
+              <div>其他</div>
+              <div class="subtitle">请选取时区</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="breadcrumb">
+          <div>首页 / 日历 / 日视图</div>
+          <div class="badge">分享</div>
+        </div>
+
+        <div class="calendar-panel">
+          <div class="calendar-header">
+            <div>
+              <div class="subtitle">Sun 02</div>
+              <div class="title" data-date-label>----</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <button class="primary-btn">新建</button>
+              <div class="icon-btn">⟳</div>
+              <div class="segmented">
+                <button class="active">D</button>
+                <button>W</button>
+                <button>M</button>
+              </div>
+              <div class="icon-btn">☰</div>
+            </div>
+          </div>
+
+          <div class="main-grid">
+            <div>
+              <div class="timeline">
+                <div class="hours">
+                  <span>8</span>
+                  <span>9</span>
+                  <span>10</span>
+                  <span>11</span>
+                  <span>12</span>
+                  <span>13</span>
+                  <span>14</span>
+                  <span>15</span>
+                  <span>16</span>
+                  <span>17</span>
+                  <span>18</span>
+                  <span>19</span>
+                </div>
+                <div class="grid-lines">
+                  <div class="event-layer">
+                    <div class="event plan" style="top: 48px; height: 60px">
+                      <small>9:00 - 10:00</small>
+                      <strong>学习计划</strong>
+                    </div>
+                    <div class="event project" style="top: 98px; height: 120px; left: 18%; right: 8%">
+                      <small>10:00 - 12:00</small>
+                      <strong>项目3</strong>
+                    </div>
+                    <div class="event project" style="top: 144px; height: 72px; left: 55%; right: 8%">
+                      <small>10:30 - 11:42</small>
+                      <strong>项目2</strong>
+                    </div>
+                    <div class="event plan" style="top: 384px; height: 120px; left: 12%; right: 18%">
+                      <small>16:00 - 18:00</small>
+                      <strong>学习计划</strong>
+                    </div>
+                    <div class="current-time"></div>
+                    <div class="time-mark">当前时间：13:25</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px">
+              <div class="tasks">
+                <div class="task-row">
+                  <div class="bubble">⚡</div>
+                  <div>
+                    <div style="font-weight: 700">待办事项</div>
+                    <div class="subtitle">母数据描述</div>
+                  </div>
+                </div>
+                <div class="task-row">
+                  <div class="bubble">✓</div>
+                  <div>
+                    <div style="font-weight: 700">子任务1</div>
+                    <div class="subtitle">待处理任务</div>
+                  </div>
+                  <span style="margin-left: auto; font-weight: 700">今日</span>
+                </div>
+                <div class="task-row">
+                  <div class="bubble">✓</div>
+                  <div>
+                    <div style="font-weight: 700">子任务2</div>
+                    <div class="subtitle">待处理任务</div>
+                  </div>
+                  <span style="margin-left: auto; font-weight: 700">今日</span>
+                </div>
+              </div>
+
+              <div class="small-card">
+                <div class="divider-title">
+                  <span class="color-dot"></span>
+                  <span>默认图书馆</span>
+                </div>
+                <div>亮亮图书馆 · 105·南区</div>
+                <div class="subtitle">欢迎你，按时签到</div>
+                <div style="display: flex; gap: 8px; font-weight: 700">
+                  <span class="badge">预约</span>
+                  <span class="badge">签到</span>
+                  <span class="badge">取消预约</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/js/day-view.js"></script>
+  </body>
+</html>
