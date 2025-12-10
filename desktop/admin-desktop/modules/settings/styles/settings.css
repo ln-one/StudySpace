@@ -6,47 +6,50 @@
 /* ==================== 主布局 ==================== */
 .settings-layout {
     display: flex;
-    gap: 32px;
-    max-width: 960px;
+    gap: 40px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
 /* ==================== 左侧导航区 ==================== */
 .settings-sidebar {
-    width: 180px;
+    width: 200px;
     flex-shrink: 0;
     position: sticky;
-    top: calc(var(--navbar-height, 56px) + 24px);
+    top: calc(var(--navbar-height, 52px) + 24px);
     height: fit-content;
     align-self: flex-start;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
-/* 管理员卡片 */
+/* 管理员卡片 - 液态玻璃 */
 .admin-card {
-    background: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-    padding: 14px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 16px;
+    padding: 16px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .admin-card:hover {
-    border-color: rgba(0, 122, 255, 0.4);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
 }
 
 .admin-card__avatar {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     background: linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%);
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,7 +57,7 @@
 }
 
 .admin-card__avatar-text {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     color: #FFFFFF;
 }
@@ -65,16 +68,16 @@
 }
 
 .admin-card__name {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: #1D1D1F;
     margin: 0;
 }
 
 .admin-card__role {
-    font-size: 11px;
+    font-size: 12px;
     color: #007AFF;
-    margin: 0;
+    margin: 2px 0 0 0;
 }
 
 .admin-card__hint {
@@ -83,26 +86,35 @@
 
 .admin-card__arrow {
     color: #C7C7CC;
-    font-size: 12px;
+    font-size: 14px;
+    transition: transform 0.2s ease;
 }
 
-/* 设置菜单 */
+.admin-card:hover .admin-card__arrow {
+    transform: translateX(2px);
+}
+
+/* 设置菜单 - 液态玻璃 */
 .settings-menu {
-    background: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-    padding: 6px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 16px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
     gap: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-/* 系统状态 */
+/* 系统状态 - 液态玻璃 */
 .system-status {
-    background: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-    padding: 14px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .system-status__title {
@@ -161,12 +173,14 @@
     color: #1D1D1F;
 }
 
-/* 快捷操作 */
+/* 快捷操作 - 液态玻璃 */
 .quick-actions {
-    background: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-    padding: 14px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .quick-actions__title {
@@ -213,22 +227,22 @@
 .settings-menu__item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border-radius: 8px;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 10px;
     color: #3C3C43;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
 }
 
 .settings-menu__item:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .settings-menu__item--active {
-    background: rgba(0, 122, 255, 0.1);
+    background: rgba(0, 122, 255, 0.12);
     color: #007AFF;
 }
 
@@ -273,13 +287,15 @@
     display: none;
 }
 
-/* ==================== 设置卡片 ==================== */
+/* ==================== 设置卡片 - 液态玻璃 ==================== */
 .settings-card {
-    background: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 20px;
     padding: 24px;
     margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .settings-card:last-of-type {
@@ -287,7 +303,7 @@
 }
 
 .settings-card__title {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     color: #86868B;
     text-transform: uppercase;
@@ -363,15 +379,15 @@
 
 /* ==================== 权限表格 ==================== */
 .permission-table {
-    border-radius: 10px;
+    border-radius: 14px;
     overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(245, 245, 247, 0.6);
 }
 
 .permission-table__header {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
-    background: #F5F5F7;
+    background: rgba(0, 0, 0, 0.03);
     padding: 14px 20px;
     font-size: 11px;
     font-weight: 600;
@@ -386,6 +402,7 @@
     padding: 16px 20px;
     border-top: 1px solid rgba(0, 0, 0, 0.04);
     align-items: center;
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .permission-table__row:hover {
@@ -412,9 +429,14 @@
 }
 
 .violation-rule {
-    background: #F5F5F7;
-    border-radius: 10px;
+    background: rgba(245, 245, 247, 0.8);
+    border-radius: 14px;
     padding: 20px;
+    transition: all 0.2s ease;
+}
+
+.violation-rule:hover {
+    background: rgba(245, 245, 247, 1);
 }
 
 .violation-rule__header {
@@ -490,8 +512,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 18px;
-    background: #F5F5F7;
-    border-radius: 10px;
+    background: rgba(245, 245, 247, 0.8);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.channel-item:hover {
+    background: rgba(245, 245, 247, 1);
 }
 
 .channel-item__name {
@@ -549,8 +576,13 @@
     align-items: center;
     gap: 16px;
     padding: 14px 18px;
-    background: #F5F5F7;
-    border-radius: 10px;
+    background: rgba(245, 245, 247, 0.8);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.time-schedule__row:hover {
+    background: rgba(245, 245, 247, 1);
 }
 
 .time-schedule__day {
@@ -594,10 +626,15 @@
     align-items: center;
     gap: 10px;
     padding: 10px 14px;
-    background: #F5F5F7;
-    border-radius: 8px;
+    background: rgba(245, 245, 247, 0.8);
+    border-radius: 10px;
     font-size: 13px;
     color: #1D1D1F;
+    transition: all 0.2s ease;
+}
+
+.area-tag:hover {
+    background: rgba(245, 245, 247, 1);
 }
 
 .area-tag__remove {

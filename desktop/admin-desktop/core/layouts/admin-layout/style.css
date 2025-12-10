@@ -1,12 +1,12 @@
 /**
  * AdminLayout - 管理员端主布局样式
- * Apple 风格：简洁、通透、优雅
+ * Apple Liquid Glass 液态玻璃风格
  */
 
 .admin-layout {
   min-height: 100vh;
   display: flex;
-  background: linear-gradient(135deg, #F5F5F7 0%, #E8E8ED 100%);
+  background: linear-gradient(180deg, #F2F2F7 0%, #E5E5EA 100%);
 }
 
 /* 主内容区 */
@@ -21,63 +21,65 @@
 /* 内容区域 */
 .admin-layout__content {
   flex: 1;
-  padding: var(--content-padding);
-  padding-top: calc(var(--navbar-height) + var(--content-padding));
+  padding: 24px 32px;
+  padding-top: calc(var(--navbar-height) + 24px);
 }
 
 /* 页面标题区 */
 .page-header {
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: 24px;
 }
 
 .page-header__title {
-  font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-bold);
+  font-size: 28px;
+  font-weight: 700;
   color: var(--color-text-primary);
-  letter-spacing: var(--letter-spacing-tight);
-  margin-bottom: var(--spacing-xs);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
 }
 
 .page-header__desc {
-  font-size: var(--font-size-body);
+  font-size: 15px;
   color: var(--color-text-secondary);
 }
 
-/* 内容卡片容器 - 毛玻璃 */
+/* 内容卡片容器 - 液态玻璃 */
 .content-card {
-  background: var(--glass-bg-dark);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-lg);
-  border: 1px solid var(--color-border-secondary);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-normal);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
 }
 
 .content-card:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 12px 32px rgba(0, 0, 0, 0.08);
 }
 
 .content-card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 20px;
 }
 
 .content-card__title {
-  font-size: var(--font-size-h4);
-  font-weight: var(--font-weight-semibold);
+  font-size: 17px;
+  font-weight: 600;
   color: var(--color-text-primary);
-  letter-spacing: var(--letter-spacing-normal);
+  letter-spacing: -0.01em;
 }
 
-/* 分隔线 */
 .content-card__divider {
   height: 1px;
-  background: var(--color-border-light);
-  margin: var(--spacing-md) 0;
+  background: rgba(0, 0, 0, 0.06);
+  margin: 16px 0;
 }
 
 /* 响应式 */
@@ -93,7 +95,7 @@
   }
   
   .admin-layout__content {
-    padding: var(--spacing-md);
-    padding-top: calc(var(--navbar-height) + var(--spacing-md));
+    padding: 16px;
+    padding-top: calc(var(--navbar-height) + 16px);
   }
 }

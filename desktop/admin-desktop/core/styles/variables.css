@@ -137,9 +137,9 @@
   
   /* ========== 布局 (Layout) ========== */
   
-  --sidebar-width: 260px;
+  --sidebar-width: 240px;
   --sidebar-collapsed-width: 72px;
-  --navbar-height: 56px;
+  --navbar-height: 52px;
   --content-max-width: 1440px;
   --content-padding: var(--spacing-lg);
   

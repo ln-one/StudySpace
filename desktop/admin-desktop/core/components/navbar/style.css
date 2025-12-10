@@ -1,18 +1,17 @@
 /**
  * Navbar - 顶部导航栏样式
- * Apple 风格：毛玻璃、简洁、精致
+ * Apple Liquid Glass 液态玻璃风格
  */
 
 .navbar {
   height: var(--navbar-height);
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-bottom: 1px solid var(--color-border-secondary);
+  background: rgba(251, 251, 253, 0.8);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--spacing-lg);
+  padding: 0 24px;
 }
 
 .navbar--fixed {
@@ -23,77 +22,74 @@
   z-index: var(--z-sticky);
 }
 
-/* 搜索框 */
+/* 搜索框容器 */
 .navbar__search {
   display: flex;
   align-items: center;
-  background-color: var(--color-bg-hover);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-xs) var(--spacing-md);
-  width: 320px;
-  transition: all var(--transition-fast);
-  border: 1px solid transparent;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  padding: 0 16px;
+  width: 280px;
+  height: 36px;
+  transition: all 0.2s ease;
 }
 
 .navbar__search:focus-within {
-  background-color: var(--color-bg-primary);
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-bg);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3);
 }
 
 .navbar__search-input {
   flex: 1;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: var(--font-size-body);
+  padding: 8px 0;
+  font-size: 14px;
   color: var(--color-text-primary);
   background: transparent;
 }
 
 .navbar__search-input::placeholder {
-  color: var(--color-text-placeholder);
+  color: var(--color-text-tertiary);
 }
 
 .navbar__search-btn {
-  padding: var(--spacing-xs);
+  padding: 4px;
   color: var(--color-text-tertiary);
-  transition: all var(--transition-fast);
-  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  border-radius: 6px;
 }
 
 .navbar__search-btn:hover {
   color: var(--color-primary);
-  background: var(--color-primary-bg);
+  background: rgba(0, 122, 255, 0.1);
 }
 
 /* 操作区域 */
 .navbar__actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: 8px;
 }
 
 .navbar__filter-btn {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding: 8px 16px;
-  background: var(--glass-bg-dark);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-medium);
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(0, 0, 0, 0.04);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--color-text-secondary);
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .navbar__filter-btn:hover {
-  background: var(--color-bg-primary);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--color-text-primary);
 }
 
 .navbar__filter-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }

@@ -1,6 +1,6 @@
 /**
  * Sidebar - 侧边栏导航样式
- * Apple Glassmorphism 风格
+ * Apple Liquid Glass 液态玻璃风格
  */
 
 .sidebar {
@@ -9,10 +9,9 @@
   top: 0;
   width: var(--sidebar-width);
   height: 100vh;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-right: 1px solid var(--color-border-secondary);
+  background: rgba(251, 251, 253, 0.85);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
   display: flex;
   flex-direction: column;
   z-index: var(--z-fixed);
@@ -23,44 +22,43 @@
   height: var(--navbar-height);
   display: flex;
   align-items: center;
-  padding: 0 var(--spacing-lg);
-  border-bottom: 1px solid var(--color-border-light);
+  padding: 0 20px;
 }
 
 .sidebar__logo-text {
-  font-size: var(--font-size-h3);
+  font-size: 20px;
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
-  letter-spacing: var(--letter-spacing-tight);
+  letter-spacing: -0.02em;
 }
 
 /* 导航区域 */
 .sidebar__nav {
   flex: 1;
-  padding: var(--spacing-sm) var(--spacing-sm);
+  padding: 8px 12px;
   overflow-y: auto;
 }
 
 .sidebar__nav-item {
   display: flex;
   align-items: center;
-  padding: var(--spacing-md) var(--spacing-md);
+  padding: 12px 16px;
   margin-bottom: 2px;
-  color: var(--color-sidebar-text-secondary);
-  border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
+  color: var(--color-text-secondary);
+  border-radius: 12px;
+  transition: all 0.2s ease;
   cursor: pointer;
   position: relative;
 }
 
 .sidebar__nav-item:hover {
-  color: var(--color-sidebar-text);
-  background-color: var(--color-sidebar-hover);
+  color: var(--color-text-primary);
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .sidebar__nav-item--active {
-  color: var(--color-sidebar-active-text);
-  background-color: var(--color-sidebar-active-bg);
+  color: var(--color-primary);
+  background: rgba(0, 122, 255, 0.1);
   font-weight: var(--font-weight-medium);
 }
 
@@ -74,13 +72,13 @@
   width: 3px;
   height: 20px;
   background: var(--color-primary);
-  border-radius: var(--radius-full);
+  border-radius: 2px;
 }
 
 .sidebar__nav-icon {
   width: 22px;
   height: 22px;
-  margin-right: var(--spacing-sm);
+  margin-right: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,11 +90,10 @@
 }
 
 .sidebar__nav-text {
-  font-size: var(--font-size-body);
-  letter-spacing: var(--letter-spacing-normal);
+  font-size: 15px;
+  letter-spacing: -0.01em;
 }
 
-/* 悬停时的微动效 */
 .sidebar__nav-item:active {
   transform: scale(0.98);
 }
