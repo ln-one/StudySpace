@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理员设置 - StudySpace 管理后台</title>
+  <link rel="stylesheet" href="../../../core/styles/main.css">
+  <link rel="stylesheet" href="../../../core/layouts/admin-layout/style.css">
+  <link rel="stylesheet" href="../../../core/components/sidebar/style.css">
+  <link rel="stylesheet" href="../../../core/components/navbar/style.css">
+  <link rel="stylesheet" href="../../../core/components/search-bar/style.css">
+  <link rel="stylesheet" href="../../../core/components/filter-dropdown/style.css">
+  <link rel="stylesheet" href="../../../core/components/form-controls/style.css">
+  <link rel="stylesheet" href="../../../core/components/button/style.css">
+  <link rel="stylesheet" href="../../../core/components/modal/style.css">
+  <link rel="stylesheet" href="../styles/settings.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <span class="sidebar__logo-text">StudySpace</span>
+      </div>
+      <nav class="sidebar__nav">
+        <a href="../../dashboard/pages/overview.html" class="sidebar__nav-item" data-page="dashboard">
+          <span class="sidebar__nav-text">数据概览</span>
+        </a>
+        <a href="../../task/pages/index.html" class="sidebar__nav-item" data-page="task">
+          <span class="sidebar__nav-text">任务</span>
+        </a>
+        <a href="../../calendar/pages/index.html" class="sidebar__nav-item" data-page="calendar">
+          <span class="sidebar__nav-text">日历</span>
+        </a>
+        <a href="../../study-record/pages/index.html" class="sidebar__nav-item" data-page="study-record">
+          <span class="sidebar__nav-text">学习记录</span>
+        </a>
+        <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item" data-page="seat-management">
+          <span class="sidebar__nav-text">座位管理</span>
+        </a>
+        <a href="index.html" class="sidebar__nav-item sidebar__nav-item--active" data-page="settings">
+          <span class="sidebar__nav-text">管理员设置</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- 主内容区 -->
+    <div class="admin-layout__main">
+      <!-- 顶部导航 -->
+      <header class="navbar navbar--fixed">
+        <div class="search-bar">
+          <input type="text" class="search-bar__input" placeholder="搜索设置...">
+        </div>
+        <div class="navbar__actions">
+          <button class="navbar__filter-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
+            </svg>
+            筛选
+          </button>
+        </div>
+      </header>
+
+      <!-- 页面内容 -->
+      <main class="admin-layout__content">
+        <div class="settings-layout">
+          <!-- 左侧：管理员信息 + 设置菜单 -->
+          <div class="settings-sidebar">
+            <!-- 管理员信息卡片 -->
+            <div class="admin-card" onclick="openProfileModal()">
+              <div class="admin-card__avatar">
+                <span class="admin-card__avatar-text">管</span>
+              </div>
+              <div class="admin-card__info">
+                <h3 class="admin-card__name">管理员</h3>
+                <p class="admin-card__role">超级管理员</p>
+              </div>
+              <span class="admin-card__arrow">→</span>
+            </div>
+
+            <!-- 设置菜单 -->
+            <nav class="settings-menu">
+              <a href="#reservation" class="settings-menu__item settings-menu__item--active" data-section="reservation">
+                <span class="settings-menu__text">预约设置</span>
+              </a>
+              <a href="#permission" class="settings-menu__item" data-section="permission">
+                <span class="settings-menu__text">权限设置</span>
+              </a>
+              <a href="#violation" class="settings-menu__item" data-section="violation">
+                <span class="settings-menu__text">违约处理</span>
+              </a>
+              <a href="#notification" class="settings-menu__item" data-section="notification">
+                <span class="settings-menu__text">通知设置</span>
+              </a>
+              <a href="#library" class="settings-menu__item" data-section="library">
+                <span class="settings-menu__text">图书馆设置</span>
+              </a>
+              <a href="#gtd" class="settings-menu__item" data-section="gtd">
+                <span class="settings-menu__text">GTD 设置</span>
+              </a>
+            </nav>
+
+            <!-- 系统状态 -->
+            <div class="system-status">
+              <div class="system-status__title">系统状态</div>
+              <div class="system-status__item">
+                <span class="system-status__dot system-status__dot--online"></span>
+                <span class="system-status__label">服务运行中</span>
+              </div>
+              <div class="system-status__item">
+                <span class="system-status__text">在线用户</span>
+                <span class="system-status__value">128</span>
+              </div>
+              <div class="system-status__item">
+                <span class="system-status__text">今日预约</span>
+                <span class="system-status__value">89</span>
+              </div>
+              <div class="system-status__item">
+                <span class="system-status__text">座位使用率</span>
+                <span class="system-status__value">76%</span>
+              </div>
+            </div>
+
+            <!-- 快捷操作 -->
+            <div class="quick-actions">
+              <div class="quick-actions__title">快捷操作</div>
+              <button class="quick-actions__btn">导出数据</button>
+              <button class="quick-actions__btn">清除缓存</button>
+              <button class="quick-actions__btn quick-actions__btn--danger">重置系统</button>
+            </div>
+          </div>
+
+          <!-- 右侧：设置内容区 -->
+          <div class="settings-content">
+            <!-- 预约设置 -->
+            <section class="settings-section settings-section--active" id="reservation">
+              <div class="settings-section__header">
+                <h2 class="settings-section__title">预约设置</h2>
+                <p class="settings-section__desc">配置座位预约的基本规则</p>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">时间规则</h3>
+                <div class="settings-grid">
+                  <div class="setting-item">
+                    <label class="setting-item__label">单次预约最长时间</label>
+                    <select class="form-select" id="maxDuration">
+                      <option value="1">1 小时</option>
+                      <option value="2">2 小时</option>
+                      <option value="3" selected>3 小时</option>
+                      <option value="4">4 小时</option>
+                      <option value="6">6 小时</option>
+                      <option value="8">8 小时</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">每日最多预约次数</label>
+                    <select class="form-select" id="maxDaily">
+                      <option value="1">1 次</option>
+                      <option value="2" selected>2 次</option>
+                      <option value="3">3 次</option>
+                      <option value="4">4 次</option>
+                      <option value="unlimited">不限制</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">允许提前取消的时间</label>
+                    <select class="form-select" id="cancelTime">
+                      <option value="15">15 分钟</option>
+                      <option value="30" selected>30 分钟</option>
+                      <option value="60">1 小时</option>
+                      <option value="120">2 小时</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">最早可提前预约天数</label>
+                    <select class="form-select" id="advanceDay">
+                      <option value="1">1 天</option>
+                      <option value="3">3 天</option>
+                      <option value="7" selected>7 天</option>
+                      <option value="14">14 天</option>
+                      <option value="30">30 天</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">签到规则</h3>
+                <div class="settings-grid">
+                  <div class="setting-item">
+                    <label class="setting-item__label">签到宽限时间</label>
+                    <select class="form-select" id="checkinGrace">
+                      <option value="5">5 分钟</option>
+                      <option value="10">10 分钟</option>
+                      <option value="15" selected>15 分钟</option>
+                      <option value="30">30 分钟</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">临时离开最长时间</label>
+                    <select class="form-select" id="tempLeave">
+                      <option value="15">15 分钟</option>
+                      <option value="30" selected>30 分钟</option>
+                      <option value="45">45 分钟</option>
+                      <option value="60">60 分钟</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">签到方式</label>
+                    <select class="form-select" id="checkinMethod">
+                      <option value="qrcode" selected>扫码签到</option>
+                      <option value="location">位置签到</option>
+                      <option value="both">扫码 + 位置</option>
+                      <option value="manual">手动签到</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">自动释放座位</label>
+                    <div class="setting-item__switch">
+                      <label class="form-switch">
+                        <input type="checkbox" class="form-switch__input" checked>
+                        <span class="form-switch__slider"></span>
+                      </label>
+                      <span class="setting-item__switch-label">超时未签到自动释放</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn btn--primary" onclick="saveSettings('reservation')">保存规则</button>
+                <button class="btn btn--secondary" onclick="resetSettings('reservation')">重置</button>
+              </div>
+            </section>
+
+            <!-- 权限设置 -->
+            <section class="settings-section" id="permission">
+              <div class="settings-section__header">
+                <h2 class="settings-section__title">权限设置</h2>
+                <p class="settings-section__desc">管理不同角色的操作权限</p>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">用户角色权限</h3>
+                <div class="permission-table">
+                  <div class="permission-table__header">
+                    <span class="permission-table__col">权限项</span>
+                    <span class="permission-table__col">普通用户</span>
+                    <span class="permission-table__col">VIP用户</span>
+                    <span class="permission-table__col">管理员</span>
+                  </div>
+                  <div class="permission-table__row">
+                    <span class="permission-table__col">预约座位</span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input" checked><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input" checked><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input" checked><span class="form-checkbox__box"></span></label></span>
+                  </div>
+                  <div class="permission-table__row">
+                    <span class="permission-table__col">预约VIP座位</span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input"><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input" checked><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input" checked><span class="form-checkbox__box"></span></label></span>
+                  </div>
+                  <div class="permission-table__row">
+                    <span class="permission-table__col">提前预约（7天+）</span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input"><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input" checked><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input" checked><span class="form-checkbox__box"></span></label></span>
+                  </div>
+                  <div class="permission-table__row">
+                    <span class="permission-table__col">管理座位</span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input"><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input"><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input" checked><span class="form-checkbox__box"></span></label></span>
+                  </div>
+                  <div class="permission-table__row">
+                    <span class="permission-table__col">查看统计数据</span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input"><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input"><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input" checked><span class="form-checkbox__box"></span></label></span>
+                  </div>
+                  <div class="permission-table__row">
+                    <span class="permission-table__col">处理违约</span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input"><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input"><span class="form-checkbox__box"></span></label></span>
+                    <span class="permission-table__col"><label class="form-checkbox"><input type="checkbox" class="form-checkbox__input" checked><span class="form-checkbox__box"></span></label></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn btn--primary" onclick="saveSettings('permission')">保存权限</button>
+                <button class="btn btn--secondary" onclick="resetSettings('permission')">重置</button>
+              </div>
+            </section>
+
+            <!-- 违约处理 -->
+            <section class="settings-section" id="violation">
+              <div class="settings-section__header">
+                <h2 class="settings-section__title">违约处理</h2>
+                <p class="settings-section__desc">设置违约行为的处罚规则</p>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">违约类型与处罚</h3>
+                <div class="violation-rules">
+                  <div class="violation-rule">
+                    <div class="violation-rule__header">
+                      <span class="violation-rule__name">未签到</span>
+                    </div>
+                    <div class="violation-rule__content">
+                      <select class="form-select">
+                        <option value="warn">警告</option>
+                        <option value="ban1" selected>禁止预约 1 天</option>
+                        <option value="ban3">禁止预约 3 天</option>
+                        <option value="ban7">禁止预约 7 天</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="violation-rule">
+                    <div class="violation-rule__header">
+                      <span class="violation-rule__name">迟到超时</span>
+                    </div>
+                    <div class="violation-rule__content">
+                      <select class="form-select">
+                        <option value="warn" selected>警告</option>
+                        <option value="ban1">禁止预约 1 天</option>
+                        <option value="ban3">禁止预约 3 天</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="violation-rule">
+                    <div class="violation-rule__header">
+                      <span class="violation-rule__name">未签退离开</span>
+                    </div>
+                    <div class="violation-rule__content">
+                      <select class="form-select">
+                        <option value="warn" selected>警告</option>
+                        <option value="ban1">禁止预约 1 天</option>
+                        <option value="ban3">禁止预约 3 天</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">累计违约处理</h3>
+                <div class="settings-grid">
+                  <div class="setting-item">
+                    <label class="setting-item__label">月度违约上限</label>
+                    <select class="form-select">
+                      <option value="3" selected>3 次</option>
+                      <option value="5">5 次</option>
+                      <option value="10">10 次</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">超限处罚</label>
+                    <select class="form-select">
+                      <option value="ban7">禁止预约 7 天</option>
+                      <option value="ban14" selected>禁止预约 14 天</option>
+                      <option value="ban30">禁止预约 30 天</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">违约记录保留</label>
+                    <select class="form-select">
+                      <option value="30">30 天</option>
+                      <option value="90" selected>90 天</option>
+                      <option value="180">180 天</option>
+                      <option value="365">1 年</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">自动清除违约</label>
+                    <div class="setting-item__switch">
+                      <label class="form-switch">
+                        <input type="checkbox" class="form-switch__input" checked>
+                        <span class="form-switch__slider"></span>
+                      </label>
+                      <span class="setting-item__switch-label">到期自动清除</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn btn--primary" onclick="saveSettings('violation')">保存规则</button>
+                <button class="btn btn--secondary" onclick="resetSettings('violation')">重置</button>
+              </div>
+            </section>
+
+            <!-- 通知设置 -->
+            <section class="settings-section" id="notification">
+              <div class="settings-section__header">
+                <h2 class="settings-section__title">通知设置</h2>
+                <p class="settings-section__desc">配置系统通知和提醒方式</p>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">用户通知</h3>
+                <div class="notification-list">
+                  <div class="notification-item">
+                    <div class="notification-item__info">
+                      <span class="notification-item__name">预约成功通知</span>
+                      <span class="notification-item__desc">用户成功预约座位后发送通知</span>
+                    </div>
+                    <label class="form-switch">
+                      <input type="checkbox" class="form-switch__input" checked>
+                      <span class="form-switch__slider"></span>
+                    </label>
+                  </div>
+                  <div class="notification-item">
+                    <div class="notification-item__info">
+                      <span class="notification-item__name">签到提醒</span>
+                      <span class="notification-item__desc">预约开始前 15 分钟提醒签到</span>
+                    </div>
+                    <label class="form-switch">
+                      <input type="checkbox" class="form-switch__input" checked>
+                      <span class="form-switch__slider"></span>
+                    </label>
+                  </div>
+                  <div class="notification-item">
+                    <div class="notification-item__info">
+                      <span class="notification-item__name">即将结束提醒</span>
+                      <span class="notification-item__desc">预约结束前 10 分钟提醒</span>
+                    </div>
+                    <label class="form-switch">
+                      <input type="checkbox" class="form-switch__input" checked>
+                      <span class="form-switch__slider"></span>
+                    </label>
+                  </div>
+                  <div class="notification-item">
+                    <div class="notification-item__info">
+                      <span class="notification-item__name">违约通知</span>
+                      <span class="notification-item__desc">发生违约行为时通知用户</span>
+                    </div>
+                    <label class="form-switch">
+                      <input type="checkbox" class="form-switch__input" checked>
+                      <span class="form-switch__slider"></span>
+                    </label>
+                  </div>
+                  <div class="notification-item">
+                    <div class="notification-item__info">
+                      <span class="notification-item__name">任务到期提醒</span>
+                      <span class="notification-item__desc">GTD 任务即将到期时提醒</span>
+                    </div>
+                    <label class="form-switch">
+                      <input type="checkbox" class="form-switch__input" checked>
+                      <span class="form-switch__slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">通知渠道</h3>
+                <div class="channel-grid">
+                  <div class="channel-item">
+                    <span class="channel-item__name">站内消息</span>
+                    <label class="form-switch">
+                      <input type="checkbox" class="form-switch__input" checked>
+                      <span class="form-switch__slider"></span>
+                    </label>
+                  </div>
+                  <div class="channel-item">
+                    <span class="channel-item__name">邮件通知</span>
+                    <label class="form-switch">
+                      <input type="checkbox" class="form-switch__input" checked>
+                      <span class="form-switch__slider"></span>
+                    </label>
+                  </div>
+                  <div class="channel-item">
+                    <span class="channel-item__name">短信通知</span>
+                    <label class="form-switch">
+                      <input type="checkbox" class="form-switch__input">
+                      <span class="form-switch__slider"></span>
+                    </label>
+                  </div>
+                  <div class="channel-item">
+                    <span class="channel-item__name">微信推送</span>
+                    <label class="form-switch">
+                      <input type="checkbox" class="form-switch__input" checked>
+                      <span class="form-switch__slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn btn--primary" onclick="saveSettings('notification')">保存设置</button>
+                <button class="btn btn--secondary" onclick="resetSettings('notification')">重置</button>
+              </div>
+            </section>
+
+            <!-- 图书馆设置 -->
+            <section class="settings-section" id="library">
+              <div class="settings-section__header">
+                <h2 class="settings-section__title">图书馆设置</h2>
+                <p class="settings-section__desc">配置图书馆基本信息和开放时间</p>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">基本信息</h3>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">图书馆名称</label>
+                    <input type="text" class="form-input" value="StudySpace 智慧图书馆" placeholder="输入图书馆名称">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">联系电话</label>
+                    <input type="text" class="form-input" value="400-123-4567" placeholder="输入联系电话">
+                  </div>
+                  <div class="form-group form-group--full">
+                    <label class="form-label">地址</label>
+                    <input type="text" class="form-input" value="北京市海淀区中关村大街1号" placeholder="输入详细地址">
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">开放时间</h3>
+                <div class="time-schedule">
+                  <div class="time-schedule__row">
+                    <span class="time-schedule__day">周一至周五</span>
+                    <input type="text" class="form-input form-input--sm" value="08:00">
+                    <span class="time-schedule__separator">至</span>
+                    <input type="text" class="form-input form-input--sm" value="22:00">
+                  </div>
+                  <div class="time-schedule__row">
+                    <span class="time-schedule__day">周六</span>
+                    <input type="text" class="form-input form-input--sm" value="09:00">
+                    <span class="time-schedule__separator">至</span>
+                    <input type="text" class="form-input form-input--sm" value="21:00">
+                  </div>
+                  <div class="time-schedule__row">
+                    <span class="time-schedule__day">周日</span>
+                    <input type="text" class="form-input form-input--sm" value="09:00">
+                    <span class="time-schedule__separator">至</span>
+                    <input type="text" class="form-input form-input--sm" value="18:00">
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">楼层与区域</h3>
+                <div class="area-manager">
+                  <div class="area-manager__list">
+                    <div class="area-tag">
+                      <span>1F - A区（自习区）</span>
+                      <button class="area-tag__remove">×</button>
+                    </div>
+                    <div class="area-tag">
+                      <span>1F - B区（静音区）</span>
+                      <button class="area-tag__remove">×</button>
+                    </div>
+                    <div class="area-tag">
+                      <span>2F - A区（讨论区）</span>
+                      <button class="area-tag__remove">×</button>
+                    </div>
+                    <div class="area-tag">
+                      <span>2F - B区（电脑区）</span>
+                      <button class="area-tag__remove">×</button>
+                    </div>
+                    <div class="area-tag">
+                      <span>3F - VIP区</span>
+                      <button class="area-tag__remove">×</button>
+                    </div>
+                  </div>
+                  <button class="btn btn--secondary btn--sm">+ 添加区域</button>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn btn--primary" onclick="saveSettings('library')">保存设置</button>
+                <button class="btn btn--secondary" onclick="resetSettings('library')">重置</button>
+              </div>
+            </section>
+
+            <!-- GTD 设置 -->
+            <section class="settings-section" id="gtd">
+              <div class="settings-section__header">
+                <h2 class="settings-section__title">GTD 设置</h2>
+                <p class="settings-section__desc">配置任务管理和学习记录相关功能</p>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">任务设置</h3>
+                <div class="settings-grid">
+                  <div class="setting-item">
+                    <label class="setting-item__label">默认任务优先级</label>
+                    <select class="form-select">
+                      <option value="low">低</option>
+                      <option value="medium" selected>中</option>
+                      <option value="high">高</option>
+                      <option value="urgent">紧急</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">任务提醒提前时间</label>
+                    <select class="form-select">
+                      <option value="15">15 分钟</option>
+                      <option value="30" selected>30 分钟</option>
+                      <option value="60">1 小时</option>
+                      <option value="1440">1 天</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">过期任务处理</label>
+                    <select class="form-select">
+                      <option value="keep" selected>保留并标记</option>
+                      <option value="archive">自动归档</option>
+                      <option value="delete">自动删除</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">每日任务上限</label>
+                    <select class="form-select">
+                      <option value="5">5 个</option>
+                      <option value="10" selected>10 个</option>
+                      <option value="20">20 个</option>
+                      <option value="unlimited">不限制</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">学习记录</h3>
+                <div class="settings-grid">
+                  <div class="setting-item">
+                    <label class="setting-item__label">自动记录学习时长</label>
+                    <div class="setting-item__switch">
+                      <label class="form-switch">
+                        <input type="checkbox" class="form-switch__input" checked>
+                        <span class="form-switch__slider"></span>
+                      </label>
+                      <span class="setting-item__switch-label">座位使用时自动计时</span>
+                    </div>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">学习目标周期</label>
+                    <select class="form-select">
+                      <option value="daily">每日</option>
+                      <option value="weekly" selected>每周</option>
+                      <option value="monthly">每月</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">默认学习目标</label>
+                    <select class="form-select">
+                      <option value="10">10 小时/周</option>
+                      <option value="20" selected>20 小时/周</option>
+                      <option value="30">30 小时/周</option>
+                      <option value="40">40 小时/周</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">显示学习排行</label>
+                    <div class="setting-item__switch">
+                      <label class="form-switch">
+                        <input type="checkbox" class="form-switch__input" checked>
+                        <span class="form-switch__slider"></span>
+                      </label>
+                      <span class="setting-item__switch-label">用户可见排行榜</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-card">
+                <h3 class="settings-card__title">番茄钟设置</h3>
+                <div class="settings-grid">
+                  <div class="setting-item">
+                    <label class="setting-item__label">专注时长</label>
+                    <select class="form-select">
+                      <option value="15">15 分钟</option>
+                      <option value="25" selected>25 分钟</option>
+                      <option value="30">30 分钟</option>
+                      <option value="45">45 分钟</option>
+                      <option value="60">60 分钟</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">短休息时长</label>
+                    <select class="form-select">
+                      <option value="3">3 分钟</option>
+                      <option value="5" selected>5 分钟</option>
+                      <option value="10">10 分钟</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">长休息时长</label>
+                    <select class="form-select">
+                      <option value="10">10 分钟</option>
+                      <option value="15" selected>15 分钟</option>
+                      <option value="20">20 分钟</option>
+                      <option value="30">30 分钟</option>
+                    </select>
+                  </div>
+                  <div class="setting-item">
+                    <label class="setting-item__label">长休息间隔</label>
+                    <select class="form-select">
+                      <option value="3">3 个番茄</option>
+                      <option value="4" selected>4 个番茄</option>
+                      <option value="5">5 个番茄</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn btn--primary" onclick="saveSettings('gtd')">保存设置</button>
+                <button class="btn btn--secondary" onclick="resetSettings('gtd')">重置</button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- 个人信息编辑弹窗 -->
+  <div class="modal-backdrop" id="profileModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 class="modal__title">编辑个人信息</h3>
+        <button class="modal__close" onclick="closeProfileModal()">×</button>
+      </div>
+      <div class="modal__body">
+        <div class="form-group">
+          <label class="form-label">头像</label>
+          <div class="avatar-upload">
+            <div class="avatar-upload__preview">
+              <span>管</span>
+            </div>
+            <button class="btn btn--secondary btn--sm">更换头像</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">姓名</label>
+          <input type="text" class="form-input" value="管理员" placeholder="输入姓名">
+        </div>
+        <div class="form-group">
+          <label class="form-label">邮箱</label>
+          <input type="email" class="form-input" value="admin@studyspace.com" placeholder="输入邮箱">
+        </div>
+        <div class="form-group">
+          <label class="form-label">手机号</label>
+          <input type="tel" class="form-input" value="138****8888" placeholder="输入手机号">
+        </div>
+        <div class="form-group">
+          <label class="form-label">修改密码</label>
+          <input type="password" class="form-input" placeholder="输入新密码（留空则不修改）">
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" onclick="closeProfileModal()">取消</button>
+        <button class="btn btn--primary" onclick="saveProfile()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 设置菜单切换
+    document.querySelectorAll('.settings-menu__item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const section = this.dataset.section;
+        
+        // 更新菜单激活状态
+        document.querySelectorAll('.settings-menu__item').forEach(i => {
+          i.classList.remove('settings-menu__item--active');
+        });
+        this.classList.add('settings-menu__item--active');
+        
+        // 切换内容区域
+        document.querySelectorAll('.settings-section').forEach(s => {
+          s.classList.remove('settings-section--active');
+        });
+        document.getElementById(section).classList.add('settings-section--active');
+      });
+    });
+
+    // 保存设置
+    function saveSettings(section) {
+      const btn = event.target;
+      btn.textContent = '保存中...';
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        btn.textContent = '已保存 ✓';
+        btn.classList.add('btn--success');
+        
+        setTimeout(() => {
+          btn.textContent = section === 'permission' ? '保存权限' : 
+                           section === 'violation' ? '保存规则' : 
+                           section === 'notification' ? '保存设置' : 
+                           section === 'library' ? '保存设置' : 
+                           section === 'gtd' ? '保存设置' : '保存规则';
+          btn.classList.remove('btn--success');
+          btn.disabled = false;
+        }, 1500);
+      }, 800);
+    }
+
+    // 重置设置
+    function resetSettings(section) {
+      if (confirm('确定要重置此部分设置吗？')) {
+        location.reload();
+      }
+    }
+
+    // 打开个人信息弹窗
+    function openProfileModal() {
+      document.getElementById('profileModal').classList.add('modal-backdrop--visible');
+    }
+
+    // 关闭个人信息弹窗
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.remove('modal-backdrop--visible');
+    }
+
+    // 保存个人信息
+    function saveProfile() {
+      const btn = event.target;
+      btn.textContent = '保存中...';
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        btn.textContent = '已保存 ✓';
+        setTimeout(() => {
+          closeProfileModal();
+          btn.textContent = '保存';
+          btn.disabled = false;
+        }, 800);
+      }, 600);
+    }
+
+    // 点击弹窗外部关闭
+    document.getElementById('profileModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeProfileModal();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>座位管理 - StudySpace 管理后台</title>
+  <link rel="stylesheet" href="../../../core/styles/main.css">
+  <link rel="stylesheet" href="../../../core/layouts/admin-layout/style.css">
+  <link rel="stylesheet" href="../../../core/components/sidebar/style.css">
+  <link rel="stylesheet" href="../../../core/components/navbar/style.css">
+  <link rel="stylesheet" href="../../../core/components/search-bar/style.css">
+  <link rel="stylesheet" href="../../../core/components/filter-dropdown/style.css">
+  <link rel="stylesheet" href="../../../core/components/form-controls/style.css">
+  <link rel="stylesheet" href="../../../core/components/button/style.css">
+  <link rel="stylesheet" href="../styles/seat-list.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <span class="sidebar__logo-text">StudySpace</span>
+      </div>
+      <nav class="sidebar__nav">
+        <a href="../../dashboard/pages/overview.html" class="sidebar__nav-item" data-page="dashboard">
+          <span class="sidebar__nav-text">数据概览</span>
+        </a>
+        <a href="../../task/pages/index.html" class="sidebar__nav-item" data-page="task">
+          <span class="sidebar__nav-text">任务</span>
+        </a>
+        <a href="../../calendar/pages/index.html" class="sidebar__nav-item" data-page="calendar">
+          <span class="sidebar__nav-text">日历</span>
+        </a>
+        <a href="../../study-record/pages/index.html" class="sidebar__nav-item" data-page="study-record">
+          <span class="sidebar__nav-text">学习记录</span>
+        </a>
+        <a href="seat-list.html" class="sidebar__nav-item sidebar__nav-item--active" data-page="seat-management">
+          <span class="sidebar__nav-text">座位管理</span>
+        </a>
+        <a href="../../settings/pages/index.html" class="sidebar__nav-item" data-page="settings">
+          <span class="sidebar__nav-text">管理员设置</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- 主内容区 -->
+    <div class="admin-layout__main">
+      <!-- 顶部导航 -->
+      <header class="navbar navbar--fixed">
+        <div class="search-bar">
+          <input type="text" class="search-bar__input" placeholder="搜索座位...">
+        </div>
+        <div class="navbar__actions">
+          <button class="navbar__filter-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
+            </svg>
+            筛选
+          </button>
+        </div>
+      </header>
+
+      <!-- 页面内容 -->
+      <main class="admin-layout__content">
+        <div class="seat-management">
+          <!-- 左侧：筛选 + 座位网格 -->
+          <div class="seat-management__main">
+            <!-- 筛选区域 -->
+            <div class="filter-bar">
+              <div class="filter-dropdown" id="floorDropdown">
+                <button class="filter-dropdown__trigger" onclick="toggleDropdown('floorDropdown')">
+                  <span class="filter-dropdown__label">楼层 1</span>
+                  <span class="filter-dropdown__arrow">▾</span>
+                </button>
+                <div class="filter-dropdown__menu">
+                  <div class="filter-dropdown__item filter-dropdown__item--active">楼层 1</div>
+                  <div class="filter-dropdown__item">楼层 2</div>
+                  <div class="filter-dropdown__item">楼层 3</div>
+                </div>
+              </div>
+
+              <div class="filter-dropdown" id="areaDropdown">
+                <button class="filter-dropdown__trigger" onclick="toggleDropdown('areaDropdown')">
+                  <span class="filter-dropdown__label">区域 A</span>
+                  <span class="filter-dropdown__arrow">▾</span>
+                </button>
+                <div class="filter-dropdown__menu">
+                  <div class="filter-dropdown__item filter-dropdown__item--active">区域 A</div>
+                  <div class="filter-dropdown__item">区域 B</div>
+                  <div class="filter-dropdown__item">区域 C</div>
+                  <div class="filter-dropdown__item">区域 D</div>
+                </div>
+              </div>
+
+              <div class="date-picker">
+                <input type="text" class="date-picker__input" value="2025/11/29" readonly>
+                <span class="date-picker__icon">📅</span>
+              </div>
+
+              <div class="filter-dropdown" id="timeDropdown">
+                <button class="filter-dropdown__trigger" onclick="toggleDropdown('timeDropdown')">
+                  <span class="filter-dropdown__label">具体时间</span>
+                  <span class="filter-dropdown__arrow">▾</span>
+                </button>
+                <div class="filter-dropdown__menu">
+                  <div class="filter-dropdown__item">08:00 - 10:00</div>
+                  <div class="filter-dropdown__item">10:00 - 12:00</div>
+                  <div class="filter-dropdown__item filter-dropdown__item--active">14:00 - 16:00</div>
+                  <div class="filter-dropdown__item">16:00 - 18:00</div>
+                  <div class="filter-dropdown__item">18:00 - 20:00</div>
+                  <div class="filter-dropdown__item">20:00 - 22:00</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 座位网格 -->
+            <div class="seat-grid-container">
+              <div class="seat-grid">
+                <!-- 第1行 -->
+                <div class="seat" data-seat-id="A01" data-status="available">
+                  <span class="seat__label">A01</span>
+                </div>
+                <div class="seat" data-seat-id="A02" data-status="available">
+                  <span class="seat__label">A02</span>
+                </div>
+                <div class="seat" data-seat-id="A03" data-status="available">
+                  <span class="seat__label">A03</span>
+                </div>
+                <div class="seat" data-seat-id="A04" data-status="available">
+                  <span class="seat__label">A04</span>
+                </div>
+                <div class="seat" data-seat-id="A05" data-status="available">
+                  <span class="seat__label">A05</span>
+                </div>
+                <div class="seat" data-seat-id="A06" data-status="available">
+                  <span class="seat__label">A06</span>
+                </div>
+                <!-- 第2行 -->
+                <div class="seat" data-seat-id="A07" data-status="available">
+                  <span class="seat__label">A07</span>
+                </div>
+                <div class="seat" data-seat-id="A08" data-status="available">
+                  <span class="seat__label">A08</span>
+                </div>
+                <div class="seat" data-seat-id="A09" data-status="available">
+                  <span class="seat__label">A09</span>
+                </div>
+                <div class="seat" data-seat-id="A10" data-status="reserved">
+                  <span class="seat__label">A10</span>
+                </div>
+                <div class="seat" data-seat-id="A11" data-status="available">
+                  <span class="seat__label">A11</span>
+                </div>
+                <div class="seat" data-seat-id="A12" data-status="available">
+                  <span class="seat__label">A12</span>
+                </div>
+                <!-- 第3行 -->
+                <div class="seat" data-seat-id="A13" data-status="available">
+                  <span class="seat__label">A13</span>
+                </div>
+                <div class="seat" data-seat-id="A14" data-status="available">
+                  <span class="seat__label">A14</span>
+                </div>
+                <div class="seat seat--selected" data-seat-id="A15" data-status="available">
+                  <span class="seat__label">A15</span>
+                </div>
+                <div class="seat" data-seat-id="A16" data-status="occupied">
+                  <span class="seat__label">A16</span>
+                </div>
+                <div class="seat" data-seat-id="A17" data-status="available">
+                  <span class="seat__label">A17</span>
+                </div>
+                <div class="seat" data-seat-id="A18" data-status="available">
+                  <span class="seat__label">A18</span>
+                </div>
+                <!-- 第4行 -->
+                <div class="seat" data-seat-id="A19" data-status="available">
+                  <span class="seat__label">A19</span>
+                </div>
+                <div class="seat" data-seat-id="A20" data-status="available">
+                  <span class="seat__label">A20</span>
+                </div>
+                <div class="seat" data-seat-id="A21" data-status="available">
+                  <span class="seat__label">A21</span>
+                </div>
+                <div class="seat" data-seat-id="A22" data-status="reserved">
+                  <span class="seat__label">A22</span>
+                </div>
+                <div class="seat" data-seat-id="A23" data-status="available">
+                  <span class="seat__label">A23</span>
+                </div>
+                <div class="seat" data-seat-id="A24" data-status="available">
+                  <span class="seat__label">A24</span>
+                </div>
+                <!-- 第5行 -->
+                <div class="seat" data-seat-id="A25" data-status="available">
+                  <span class="seat__label">A25</span>
+                </div>
+                <div class="seat" data-seat-id="A26" data-status="disabled">
+                  <span class="seat__label">A26</span>
+                </div>
+                <div class="seat" data-seat-id="A27" data-status="available">
+                  <span class="seat__label">A27</span>
+                </div>
+                <div class="seat" data-seat-id="A28" data-status="available">
+                  <span class="seat__label">A28</span>
+                </div>
+                <div class="seat" data-seat-id="A29" data-status="available">
+                  <span class="seat__label">A29</span>
+                </div>
+                <div class="seat" data-seat-id="A30" data-status="available">
+                  <span class="seat__label">A30</span>
+                </div>
+              </div>
+
+              <!-- 座位图例 -->
+              <div class="seat-legend">
+                <div class="seat-legend__item">
+                  <span class="seat-legend__dot seat-legend__dot--available"></span>
+                  <span class="seat-legend__text">可用</span>
+                </div>
+                <div class="seat-legend__item">
+                  <span class="seat-legend__dot seat-legend__dot--reserved"></span>
+                  <span class="seat-legend__text">已预约</span>
+                </div>
+                <div class="seat-legend__item">
+                  <span class="seat-legend__dot seat-legend__dot--occupied"></span>
+                  <span class="seat-legend__text">使用中</span>
+                </div>
+                <div class="seat-legend__item">
+                  <span class="seat-legend__dot seat-legend__dot--disabled"></span>
+                  <span class="seat-legend__text">不可用</span>
+                </div>
+                <div class="seat-legend__item">
+                  <span class="seat-legend__dot seat-legend__dot--selected"></span>
+                  <span class="seat-legend__text">已选中</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧：座位详细信息面板 -->
+          <div class="seat-detail-panel" id="seatDetailPanel">
+            <div class="seat-detail-panel__header">
+              <h3 class="seat-detail-panel__title">座位详细信息</h3>
+            </div>
+
+            <div class="seat-detail-panel__body">
+              <!-- 座位号 -->
+              <div class="detail-section">
+                <label class="detail-section__label">座位号</label>
+                <div class="detail-section__value">
+                  <input type="text" class="form-input" id="seatNumber" value="A15" placeholder="座位号">
+                </div>
+              </div>
+
+              <!-- 设施 -->
+              <div class="detail-section">
+                <label class="detail-section__label">设施</label>
+                <div class="detail-section__checkboxes">
+                  <label class="form-checkbox">
+                    <input type="checkbox" class="form-checkbox__input" checked>
+                    <span class="form-checkbox__box"></span>
+                    <span class="form-checkbox__label">设施1（电源插座）</span>
+                  </label>
+                  <label class="form-checkbox">
+                    <input type="checkbox" class="form-checkbox__input" checked>
+                    <span class="form-checkbox__box"></span>
+                    <span class="form-checkbox__label">设施2（台灯）</span>
+                  </label>
+                  <label class="form-checkbox">
+                    <input type="checkbox" class="form-checkbox__input">
+                    <span class="form-checkbox__box"></span>
+                    <span class="form-checkbox__label">设施3（显示器）</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 预约状态 -->
+              <div class="detail-section">
+                <label class="detail-section__label">预约状态</label>
+                <div class="detail-section__value">
+                  <select class="form-select" id="reservationStatus">
+                    <option value="available" selected>可预约</option>
+                    <option value="reserved">已预约</option>
+                    <option value="occupied">使用中</option>
+                    <option value="disabled">不可用</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 预约日期和时间 -->
+              <div class="detail-section">
+                <label class="detail-section__label">预约日期和时间</label>
+                <div class="detail-section__datetime">
+                  <input type="text" class="form-input" value="2025/11/29" placeholder="日期">
+                  <input type="text" class="form-input" value="14:00 - 16:00" placeholder="时间段">
+                </div>
+              </div>
+
+              <!-- 座位管理 -->
+              <div class="detail-section">
+                <label class="detail-section__label">座位管理</label>
+                <div class="detail-section__value">
+                  <select class="form-select" id="seatManagement">
+                    <option value="normal" selected>正常使用</option>
+                    <option value="maintenance">维护中</option>
+                    <option value="reserved-admin">管理员预留</option>
+                    <option value="disabled">停用</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="seat-detail-panel__footer">
+              <button class="btn btn--primary" id="saveBtn">保存</button>
+              <button class="btn btn--secondary" id="cancelBtn">取消</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // 下拉框交互
+    function toggleDropdown(id) {
+      const dropdown = document.getElementById(id);
+      const isOpen = dropdown.classList.contains('filter-dropdown--open');
+      
+      document.querySelectorAll('.filter-dropdown').forEach(d => {
+        d.classList.remove('filter-dropdown--open');
+      });
+      
+      if (!isOpen) {
+        dropdown.classList.add('filter-dropdown--open');
+      }
+    }
+    
+    // 点击外部关闭下拉框
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.filter-dropdown')) {
+        document.querySelectorAll('.filter-dropdown').forEach(d => {
+          d.classList.remove('filter-dropdown--open');
+        });
+      }
+    });
+    
+    // 选择下拉项
+    document.querySelectorAll('.filter-dropdown__item').forEach(item => {
+      item.addEventListener('click', function() {
+        const dropdown = this.closest('.filter-dropdown');
+        const label = dropdown.querySelector('.filter-dropdown__label');
+        
+        dropdown.querySelectorAll('.filter-dropdown__item').forEach(i => {
+          i.classList.remove('filter-dropdown__item--active');
+        });
+        this.classList.add('filter-dropdown__item--active');
+        label.textContent = this.textContent;
+        dropdown.classList.remove('filter-dropdown--open');
+      });
+    });
+
+    // 座位选择交互
+    document.querySelectorAll('.seat').forEach(seat => {
+      seat.addEventListener('click', function() {
+        const status = this.dataset.status;
+        
+        // 移除其他座位的选中状态
+        document.querySelectorAll('.seat').forEach(s => {
+          s.classList.remove('seat--selected');
+        });
+        
+        // 选中当前座位
+        this.classList.add('seat--selected');
+        
+        // 更新右侧面板信息
+        updateDetailPanel(this);
+      });
+    });
+
+    // 更新详情面板
+    function updateDetailPanel(seatElement) {
+      const seatId = seatElement.dataset.seatId;
+      const status = seatElement.dataset.status;
+      
+      document.getElementById('seatNumber').value = seatId;
+      
+      const statusMap = {
+        'available': 'available',
+        'reserved': 'reserved',
+        'occupied': 'occupied',
+        'disabled': 'disabled'
+      };
+      document.getElementById('reservationStatus').value = statusMap[status] || 'available';
+      
+      // 显示面板（移动端）
+      document.getElementById('seatDetailPanel').classList.add('seat-detail-panel--visible');
+    }
+
+    // 保存按钮
+    document.getElementById('saveBtn').addEventListener('click', function() {
+      const selectedSeat = document.querySelector('.seat--selected');
+      if (selectedSeat) {
+        const newStatus = document.getElementById('reservationStatus').value;
+        selectedSeat.dataset.status = newStatus;
+        
+        // 显示保存成功提示
+        this.textContent = '已保存 ✓';
+        this.classList.add('btn--success');
+        setTimeout(() => {
+          this.textContent = '保存';
+          this.classList.remove('btn--success');
+        }, 1500);
+      }
+    });
+
+    // 取消按钮
+    document.getElementById('cancelBtn').addEventListener('click', function() {
+      document.querySelectorAll('.seat').forEach(s => {
+        s.classList.remove('seat--selected');
+      });
+      document.getElementById('seatDetailPanel').classList.remove('seat-detail-panel--visible');
+    });
+  </script>
+</body>
+</html>
