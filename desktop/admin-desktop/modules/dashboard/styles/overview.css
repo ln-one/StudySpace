@@ -72,13 +72,42 @@
   }
 }
 
-/* 使用情况横条图 - 渐变 */
+/* 使用情况统计 */
+.usage-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.usage-stats__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #86868B;
+}
+
+.usage-stats__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.usage-stats__dot--used {
+  background: #007AFF;
+}
+
+.usage-stats__dot--available {
+  background: #E5E5EA;
+}
+
+/* 使用情况横条图 */
 .usage-bar {
   position: relative;
-  height: 48px;
-  background: var(--color-bg-hover);
-  border-radius: var(--radius-lg);
+  height: 40px;
+  background: #F5F5F7;
+  border-radius: 12px;
   overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .usage-bar__fill {
@@ -86,34 +115,285 @@
   left: 0;
   top: 0;
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
-  border-radius: var(--radius-lg);
+  background: linear-gradient(90deg, #007AFF 0%, #5AC8FA 100%);
+  border-radius: 12px;
   transition: width 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 12px;
 }
 
-.usage-bar__text {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: var(--font-size-body);
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-  font-weight: var(--font-weight-medium);
+.usage-bar__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
 }
 
-/* 记录占位区域 */
-.records-placeholder {
-  min-height: 240px;
+/* 使用详情 */
+.usage-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.usage-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(245, 245, 247, 0.6);
+  border-radius: 10px;
+}
+
+.usage-detail__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.usage-detail__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1D1D1F;
+}
+
+.usage-detail__value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #007AFF;
+}
+
+.usage-detail__bar {
+  height: 6px;
+  background: #E5E5EA;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.usage-detail__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #007AFF 0%, #5AC8FA 100%);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+@media (max-width: 768px) {
+  .usage-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 两列布局 */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 图表按钮 */
+.chart-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  color: #86868B;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chart-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.chart-btn--active {
+  color: #007AFF;
+  background: rgba(0, 122, 255, 0.1);
+}
+
+/* 时段分布 */
+.time-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.time-slot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.time-slot__time {
+  width: 90px;
+  font-size: 12px;
+  color: #86868B;
+}
+
+.time-slot__bar {
+  flex: 1;
+  height: 20px;
+  background: #F5F5F7;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.time-slot__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #34C759 0%, #30D158 100%);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.time-slot__fill--high {
+  background: linear-gradient(90deg, #FF9500 0%, #FFCC00 100%);
+}
+
+.time-slot__count {
+  width: 40px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1D1D1F;
+  text-align: right;
+}
+
+/* 预约记录表格 */
+.records-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.records-table th {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 500;
+  color: #86868B;
+}
+
+.records-table td {
+  padding: 12px;
+  background: rgba(245, 245, 247, 0.6);
+  font-size: 13px;
+  color: #1D1D1F;
+}
+
+.records-table td:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.records-table td:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
+.records-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.records-table tbody tr:hover td {
+  background: rgba(245, 245, 247, 1);
+}
+
+/* 用户信息 */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-info__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--color-bg-tertiary) 0%, var(--color-bg-secondary) 100%);
-  border-radius: var(--radius-lg);
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--letter-spacing-tight);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.user-info__detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info__name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1D1D1F;
+}
+
+.user-info__id {
+  font-size: 11px;
+  color: #86868B;
+}
+
+/* 座位标签 */
+.seat-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #007AFF;
+  background: rgba(0, 122, 255, 0.1);
+  border-radius: 6px;
+}
+
+/* 状态标签 */
+.status-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+.status-tag--active {
+  color: #34C759;
+  background: rgba(52, 199, 89, 0.1);
+}
+
+.status-tag--completed {
+  color: #86868B;
+  background: rgba(134, 134, 139, 0.1);
+}
+
+.status-tag--pending {
+  color: #FF9500;
+  background: rgba(255, 149, 0, 0.1);
+}
+
+.status-tag--violation {
+  color: #FF3B30;
+  background: rgba(255, 59, 48, 0.1);
+}
+
+/* 操作链接 */
+.action-link {
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #007AFF;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-link:hover {
+  background: rgba(0, 122, 255, 0.08);
+  border-radius: 6px;
 }
 
 /* 内容卡片间距 */

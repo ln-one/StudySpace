@@ -11,7 +11,7 @@
   </div>
   <nav class="sidebar__nav">
     <a href="#" class="sidebar__nav-item sidebar__nav-item--active">
-      <span class="sidebar__nav-text">数据概览</span>
+      <span class="sidebar__nav-text">预约管理</span>
     </a>
     <a href="#" class="sidebar__nav-item">
       <span class="sidebar__nav-text">任务</span>
@@ -35,7 +35,7 @@
 ## 导航项（管理员端完整菜单）
 | 名称 | 模块 | 链接目标 |
 |-----|------|---------|
-| 数据概览 | dashboard | /modules/dashboard/pages/overview.html |
+| 预约管理 | dashboard | /modules/dashboard/pages/overview.html |
 | 任务 | task | /modules/task/pages/index.html |
 | 日历 | calendar | /modules/calendar/pages/index.html |
 | 学习记录 | study-record | /modules/study-record/pages/index.html |

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>数据概览 - StudySpace 管理后台</title>
+  <title>预约管理 - StudySpace 管理后台</title>
   <link rel="stylesheet" href="../../../core/styles/main.css">
   <link rel="stylesheet" href="../../../core/layouts/admin-layout/style.css">
   <link rel="stylesheet" href="../../../core/components/sidebar/style.css">
@@ -23,19 +23,19 @@
       </div>
       <nav class="sidebar__nav">
         <a href="overview.html" class="sidebar__nav-item sidebar__nav-item--active" data-page="dashboard">
-          <span class="sidebar__nav-text">数据概览</span>
+          <span class="sidebar__nav-text">预约管理</span>
+        </a>
+        <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item" data-page="seat-management">
+          <span class="sidebar__nav-text">座位管理</span>
+        </a>
+        <a href="../../study-record/pages/index.html" class="sidebar__nav-item" data-page="study-record">
+          <span class="sidebar__nav-text">学习记录</span>
         </a>
         <a href="../../task/pages/index.html" class="sidebar__nav-item" data-page="task">
           <span class="sidebar__nav-text">任务</span>
         </a>
         <a href="../../calendar/pages/index.html" class="sidebar__nav-item" data-page="calendar">
           <span class="sidebar__nav-text">日历</span>
-        </a>
-        <a href="../../study-record/pages/index.html" class="sidebar__nav-item" data-page="study-record">
-          <span class="sidebar__nav-text">学习记录</span>
-        </a>
-        <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item" data-page="seat-management">
-          <span class="sidebar__nav-text">座位管理</span>
         </a>
         <a href="../../settings/pages/index.html" class="sidebar__nav-item" data-page="settings">
           <span class="sidebar__nav-text">管理员设置</span>
@@ -143,22 +143,192 @@
         <div class="content-card">
           <div class="content-card__header">
             <span class="content-card__title">实时座位使用情况</span>
+            <div class="usage-stats">
+              <span class="usage-stats__item"><span class="usage-stats__dot usage-stats__dot--used"></span>已使用 378</span>
+              <span class="usage-stats__item"><span class="usage-stats__dot usage-stats__dot--available"></span>可用 122</span>
+            </div>
           </div>
           <div class="usage-bar">
-            <div class="usage-bar__fill" style="width: 75%;"></div>
-            <span class="usage-bar__text">用于实时显示座位使用情况的横条图</span>
+            <div class="usage-bar__fill" style="width: 75.6%;">
+              <span class="usage-bar__label">75.6%</span>
+            </div>
+          </div>
+          <div class="usage-details">
+            <div class="usage-detail">
+              <div class="usage-detail__header">
+                <span class="usage-detail__label">A区</span>
+                <span class="usage-detail__value">82%</span>
+              </div>
+              <div class="usage-detail__bar"><div class="usage-detail__fill" style="width: 82%;"></div></div>
+            </div>
+            <div class="usage-detail">
+              <div class="usage-detail__header">
+                <span class="usage-detail__label">B区</span>
+                <span class="usage-detail__value">68%</span>
+              </div>
+              <div class="usage-detail__bar"><div class="usage-detail__fill" style="width: 68%;"></div></div>
+            </div>
+            <div class="usage-detail">
+              <div class="usage-detail__header">
+                <span class="usage-detail__label">C区</span>
+                <span class="usage-detail__value">71%</span>
+              </div>
+              <div class="usage-detail__bar"><div class="usage-detail__fill" style="width: 71%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 两列布局：预约趋势 + 今日预约时段 -->
+        <div class="dashboard-grid">
+          <div class="content-card">
+            <div class="content-card__header">
+              <span class="content-card__title">本周预约趋势</span>
+              <div class="content-card__actions">
+                <button class="chart-btn chart-btn--active">按天</button>
+                <button class="chart-btn">按周</button>
+              </div>
+            </div>
+            <canvas id="trendChart" style="width: 100%; height: 220px;"></canvas>
+          </div>
+          
+          <div class="content-card">
+            <div class="content-card__header">
+              <span class="content-card__title">今日预约时段分布</span>
+            </div>
+            <div class="time-slots">
+              <div class="time-slot">
+                <span class="time-slot__time">08:00-10:00</span>
+                <div class="time-slot__bar"><div class="time-slot__fill" style="width: 45%;"></div></div>
+                <span class="time-slot__count">18人</span>
+              </div>
+              <div class="time-slot">
+                <span class="time-slot__time">10:00-12:00</span>
+                <div class="time-slot__bar"><div class="time-slot__fill time-slot__fill--high" style="width: 85%;"></div></div>
+                <span class="time-slot__count">34人</span>
+              </div>
+              <div class="time-slot">
+                <span class="time-slot__time">12:00-14:00</span>
+                <div class="time-slot__bar"><div class="time-slot__fill" style="width: 35%;"></div></div>
+                <span class="time-slot__count">14人</span>
+              </div>
+              <div class="time-slot">
+                <span class="time-slot__time">14:00-16:00</span>
+                <div class="time-slot__bar"><div class="time-slot__fill time-slot__fill--high" style="width: 92%;"></div></div>
+                <span class="time-slot__count">37人</span>
+              </div>
+              <div class="time-slot">
+                <span class="time-slot__time">16:00-18:00</span>
+                <div class="time-slot__bar"><div class="time-slot__fill time-slot__fill--high" style="width: 78%;"></div></div>
+                <span class="time-slot__count">31人</span>
+              </div>
+              <div class="time-slot">
+                <span class="time-slot__time">18:00-20:00</span>
+                <div class="time-slot__bar"><div class="time-slot__fill" style="width: 55%;"></div></div>
+                <span class="time-slot__count">22人</span>
+              </div>
+              <div class="time-slot">
+                <span class="time-slot__time">20:00-22:00</span>
+                <div class="time-slot__bar"><div class="time-slot__fill" style="width: 28%;"></div></div>
+                <span class="time-slot__count">11人</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- 预约与违约记录 -->
         <div class="content-card">
           <div class="content-card__header">
-            <span class="content-card__title">预约与违约记录</span>
-            <button class="btn btn--text btn--sm">更多 →</button>
+            <span class="content-card__title">最新预约记录</span>
+            <button class="btn btn--text btn--sm">查看全部 →</button>
           </div>
-          <div class="records-placeholder">
-            预约与违约记录
-          </div>
+          <table class="records-table">
+            <thead>
+              <tr>
+                <th>学生</th>
+                <th>座位</th>
+                <th>预约时段</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="user-info">
+                    <div class="user-info__avatar">张</div>
+                    <div class="user-info__detail">
+                      <span class="user-info__name">张晓明</span>
+                      <span class="user-info__id">2021112573</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="seat-tag">A-12</span></td>
+                <td>14:00 - 18:00</td>
+                <td><span class="status-tag status-tag--active">使用中</span></td>
+                <td><button class="action-link">详情</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-info">
+                    <div class="user-info__avatar">李</div>
+                    <div class="user-info__detail">
+                      <span class="user-info__name">李思雨</span>
+                      <span class="user-info__id">2022115847</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="seat-tag">B-08</span></td>
+                <td>09:00 - 12:00</td>
+                <td><span class="status-tag status-tag--completed">已完成</span></td>
+                <td><button class="action-link">详情</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-info">
+                    <div class="user-info__avatar">王</div>
+                    <div class="user-info__detail">
+                      <span class="user-info__name">王浩然</span>
+                      <span class="user-info__id">2021113264</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="seat-tag">A-15</span></td>
+                <td>16:00 - 20:00</td>
+                <td><span class="status-tag status-tag--pending">待签到</span></td>
+                <td><button class="action-link">详情</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-info">
+                    <div class="user-info__avatar">赵</div>
+                    <div class="user-info__detail">
+                      <span class="user-info__name">赵欣怡</span>
+                      <span class="user-info__id">2020114892</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="seat-tag">C-05</span></td>
+                <td>10:00 - 12:00</td>
+                <td><span class="status-tag status-tag--violation">未签到</span></td>
+                <td><button class="action-link">处理</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-info">
+                    <div class="user-info__avatar">钱</div>
+                    <div class="user-info__detail">
+                      <span class="user-info__name">钱宇轩</span>
+                      <span class="user-info__id">2022116235</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="seat-tag">A-20</span></td>
+                <td>14:00 - 17:00</td>
+                <td><span class="status-tag status-tag--active">使用中</span></td>
+                <td><button class="action-link">详情</button></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </main>
     </div>
@@ -211,6 +381,84 @@
         dropdown.classList.remove('filter-dropdown--open');
       });
     });
+
+    // 绘制预约趋势图表
+    function drawTrendChart() {
+      const canvas = document.getElementById('trendChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      
+      const width = rect.width;
+      const height = rect.height;
+      const padding = { top: 30, right: 20, bottom: 35, left: 40 };
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
+      
+      const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+      const data = [72, 85, 78, 92, 89, 65, 58];
+      const maxValue = 100;
+      
+      ctx.clearRect(0, 0, width, height);
+      
+      // 绘制网格线
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.lineWidth = 1;
+      ctx.font = '11px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillStyle = '#86868B';
+      ctx.textAlign = 'right';
+      
+      for (let i = 0; i <= 4; i++) {
+        const y = padding.top + (chartHeight / 4) * i;
+        const value = maxValue - (maxValue / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(padding.left + chartWidth, y);
+        ctx.stroke();
+        ctx.fillText(value, padding.left - 8, y + 4);
+      }
+      
+      // 绘制X轴标签
+      ctx.textAlign = 'center';
+      const barWidth = chartWidth / days.length;
+      days.forEach((day, i) => {
+        ctx.fillText(day, padding.left + barWidth * i + barWidth / 2, height - 10);
+      });
+      
+      // 绘制柱状图
+      data.forEach((value, i) => {
+        const barHeight = (value / maxValue) * chartHeight;
+        const x = padding.left + barWidth * i;
+        const y = padding.top + chartHeight - barHeight;
+        const actualBarWidth = barWidth * 0.5;
+        const barX = x + (barWidth - actualBarWidth) / 2;
+        
+        const gradient = ctx.createLinearGradient(barX, y, barX, y + barHeight);
+        gradient.addColorStop(0, '#007AFF');
+        gradient.addColorStop(1, '#5AC8FA');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        const radius = 4;
+        ctx.moveTo(barX + radius, y);
+        ctx.lineTo(barX + actualBarWidth - radius, y);
+        ctx.quadraticCurveTo(barX + actualBarWidth, y, barX + actualBarWidth, y + radius);
+        ctx.lineTo(barX + actualBarWidth, y + barHeight);
+        ctx.lineTo(barX, y + barHeight);
+        ctx.lineTo(barX, y + radius);
+        ctx.quadraticCurveTo(barX, y, barX + radius, y);
+        ctx.closePath();
+        ctx.fill();
+      });
+    }
+    
+    window.addEventListener('load', drawTrendChart);
+    window.addEventListener('resize', drawTrendChart);
   </script>
 </body>
 </html>

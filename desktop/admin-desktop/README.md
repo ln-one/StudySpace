@@ -10,14 +10,14 @@
 
 | Axure 原型页面 | 模块 | 目标页面 |
 |---------------|------|---------|
-| 桌面管理员端-数据概览.html | dashboard | /modules/dashboard/pages/overview.html |
+| 桌面管理员端-数据概览.html | dashboard | /modules/dashboard/pages/overview.html (预约管理) |
 | 桌面管理员端-座位管理.html | seat-management | /modules/seat-management/pages/seat-list.html |
 | 桌面管理员端-设置.html | settings | /modules/settings/pages/index.html |
 
 ### 侧边栏菜单（完整）
 | 菜单项 | 模块目录 | 说明 |
 |-------|---------|------|
-| 数据概览 | /modules/dashboard/ | 数据统计面板 |
+| 预约管理 | /modules/dashboard/ | 座位预约管理面板 |
 | 任务 | /modules/task/ | 任务管理 |
 | 日历 | /modules/calendar/ | 日历视图 |
 | 学习记录 | /modules/study-record/ | 学习记录查看 |
@@ -62,7 +62,7 @@ admin-desktop/
 │       └── helpers.js            # 通用辅助函数
 │
 ├── /modules/                     # 业务模块（按功能拆分）
-│   ├── /dashboard/               # 数据概览模块
+│   ├── /dashboard/               # 预约管理模块
 │   ├── /task/                    # 任务模块
 │   ├── /calendar/                # 日历模块
 │   ├── /study-record/            # 学习记录模块

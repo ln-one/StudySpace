@@ -10,32 +10,9 @@
   <link rel="stylesheet" href="../../../core/components/navbar/style.css">
   <link rel="stylesheet" href="../../../core/components/search-bar/style.css">
   <link rel="stylesheet" href="../../../core/components/button/style.css">
-  <style>
-    .placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 60vh;
-      text-align: center;
-    }
-    .placeholder__icon {
-      font-size: 80px;
-      margin-bottom: 24px;
-      opacity: 0.3;
-    }
-    .placeholder__title {
-      font-size: 24px;
-      font-weight: 600;
-      color: #1D1D1F;
-      margin-bottom: 8px;
-    }
-    .placeholder__desc {
-      font-size: 15px;
-      color: #86868B;
-      margin-bottom: 32px;
-    }
-  </style>
+  <link rel="stylesheet" href="../../../core/components/filter-dropdown/style.css">
+  <link rel="stylesheet" href="../../../core/components/data-card/style.css">
+  <link rel="stylesheet" href="../styles/study-record.css">
 </head>
 <body>
   <div class="admin-layout">
@@ -46,19 +23,19 @@
       </div>
       <nav class="sidebar__nav">
         <a href="../../dashboard/pages/overview.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">数据概览</span>
+          <span class="sidebar__nav-text">预约管理</span>
+        </a>
+        <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">座位管理</span>
+        </a>
+        <a href="index.html" class="sidebar__nav-item sidebar__nav-item--active">
+          <span class="sidebar__nav-text">学习记录</span>
         </a>
         <a href="../../task/pages/index.html" class="sidebar__nav-item">
           <span class="sidebar__nav-text">任务</span>
         </a>
         <a href="../../calendar/pages/index.html" class="sidebar__nav-item">
           <span class="sidebar__nav-text">日历</span>
-        </a>
-        <a href="index.html" class="sidebar__nav-item sidebar__nav-item--active">
-          <span class="sidebar__nav-text">学习记录</span>
-        </a>
-        <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">座位管理</span>
         </a>
         <a href="../../settings/pages/index.html" class="sidebar__nav-item">
           <span class="sidebar__nav-text">管理员设置</span>
@@ -71,7 +48,7 @@
       <!-- 顶部导航 -->
       <header class="navbar navbar--fixed">
         <div class="search-bar">
-          <input type="text" class="search-bar__input" placeholder="搜索学习记录...">
+          <input type="text" class="search-bar__input" placeholder="搜索学生...">
         </div>
         <div class="navbar__actions">
           <button class="navbar__filter-btn">
@@ -85,14 +62,844 @@
 
       <!-- 页面内容 -->
       <main class="admin-layout__content">
-        <div class="placeholder">
-          <div class="placeholder__icon">📊</div>
-          <h1 class="placeholder__title">学习记录</h1>
-          <p class="placeholder__desc">学习时长统计与分析功能正在开发中</p>
-          <button class="btn btn--primary">敬请期待</button>
+        <!-- 筛选栏 -->
+        <div class="filter-bar">
+          <div class="filter-dropdown" id="periodDropdown">
+            <button class="filter-dropdown__trigger" onclick="toggleDropdown('periodDropdown')">
+              <span class="filter-dropdown__label">本周</span>
+              <span class="filter-dropdown__arrow">▾</span>
+            </button>
+            <div class="filter-dropdown__menu">
+              <div class="filter-dropdown__item">今日</div>
+              <div class="filter-dropdown__item filter-dropdown__item--active">本周</div>
+              <div class="filter-dropdown__item">本月</div>
+              <div class="filter-dropdown__item">本季度</div>
+              <div class="filter-dropdown__item">本年</div>
+            </div>
+          </div>
+          
+          <div class="filter-dropdown" id="gradeDropdown">
+            <button class="filter-dropdown__trigger" onclick="toggleDropdown('gradeDropdown')">
+              <span class="filter-dropdown__label">全部年级</span>
+              <span class="filter-dropdown__arrow">▾</span>
+            </button>
+            <div class="filter-dropdown__menu">
+              <div class="filter-dropdown__item filter-dropdown__item--active">全部年级</div>
+              <div class="filter-dropdown__item">大一</div>
+              <div class="filter-dropdown__item">大二</div>
+              <div class="filter-dropdown__item">大三</div>
+              <div class="filter-dropdown__item">大四</div>
+              <div class="filter-dropdown__item">研究生</div>
+            </div>
+          </div>
+          
+          <div class="filter-dropdown" id="majorDropdown">
+            <button class="filter-dropdown__trigger" onclick="toggleDropdown('majorDropdown')">
+              <span class="filter-dropdown__label">全部专业</span>
+              <span class="filter-dropdown__arrow">▾</span>
+            </button>
+            <div class="filter-dropdown__menu">
+              <div class="filter-dropdown__item filter-dropdown__item--active">全部专业</div>
+              <div class="filter-dropdown__item">计算机科学</div>
+              <div class="filter-dropdown__item">软件工程</div>
+              <div class="filter-dropdown__item">数据科学</div>
+              <div class="filter-dropdown__item">人工智能</div>
+              <div class="filter-dropdown__item">信息安全</div>
+            </div>
+          </div>
+          
+          <button class="btn btn--primary export-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 1a.5.5 0 0 1 .5.5v9.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 11.293V1.5A.5.5 0 0 1 8 1z"/>
+              <path d="M2 13.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+            导出报表
+          </button>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="stats-overview">
+          <div class="data-card">
+            <div class="data-card__header">
+              <span class="data-card__title">总学习时长</span>
+            </div>
+            <div class="data-card__value">1,248 小时</div>
+            <div class="data-card__footer">
+              <span class="data-card__trend data-card__trend--up">↑ 12%</span>
+              <span class="data-card__desc">较上周</span>
+            </div>
+          </div>
+          
+          <div class="data-card">
+            <div class="data-card__header">
+              <span class="data-card__title">活跃学生数</span>
+            </div>
+            <div class="data-card__value">89</div>
+            <div class="data-card__footer">
+              <span class="data-card__trend data-card__trend--up">↑ 8%</span>
+              <span class="data-card__desc">较上周</span>
+            </div>
+          </div>
+          
+          <div class="data-card">
+            <div class="data-card__header">
+              <span class="data-card__title">人均学习时长</span>
+            </div>
+            <div class="data-card__value">14.2 小时</div>
+            <div class="data-card__footer">
+              <span class="data-card__desc">人均/周</span>
+            </div>
+          </div>
+          
+          <div class="data-card">
+            <div class="data-card__header">
+              <span class="data-card__title">出勤率</span>
+            </div>
+            <div class="data-card__value">76%</div>
+            <div class="data-card__footer">
+              <span class="data-card__trend data-card__trend--up">↑ 5%</span>
+              <span class="data-card__desc">较上周</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 全校学习时长趋势图表 - 全宽 -->
+        <div class="chart-card" style="margin-bottom: 20px;">
+          <div class="chart-card__title">
+            <span>全校学习时长趋势</span>
+            <div class="chart-card__actions">
+              <button class="chart-card__action-btn chart-card__action-btn--active">按天</button>
+              <button class="chart-card__action-btn">按周</button>
+            </div>
+          </div>
+          <div class="chart-summary">
+            <div class="chart-summary__item">
+              <span class="chart-summary__label">本周总时长</span>
+              <span class="chart-summary__value">1,143h</span>
+            </div>
+            <div class="chart-summary__item">
+              <span class="chart-summary__label">日均时长</span>
+              <span class="chart-summary__value">163.3h</span>
+            </div>
+            <div class="chart-summary__item">
+              <span class="chart-summary__label">人均时长</span>
+              <span class="chart-summary__value">14.2h</span>
+            </div>
+          </div>
+          <canvas id="trendChart" style="width: 100%; height: 280px;"></canvas>
+        </div>
+
+        <!-- 排行榜区域 - 横向排列 -->
+        <div class="ranking-grid">
+          <div class="chart-card">
+            <div class="chart-card__title">
+              <span>学习时长排行 TOP 5</span>
+              <button class="chart-card__action-btn">查看全部</button>
+            </div>
+            <div class="ranking-list ranking-list--compact">
+              <div class="ranking-item">
+                <div class="ranking-item__rank ranking-item__rank--gold">1</div>
+                <div class="ranking-item__info">
+                  <div class="ranking-item__name">张晓明</div>
+                  <div class="ranking-item__dept">计算机科学 · 大三</div>
+                </div>
+                <div class="ranking-item__value">42h</div>
+              </div>
+              <div class="ranking-item">
+                <div class="ranking-item__rank ranking-item__rank--silver">2</div>
+                <div class="ranking-item__info">
+                  <div class="ranking-item__name">李思雨</div>
+                  <div class="ranking-item__dept">软件工程 · 大二</div>
+                </div>
+                <div class="ranking-item__value">38h</div>
+              </div>
+              <div class="ranking-item">
+                <div class="ranking-item__rank ranking-item__rank--bronze">3</div>
+                <div class="ranking-item__info">
+                  <div class="ranking-item__name">王浩然</div>
+                  <div class="ranking-item__dept">数据科学 · 大三</div>
+                </div>
+                <div class="ranking-item__value">35h</div>
+              </div>
+              <div class="ranking-item">
+                <div class="ranking-item__rank">4</div>
+                <div class="ranking-item__info">
+                  <div class="ranking-item__name">赵欣怡</div>
+                  <div class="ranking-item__dept">人工智能 · 大四</div>
+                </div>
+                <div class="ranking-item__value">32h</div>
+              </div>
+              <div class="ranking-item">
+                <div class="ranking-item__rank">5</div>
+                <div class="ranking-item__info">
+                  <div class="ranking-item__name">钱宇轩</div>
+                  <div class="ranking-item__dept">计算机科学 · 大二</div>
+                </div>
+                <div class="ranking-item__value">30h</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="chart-card">
+            <div class="chart-card__title">
+              <span>出勤率排行 TOP 5</span>
+              <button class="chart-card__action-btn">查看全部</button>
+            </div>
+            <div class="ranking-list ranking-list--compact">
+              <div class="ranking-item">
+                <div class="ranking-item__rank ranking-item__rank--gold">1</div>
+                <div class="ranking-item__info">
+                  <div class="ranking-item__name">孙梦琪</div>
+                  <div class="ranking-item__dept">软件工程 · 大三</div>
+                </div>
+                <div class="ranking-item__value">100%</div>
+              </div>
+              <div class="ranking-item">
+                <div class="ranking-item__rank ranking-item__rank--silver">2</div>
+                <div class="ranking-item__info">
+                  <div class="ranking-item__name">张晓明</div>
+                  <div class="ranking-item__dept">计算机科学 · 大三</div>
+                </div>
+                <div class="ranking-item__value">100%</div>
+              </div>
+              <div class="ranking-item">
+                <div class="ranking-item__rank ranking-item__rank--bronze">3</div>
+                <div class="ranking-item__info">
+                  <div class="ranking-item__name">周子涵</div>
+                  <div class="ranking-item__dept">信息安全 · 大一</div>
+                </div>
+                <div class="ranking-item__value">95%</div>
+              </div>
+              <div class="ranking-item">
+                <div class="ranking-item__rank">4</div>
+                <div class="ranking-item__info">
+                  <div class="ranking-item__name">李思雨</div>
+                  <div class="ranking-item__dept">软件工程 · 大二</div>
+                </div>
+                <div class="ranking-item__value">92%</div>
+              </div>
+              <div class="ranking-item">
+                <div class="ranking-item__rank">5</div>
+                <div class="ranking-item__info">
+                  <div class="ranking-item__name">吴佳怡</div>
+                  <div class="ranking-item__dept">数据科学 · 研究生</div>
+                </div>
+                <div class="ranking-item__value">90%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 学习时段分布 -->
+        <div class="chart-card" style="margin-bottom: 20px;">
+          <div class="chart-card__title">
+            <span>学习时段分布</span>
+            <div class="chart-card__actions">
+              <button class="chart-card__action-btn chart-card__action-btn--active">本周</button>
+              <button class="chart-card__action-btn">本月</button>
+            </div>
+          </div>
+          <div class="heatmap-wrapper">
+            <div class="heatmap-legend">
+              <span class="heatmap-legend__text">低</span>
+              <div class="heatmap-legend__bar"></div>
+              <span class="heatmap-legend__text">高</span>
+            </div>
+            <table class="heatmap-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>8-9</th>
+                  <th>9-10</th>
+                  <th>10-11</th>
+                  <th>11-12</th>
+                  <th>12-13</th>
+                  <th>13-14</th>
+                  <th>14-15</th>
+                  <th>15-16</th>
+                  <th>16-17</th>
+                  <th>17-18</th>
+                  <th>18-19</th>
+                  <th>19-20</th>
+                  <th>20-21</th>
+                  <th>21-22</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="heatmap-table__day">周一</td>
+                  <td class="heatmap-cell" data-value="25">25%</td>
+                  <td class="heatmap-cell" data-value="45">45%</td>
+                  <td class="heatmap-cell" data-value="72">72%</td>
+                  <td class="heatmap-cell" data-value="85">85%</td>
+                  <td class="heatmap-cell" data-value="40">40%</td>
+                  <td class="heatmap-cell" data-value="55">55%</td>
+                  <td class="heatmap-cell" data-value="78">78%</td>
+                  <td class="heatmap-cell" data-value="92">92%</td>
+                  <td class="heatmap-cell" data-value="88">88%</td>
+                  <td class="heatmap-cell" data-value="75">75%</td>
+                  <td class="heatmap-cell" data-value="68">68%</td>
+                  <td class="heatmap-cell" data-value="52">52%</td>
+                  <td class="heatmap-cell" data-value="35">35%</td>
+                  <td class="heatmap-cell" data-value="18">18%</td>
+                </tr>
+                <tr>
+                  <td class="heatmap-table__day">周二</td>
+                  <td class="heatmap-cell" data-value="28">28%</td>
+                  <td class="heatmap-cell" data-value="52">52%</td>
+                  <td class="heatmap-cell" data-value="78">78%</td>
+                  <td class="heatmap-cell" data-value="88">88%</td>
+                  <td class="heatmap-cell" data-value="42">42%</td>
+                  <td class="heatmap-cell" data-value="58">58%</td>
+                  <td class="heatmap-cell" data-value="82">82%</td>
+                  <td class="heatmap-cell" data-value="95">95%</td>
+                  <td class="heatmap-cell" data-value="90">90%</td>
+                  <td class="heatmap-cell" data-value="78">78%</td>
+                  <td class="heatmap-cell" data-value="65">65%</td>
+                  <td class="heatmap-cell" data-value="48">48%</td>
+                  <td class="heatmap-cell" data-value="32">32%</td>
+                  <td class="heatmap-cell" data-value="15">15%</td>
+                </tr>
+                <tr>
+                  <td class="heatmap-table__day">周三</td>
+                  <td class="heatmap-cell" data-value="22">22%</td>
+                  <td class="heatmap-cell" data-value="48">48%</td>
+                  <td class="heatmap-cell" data-value="70">70%</td>
+                  <td class="heatmap-cell" data-value="82">82%</td>
+                  <td class="heatmap-cell" data-value="38">38%</td>
+                  <td class="heatmap-cell" data-value="52">52%</td>
+                  <td class="heatmap-cell" data-value="75">75%</td>
+                  <td class="heatmap-cell" data-value="88">88%</td>
+                  <td class="heatmap-cell" data-value="85">85%</td>
+                  <td class="heatmap-cell" data-value="72">72%</td>
+                  <td class="heatmap-cell" data-value="62">62%</td>
+                  <td class="heatmap-cell" data-value="45">45%</td>
+                  <td class="heatmap-cell" data-value="28">28%</td>
+                  <td class="heatmap-cell" data-value="12">12%</td>
+                </tr>
+                <tr>
+                  <td class="heatmap-table__day">周四</td>
+                  <td class="heatmap-cell" data-value="30">30%</td>
+                  <td class="heatmap-cell" data-value="55">55%</td>
+                  <td class="heatmap-cell" data-value="80">80%</td>
+                  <td class="heatmap-cell" data-value="92">92%</td>
+                  <td class="heatmap-cell" data-value="45">45%</td>
+                  <td class="heatmap-cell" data-value="62">62%</td>
+                  <td class="heatmap-cell" data-value="85">85%</td>
+                  <td class="heatmap-cell" data-value="98">98%</td>
+                  <td class="heatmap-cell" data-value="95">95%</td>
+                  <td class="heatmap-cell" data-value="82">82%</td>
+                  <td class="heatmap-cell" data-value="70">70%</td>
+                  <td class="heatmap-cell" data-value="55">55%</td>
+                  <td class="heatmap-cell" data-value="38">38%</td>
+                  <td class="heatmap-cell" data-value="20">20%</td>
+                </tr>
+                <tr>
+                  <td class="heatmap-table__day">周五</td>
+                  <td class="heatmap-cell" data-value="32">32%</td>
+                  <td class="heatmap-cell" data-value="58">58%</td>
+                  <td class="heatmap-cell" data-value="82">82%</td>
+                  <td class="heatmap-cell" data-value="90">90%</td>
+                  <td class="heatmap-cell" data-value="48">48%</td>
+                  <td class="heatmap-cell" data-value="65">65%</td>
+                  <td class="heatmap-cell" data-value="88">88%</td>
+                  <td class="heatmap-cell" data-value="96">96%</td>
+                  <td class="heatmap-cell" data-value="92">92%</td>
+                  <td class="heatmap-cell" data-value="80">80%</td>
+                  <td class="heatmap-cell" data-value="65">65%</td>
+                  <td class="heatmap-cell" data-value="42">42%</td>
+                  <td class="heatmap-cell" data-value="25">25%</td>
+                  <td class="heatmap-cell" data-value="10">10%</td>
+                </tr>
+                <tr>
+                  <td class="heatmap-table__day">周六</td>
+                  <td class="heatmap-cell" data-value="15">15%</td>
+                  <td class="heatmap-cell" data-value="28">28%</td>
+                  <td class="heatmap-cell" data-value="45">45%</td>
+                  <td class="heatmap-cell" data-value="55">55%</td>
+                  <td class="heatmap-cell" data-value="35">35%</td>
+                  <td class="heatmap-cell" data-value="42">42%</td>
+                  <td class="heatmap-cell" data-value="58">58%</td>
+                  <td class="heatmap-cell" data-value="65">65%</td>
+                  <td class="heatmap-cell" data-value="60">60%</td>
+                  <td class="heatmap-cell" data-value="52">52%</td>
+                  <td class="heatmap-cell" data-value="45">45%</td>
+                  <td class="heatmap-cell" data-value="32">32%</td>
+                  <td class="heatmap-cell" data-value="18">18%</td>
+                  <td class="heatmap-cell" data-value="8">8%</td>
+                </tr>
+                <tr>
+                  <td class="heatmap-table__day">周日</td>
+                  <td class="heatmap-cell" data-value="12">12%</td>
+                  <td class="heatmap-cell" data-value="22">22%</td>
+                  <td class="heatmap-cell" data-value="38">38%</td>
+                  <td class="heatmap-cell" data-value="48">48%</td>
+                  <td class="heatmap-cell" data-value="30">30%</td>
+                  <td class="heatmap-cell" data-value="38">38%</td>
+                  <td class="heatmap-cell" data-value="52">52%</td>
+                  <td class="heatmap-cell" data-value="58">58%</td>
+                  <td class="heatmap-cell" data-value="55">55%</td>
+                  <td class="heatmap-cell" data-value="48">48%</td>
+                  <td class="heatmap-cell" data-value="40">40%</td>
+                  <td class="heatmap-cell" data-value="28">28%</td>
+                  <td class="heatmap-cell" data-value="15">15%</td>
+                  <td class="heatmap-cell" data-value="5">5%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 详细学习记录表格 -->
+        <div class="chart-card work-records-table">
+          <div class="chart-card__title">
+            <span>详细学习记录</span>
+            <div class="chart-card__actions">
+              <button class="chart-card__action-btn">导出 Excel</button>
+            </div>
+          </div>
+          
+          <table class="records-table">
+            <thead class="records-table__header">
+              <tr>
+                <th>学生</th>
+                <th>专业年级</th>
+                <th>学习日期</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>学习时长</th>
+                <th>座位号</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody class="records-table__body">
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell__avatar">张</div>
+                    <div class="user-cell__info">
+                      <div class="user-cell__name">张晓明</div>
+                      <div class="user-cell__id">学号: 2021112573</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="dept-tag">计算机科学 · 大三</span></td>
+                <td class="date-cell">2024-12-12</td>
+                <td class="date-cell">09:00</td>
+                <td class="date-cell">18:30</td>
+                <td class="duration-cell">9.5h</td>
+                <td class="date-cell">A-12</td>
+                <td>
+                  <div class="action-cell">
+                    <button class="action-btn">详情</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell__avatar">李</div>
+                    <div class="user-cell__info">
+                      <div class="user-cell__name">李思雨</div>
+                      <div class="user-cell__id">学号: 2022115847</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="dept-tag">软件工程 · 大二</span></td>
+                <td class="date-cell">2024-12-12</td>
+                <td class="date-cell">08:30</td>
+                <td class="date-cell">17:45</td>
+                <td class="duration-cell">9.25h</td>
+                <td class="date-cell">B-08</td>
+                <td>
+                  <div class="action-cell">
+                    <button class="action-btn">详情</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell__avatar">王</div>
+                    <div class="user-cell__info">
+                      <div class="user-cell__name">王浩然</div>
+                      <div class="user-cell__id">学号: 2021113264</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="dept-tag">数据科学 · 大三</span></td>
+                <td class="date-cell">2024-12-12</td>
+                <td class="date-cell">09:15</td>
+                <td class="date-cell">19:00</td>
+                <td class="duration-cell">9.75h</td>
+                <td class="date-cell">A-15</td>
+                <td>
+                  <div class="action-cell">
+                    <button class="action-btn">详情</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell__avatar">赵</div>
+                    <div class="user-cell__info">
+                      <div class="user-cell__name">赵欣怡</div>
+                      <div class="user-cell__id">学号: 2020114892</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="dept-tag">人工智能 · 大四</span></td>
+                <td class="date-cell">2024-12-12</td>
+                <td class="date-cell">10:00</td>
+                <td class="date-cell">18:00</td>
+                <td class="duration-cell">8h</td>
+                <td class="date-cell">C-05</td>
+                <td>
+                  <div class="action-cell">
+                    <button class="action-btn">详情</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell__avatar">钱</div>
+                    <div class="user-cell__info">
+                      <div class="user-cell__name">钱宇轩</div>
+                      <div class="user-cell__id">学号: 2022116235</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="dept-tag">计算机科学 · 大二</span></td>
+                <td class="date-cell">2024-12-12</td>
+                <td class="date-cell">08:45</td>
+                <td class="date-cell">17:30</td>
+                <td class="duration-cell">8.75h</td>
+                <td class="date-cell">A-20</td>
+                <td>
+                  <div class="action-cell">
+                    <button class="action-btn">详情</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell__avatar">孙</div>
+                    <div class="user-cell__info">
+                      <div class="user-cell__name">孙梦琪</div>
+                      <div class="user-cell__id">学号: 2021114578</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="dept-tag">软件工程 · 大三</span></td>
+                <td class="date-cell">2024-12-12</td>
+                <td class="date-cell">09:30</td>
+                <td class="date-cell">18:15</td>
+                <td class="duration-cell">8.75h</td>
+                <td class="date-cell">B-12</td>
+                <td>
+                  <div class="action-cell">
+                    <button class="action-btn">详情</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell__avatar">周</div>
+                    <div class="user-cell__info">
+                      <div class="user-cell__name">周子涵</div>
+                      <div class="user-cell__id">学号: 2023112573</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="dept-tag">信息安全 · 大一</span></td>
+                <td class="date-cell">2024-12-11</td>
+                <td class="date-cell">09:00</td>
+                <td class="date-cell">17:00</td>
+                <td class="duration-cell">8h</td>
+                <td class="date-cell">C-10</td>
+                <td>
+                  <div class="action-cell">
+                    <button class="action-btn">详情</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-cell__avatar">吴</div>
+                    <div class="user-cell__info">
+                      <div class="user-cell__name">吴佳怡</div>
+                      <div class="user-cell__id">学号: 2023210156</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="dept-tag">数据科学 · 研究生</span></td>
+                <td class="date-cell">2024-12-11</td>
+                <td class="date-cell">10:00</td>
+                <td class="date-cell">19:30</td>
+                <td class="duration-cell">9.5h</td>
+                <td class="date-cell">A-18</td>
+                <td>
+                  <div class="action-cell">
+                    <button class="action-btn">详情</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <!-- 分页 -->
+          <div class="pagination">
+            <div class="pagination__info">显示 1-8 条，共 156 条记录</div>
+            <div class="pagination__controls">
+              <button class="pagination__btn" disabled>上一页</button>
+              <button class="pagination__btn pagination__btn--active">1</button>
+              <button class="pagination__btn">2</button>
+              <button class="pagination__btn">3</button>
+              <button class="pagination__btn">4</button>
+              <button class="pagination__btn">5</button>
+              <button class="pagination__btn">下一页</button>
+            </div>
+          </div>
         </div>
       </main>
     </div>
   </div>
+
+  <script>
+    function toggleDropdown(id) {
+      const dropdown = document.getElementById(id);
+      const isOpen = dropdown.classList.contains('filter-dropdown--open');
+      
+      document.querySelectorAll('.filter-dropdown').forEach(d => {
+        d.classList.remove('filter-dropdown--open');
+      });
+      
+      if (!isOpen) {
+        dropdown.classList.add('filter-dropdown--open');
+      }
+    }
+    
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.filter-dropdown')) {
+        document.querySelectorAll('.filter-dropdown').forEach(d => {
+          d.classList.remove('filter-dropdown--open');
+        });
+      }
+    });
+    
+    document.querySelectorAll('.filter-dropdown__item').forEach(item => {
+      item.addEventListener('click', function() {
+        const dropdown = this.closest('.filter-dropdown');
+        const label = dropdown.querySelector('.filter-dropdown__label');
+        
+        dropdown.querySelectorAll('.filter-dropdown__item').forEach(i => {
+          i.classList.remove('filter-dropdown__item--active');
+        });
+        this.classList.add('filter-dropdown__item--active');
+        label.textContent = this.textContent;
+        dropdown.classList.remove('filter-dropdown--open');
+      });
+    });
+
+    // 绘制学习时长趋势图表
+    function drawTrendChart() {
+      const canvas = document.getElementById('trendChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      
+      // 设置 canvas 实际尺寸
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      
+      const width = rect.width;
+      const height = rect.height;
+      const padding = { top: 40, right: 40, bottom: 40, left: 50 };
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
+      
+      // 模拟数据 - 本周7天的全校总学习时长
+      const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+      const data = [156, 178, 165, 189, 172, 145, 138]; // 全校总学习时长（小时）
+      const maxValue = Math.max(...data);
+      const yAxisMax = Math.ceil(maxValue / 50) * 50 + 50; // 向上取整到50的倍数
+      
+      // 清空画布
+      ctx.clearRect(0, 0, width, height);
+      
+      // 绘制网格线和Y轴标签
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.lineWidth = 1;
+      ctx.font = '12px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+      ctx.fillStyle = '#86868B';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      
+      const ySteps = 4;
+      for (let i = 0; i <= ySteps; i++) {
+        const y = padding.top + (chartHeight / ySteps) * i;
+        const value = Math.round(yAxisMax - (yAxisMax / ySteps) * i);
+        
+        // 绘制网格线
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(padding.left + chartWidth, y);
+        ctx.stroke();
+        
+        // 绘制Y轴标签
+        ctx.fillText(value + 'h', padding.left - 8, y);
+      }
+      
+      // 绘制X轴标签
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      const barWidth = chartWidth / days.length;
+      
+      days.forEach((day, index) => {
+        const x = padding.left + barWidth * index + barWidth / 2;
+        ctx.fillText(day, x, padding.top + chartHeight + 12);
+      });
+      
+      // 绘制柱状图
+      data.forEach((value, index) => {
+        const barHeight = (value / yAxisMax) * chartHeight;
+        const x = padding.left + barWidth * index;
+        const y = padding.top + chartHeight - barHeight;
+        const actualBarWidth = barWidth * 0.5;
+        const barX = x + (barWidth - actualBarWidth) / 2;
+        
+        // 创建渐变
+        const gradient = ctx.createLinearGradient(barX, y, barX, y + barHeight);
+        gradient.addColorStop(0, '#007AFF');
+        gradient.addColorStop(1, '#5AC8FA');
+        
+        // 绘制柱子（圆角）
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        const radius = 6;
+        ctx.moveTo(barX + radius, y);
+        ctx.lineTo(barX + actualBarWidth - radius, y);
+        ctx.quadraticCurveTo(barX + actualBarWidth, y, barX + actualBarWidth, y + radius);
+        ctx.lineTo(barX + actualBarWidth, y + barHeight);
+        ctx.lineTo(barX, y + barHeight);
+        ctx.lineTo(barX, y + radius);
+        ctx.quadraticCurveTo(barX, y, barX + radius, y);
+        ctx.closePath();
+        ctx.fill();
+        
+        // 绘制数值标签
+        ctx.fillStyle = '#1D1D1F';
+        ctx.font = '600 13px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(value + 'h', barX + actualBarWidth / 2, y - 6);
+      });
+      
+      // 绘制平滑曲线
+      ctx.strokeStyle = '#FF9500';
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      
+      // 使用贝塞尔曲线绘制平滑折线
+      ctx.beginPath();
+      const points = data.map((value, index) => ({
+        x: padding.left + barWidth * index + barWidth / 2,
+        y: padding.top + chartHeight - (value / yAxisMax) * chartHeight
+      }));
+      
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        const xc = (points[i].x + points[i - 1].x) / 2;
+        const yc = (points[i].y + points[i - 1].y) / 2;
+        ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, xc, yc);
+      }
+      ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+      ctx.stroke();
+      
+      // 绘制折线上的圆点
+      points.forEach((point) => {
+        // 白色填充
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 橙色边框
+        ctx.strokeStyle = '#FF9500';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+    }
+    
+    // 绘制座位使用热力图
+    function drawHeatmap() {
+      const grid = document.getElementById('heatmapGrid');
+      if (!grid) return;
+      
+      // 清空现有内容
+      grid.innerHTML = '';
+      
+      // 模拟数据：7天 x 14小时（8:00-21:00）
+      const heatmapData = [
+        // 周一
+        [0.3, 0.5, 0.7, 0.8, 0.6, 0.4, 0.6, 0.8, 0.9, 0.85, 0.7, 0.5, 0.3, 0.2],
+        // 周二
+        [0.35, 0.55, 0.75, 0.85, 0.65, 0.45, 0.65, 0.85, 0.92, 0.88, 0.72, 0.52, 0.32, 0.22],
+        // 周三
+        [0.32, 0.52, 0.72, 0.82, 0.62, 0.42, 0.62, 0.82, 0.88, 0.84, 0.68, 0.48, 0.28, 0.18],
+        // 周四
+        [0.38, 0.58, 0.78, 0.88, 0.68, 0.48, 0.68, 0.88, 0.95, 0.9, 0.75, 0.55, 0.35, 0.25],
+        // 周五
+        [0.4, 0.6, 0.8, 0.9, 0.7, 0.5, 0.7, 0.9, 0.98, 0.92, 0.78, 0.58, 0.38, 0.28],
+        // 周六
+        [0.2, 0.35, 0.5, 0.6, 0.55, 0.45, 0.5, 0.6, 0.65, 0.6, 0.5, 0.4, 0.25, 0.15],
+        // 周日
+        [0.15, 0.3, 0.45, 0.55, 0.5, 0.4, 0.45, 0.55, 0.6, 0.55, 0.45, 0.35, 0.2, 0.1]
+      ];
+      
+      // 生成热力图格子
+      heatmapData.forEach((row, dayIndex) => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'heatmap__row';
+        
+        row.forEach((value, hourIndex) => {
+          const cell = document.createElement('div');
+          cell.className = 'heatmap__cell';
+          
+          // 根据值设置颜色（蓝色渐变）
+          const hue = 210; // 蓝色
+          const saturation = 80 + value * 20;
+          const lightness = 95 - value * 50;
+          cell.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+          
+          // 添加 tooltip
+          const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+          const hour = 8 + hourIndex;
+          cell.title = `${days[dayIndex]} ${hour}:00 - ${hour + 1}:00\n使用率: ${Math.round(value * 100)}%`;
+          
+          rowDiv.appendChild(cell);
+        });
+        
+        grid.appendChild(rowDiv);
+      });
+    }
+    
+    // 页面加载完成后绘制图表
+    window.addEventListener('load', () => {
+      drawTrendChart();
+      drawHeatmap();
+    });
+    window.addEventListener('resize', drawTrendChart);
+  </script>
 </body>
 </html>
