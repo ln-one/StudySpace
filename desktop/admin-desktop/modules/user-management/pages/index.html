@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户管理 - StudySpace 管理后台</title>
+  <link rel="stylesheet" href="../../../core/styles/main.css">
+  <link rel="stylesheet" href="../../../core/layouts/admin-layout/style.css">
+  <link rel="stylesheet" href="../../../core/components/sidebar/style.css">
+  <link rel="stylesheet" href="../../../core/components/navbar/style.css">
+  <link rel="stylesheet" href="../../../core/components/search-bar/style.css">
+  <link rel="stylesheet" href="../../../core/components/button/style.css">
+  <link rel="stylesheet" href="../../../core/components/filter-dropdown/style.css">
+  <link rel="stylesheet" href="../../../core/components/data-card/style.css">
+  <link rel="stylesheet" href="../styles/user-management.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <span class="sidebar__logo-text">StudySpace</span>
+      </div>
+      <nav class="sidebar__nav">
+        <a href="../../dashboard/pages/overview.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">预约管理</span>
+        </a>
+        <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">座位管理</span>
+        </a>
+        <a href="../../study-record/pages/index.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">学习记录</span>
+        </a>
+        <a href="index.html" class="sidebar__nav-item sidebar__nav-item--active">
+          <span class="sidebar__nav-text">用户管理</span>
+        </a>
+        <a href="../../announcement/pages/index.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">公告通知</span>
+        </a>
+        <a href="../../settings/pages/index.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">管理员设置</span>
+        </a>
+      </nav>
+    </aside>
+
+    <div class="admin-layout__main">
+      <header class="navbar navbar--fixed">
+        <div class="search-bar">
+          <input type="text" class="search-bar__input" placeholder="搜索学生姓名、学号...">
+        </div>
+        <div class="navbar__actions">
+          <button class="btn btn--secondary btn--sm">导出数据</button>
+          <button class="btn btn--primary btn--sm">+ 添加用户</button>
+        </div>
+      </header>
+
+      <main class="admin-layout__content">
+        <!-- Tab 切换 -->
+        <div class="tab-nav">
+          <button class="tab-nav__item tab-nav__item--active" data-tab="users">学生列表</button>
+          <button class="tab-nav__item" data-tab="violations">违约处理</button>
+          <button class="tab-nav__item" data-tab="permissions">权限管理</button>
+        </div>
+
+        <!-- 学生列表 Tab -->
+        <div class="tab-content tab-content--active" id="usersTab">
+          <div class="stats-grid">
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">总用户数</span>
+                <span class="data-card__icon">👥</span>
+              </div>
+              <div class="data-card__value">1,234</div>
+              <div class="data-card__footer">
+                <span class="data-card__trend data-card__trend--up">↑ 23</span>
+                <span class="data-card__desc">本月新增</span>
+              </div>
+            </div>
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">活跃用户</span>
+                <span class="data-card__icon">✨</span>
+              </div>
+              <div class="data-card__value">892</div>
+              <div class="data-card__footer">
+                <span class="data-card__desc">近7天有预约</span>
+              </div>
+            </div>
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">VIP用户</span>
+                <span class="data-card__icon">⭐</span>
+              </div>
+              <div class="data-card__value">156</div>
+              <div class="data-card__footer">
+                <span class="data-card__desc">享有优先预约权</span>
+              </div>
+            </div>
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">黑名单</span>
+                <span class="data-card__icon">🚫</span>
+              </div>
+              <div class="data-card__value">8</div>
+              <div class="data-card__footer">
+                <span class="data-card__desc">禁止预约中</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-dropdown" id="statusDropdown">
+              <button class="filter-dropdown__trigger" onclick="toggleDropdown('statusDropdown')">
+                <span class="filter-dropdown__label">全部状态</span>
+                <span class="filter-dropdown__arrow">▾</span>
+              </button>
+              <div class="filter-dropdown__menu">
+                <div class="filter-dropdown__item filter-dropdown__item--active">全部状态</div>
+                <div class="filter-dropdown__item">正常</div>
+                <div class="filter-dropdown__item">VIP</div>
+                <div class="filter-dropdown__item">警告中</div>
+                <div class="filter-dropdown__item">已禁用</div>
+              </div>
+            </div>
+            <div class="filter-dropdown" id="gradeDropdown">
+              <button class="filter-dropdown__trigger" onclick="toggleDropdown('gradeDropdown')">
+                <span class="filter-dropdown__label">全部年级</span>
+                <span class="filter-dropdown__arrow">▾</span>
+              </button>
+              <div class="filter-dropdown__menu">
+                <div class="filter-dropdown__item filter-dropdown__item--active">全部年级</div>
+                <div class="filter-dropdown__item">大一</div>
+                <div class="filter-dropdown__item">大二</div>
+                <div class="filter-dropdown__item">大三</div>
+                <div class="filter-dropdown__item">大四</div>
+                <div class="filter-dropdown__item">研究生</div>
+              </div>
+            </div>
+            <div class="filter-dropdown" id="violationDropdown">
+              <button class="filter-dropdown__trigger" onclick="toggleDropdown('violationDropdown')">
+                <span class="filter-dropdown__label">违约记录</span>
+                <span class="filter-dropdown__arrow">▾</span>
+              </button>
+              <div class="filter-dropdown__menu">
+                <div class="filter-dropdown__item filter-dropdown__item--active">全部</div>
+                <div class="filter-dropdown__item">无违约</div>
+                <div class="filter-dropdown__item">1-2次</div>
+                <div class="filter-dropdown__item">3次以上</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="user-list-card">
+            <table class="user-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" class="checkbox-all"></th>
+                  <th>用户信息</th>
+                  <th>学号</th>
+                  <th>专业年级</th>
+                  <th>状态</th>
+                  <th>累计学习</th>
+                  <th>违约次数</th>
+                  <th>最近活跃</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onclick="openUserDetail('张晓明')">
+                  <td><input type="checkbox" onclick="event.stopPropagation()"></td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-cell__avatar">张</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">张晓明</span>
+                        <span class="user-cell__email">zhangxm@edu.cn</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>2021112573</td>
+                  <td><span class="grade-tag">计算机科学 · 大三</span></td>
+                  <td><span class="status-badge status-badge--vip">VIP</span></td>
+                  <td class="highlight-cell">142h</td>
+                  <td>0次</td>
+                  <td>今天 14:30</td>
+                  <td>
+                    <div class="action-group">
+                      <button class="action-btn" onclick="event.stopPropagation();openUserDetail('张晓明')">详情</button>
+                      <button class="action-btn action-btn--more" onclick="event.stopPropagation()">⋯</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr onclick="openUserDetail('李思雨')">
+                  <td><input type="checkbox" onclick="event.stopPropagation()"></td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-cell__avatar">李</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">李思雨</span>
+                        <span class="user-cell__email">lisy@edu.cn</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>2022115847</td>
+                  <td><span class="grade-tag">软件工程 · 大二</span></td>
+                  <td><span class="status-badge status-badge--normal">正常</span></td>
+                  <td class="highlight-cell">98h</td>
+                  <td>1次</td>
+                  <td>今天 10:15</td>
+                  <td>
+                    <div class="action-group">
+                      <button class="action-btn" onclick="event.stopPropagation();openUserDetail('李思雨')">详情</button>
+                      <button class="action-btn action-btn--more" onclick="event.stopPropagation()">⋯</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr onclick="openUserDetail('赵欣怡')">
+                  <td><input type="checkbox" onclick="event.stopPropagation()"></td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-cell__avatar user-cell__avatar--warning">赵</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">赵欣怡</span>
+                        <span class="user-cell__email">zhaoxy@edu.cn</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>2020114892</td>
+                  <td><span class="grade-tag">人工智能 · 大四</span></td>
+                  <td><span class="status-badge status-badge--warning">警告中</span></td>
+                  <td class="highlight-cell">85h</td>
+                  <td class="warning-cell">3次</td>
+                  <td>3天前</td>
+                  <td>
+                    <div class="action-group">
+                      <button class="action-btn" onclick="event.stopPropagation();openUserDetail('赵欣怡')">详情</button>
+                      <button class="action-btn action-btn--more" onclick="event.stopPropagation()">⋯</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr onclick="openUserDetail('陈小刚')">
+                  <td><input type="checkbox" onclick="event.stopPropagation()"></td>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-cell__avatar user-cell__avatar--disabled">陈</div>
+                      <div class="user-cell__info">
+                        <span class="user-cell__name">陈小刚</span>
+                        <span class="user-cell__email">chenxg@edu.cn</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>2022118956</td>
+                  <td><span class="grade-tag">信息安全 · 大二</span></td>
+                  <td><span class="status-badge status-badge--disabled">已禁用</span></td>
+                  <td class="highlight-cell">12h</td>
+                  <td class="danger-cell">5次</td>
+                  <td>7天前</td>
+                  <td>
+                    <div class="action-group">
+                      <button class="action-btn action-btn--primary" onclick="event.stopPropagation()">解封</button>
+                      <button class="action-btn action-btn--more" onclick="event.stopPropagation()">⋯</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="pagination">
+              <div class="pagination__info">显示 1-4 条，共 1,234 条记录</div>
+              <div class="pagination__controls">
+                <button class="pagination__btn" disabled>上一页</button>
+                <button class="pagination__btn pagination__btn--active">1</button>
+                <button class="pagination__btn">2</button>
+                <button class="pagination__btn">3</button>
+                <button class="pagination__btn">...</button>
+                <button class="pagination__btn">309</button>
+                <button class="pagination__btn">下一页</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 违约处理 Tab -->
+        <div class="tab-content" id="violationsTab">
+          <div class="stats-grid stats-grid--3">
+            <div class="data-card data-card--warning">
+              <div class="data-card__header">
+                <span class="data-card__title">待处理违约</span>
+                <span class="data-card__icon">⚠️</span>
+              </div>
+              <div class="data-card__value">12</div>
+              <div class="data-card__footer">
+                <span class="data-card__desc">需要审核处理</span>
+              </div>
+            </div>
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">本月违约</span>
+                <span class="data-card__icon">📋</span>
+              </div>
+              <div class="data-card__value">28</div>
+              <div class="data-card__footer">
+                <span class="data-card__trend data-card__trend--down">↓ 8</span>
+                <span class="data-card__desc">较上月</span>
+              </div>
+            </div>
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">累计处理</span>
+                <span class="data-card__icon">✅</span>
+              </div>
+              <div class="data-card__value">156</div>
+              <div class="data-card__footer">
+                <span class="data-card__desc">历史违约记录</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="violation-list">
+            <div class="violation-item violation-item--pending">
+              <div class="violation-item__header">
+                <div class="violation-item__user">
+                  <div class="user-cell__avatar user-cell__avatar--warning">赵</div>
+                  <div class="violation-item__user-info">
+                    <span class="violation-item__name">赵欣怡</span>
+                    <span class="violation-item__id">2020114892 · 人工智能 · 大四</span>
+                  </div>
+                </div>
+                <span class="violation-status violation-status--pending">待处理</span>
+              </div>
+              <div class="violation-item__content">
+                <div class="violation-item__type">
+                  <span class="violation-type-tag">爽约未到</span>
+                  <span class="violation-item__time">2024-12-10 14:00 - 16:00</span>
+                </div>
+                <p class="violation-item__desc">预约A区-23号座位，未在规定时间内签到，系统自动记录违约</p>
+                <div class="violation-item__history">
+                  <span>历史违约：3次</span>
+                  <span>·</span>
+                  <span>当前状态：警告中</span>
+                </div>
+              </div>
+              <div class="violation-item__actions">
+                <button class="btn btn--secondary btn--sm">发送警告</button>
+                <button class="btn btn--danger btn--sm">禁用账户</button>
+                <button class="btn btn--ghost btn--sm">忽略</button>
+              </div>
+            </div>
+
+            <div class="violation-item violation-item--pending">
+              <div class="violation-item__header">
+                <div class="violation-item__user">
+                  <div class="user-cell__avatar">王</div>
+                  <div class="violation-item__user-info">
+                    <span class="violation-item__name">王浩然</span>
+                    <span class="violation-item__id">2021113264 · 数据科学 · 大三</span>
+                  </div>
+                </div>
+                <span class="violation-status violation-status--pending">待处理</span>
+              </div>
+              <div class="violation-item__content">
+                <div class="violation-item__type">
+                  <span class="violation-type-tag violation-type-tag--early">提前离开</span>
+                  <span class="violation-item__time">2024-12-09 09:00 - 12:00</span>
+                </div>
+                <p class="violation-item__desc">预约B区-15号座位，10:15提前离开未签退，占用时长不足50%</p>
+                <div class="violation-item__history">
+                  <span>历史违约：0次</span>
+                  <span>·</span>
+                  <span>当前状态：正常</span>
+                </div>
+              </div>
+              <div class="violation-item__actions">
+                <button class="btn btn--secondary btn--sm">发送警告</button>
+                <button class="btn btn--ghost btn--sm">忽略（首次）</button>
+              </div>
+            </div>
+
+            <div class="violation-item">
+              <div class="violation-item__header">
+                <div class="violation-item__user">
+                  <div class="user-cell__avatar user-cell__avatar--disabled">陈</div>
+                  <div class="violation-item__user-info">
+                    <span class="violation-item__name">陈小刚</span>
+                    <span class="violation-item__id">2022118956 · 信息安全 · 大二</span>
+                  </div>
+                </div>
+                <span class="violation-status violation-status--handled">已处理</span>
+              </div>
+              <div class="violation-item__content">
+                <div class="violation-item__type">
+                  <span class="violation-type-tag">爽约未到</span>
+                  <span class="violation-item__time">2024-12-05 08:00 - 10:00</span>
+                </div>
+                <p class="violation-item__desc">预约C区-08号座位，连续第5次违约，已禁用账户7天</p>
+                <div class="violation-item__history">
+                  <span>处理结果：禁用7天</span>
+                  <span>·</span>
+                  <span>解封时间：2024-12-12</span>
+                </div>
+              </div>
+              <div class="violation-item__actions">
+                <button class="btn btn--primary btn--sm">提前解封</button>
+                <button class="btn btn--ghost btn--sm">查看详情</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 权限管理 Tab -->
+        <div class="tab-content" id="permissionsTab">
+          <div class="permission-section">
+            <div class="permission-header">
+              <h3 class="permission-title">用户权限等级</h3>
+              <p class="permission-desc">管理不同等级用户的预约权限和特权</p>
+            </div>
+            
+            <div class="permission-cards">
+              <div class="permission-card">
+                <div class="permission-card__header">
+                  <span class="permission-card__icon">👤</span>
+                  <span class="permission-card__title">普通用户</span>
+                  <span class="permission-card__count">1,070 人</span>
+                </div>
+                <ul class="permission-card__list">
+                  <li>每日最多预约 2 次</li>
+                  <li>单次预约最长 4 小时</li>
+                  <li>提前 1 天预约</li>
+                  <li>违约 3 次警告</li>
+                </ul>
+                <button class="btn btn--ghost btn--sm btn--full">编辑权限</button>
+              </div>
+
+              <div class="permission-card permission-card--vip">
+                <div class="permission-card__header">
+                  <span class="permission-card__icon">⭐</span>
+                  <span class="permission-card__title">VIP用户</span>
+                  <span class="permission-card__count">156 人</span>
+                </div>
+                <ul class="permission-card__list">
+                  <li>每日最多预约 4 次</li>
+                  <li>单次预约最长 6 小时</li>
+                  <li>提前 3 天预约</li>
+                  <li>优先选择热门座位</li>
+                  <li>违约 5 次警告</li>
+                </ul>
+                <button class="btn btn--ghost btn--sm btn--full">编辑权限</button>
+              </div>
+
+              <div class="permission-card permission-card--blocked">
+                <div class="permission-card__header">
+                  <span class="permission-card__icon">🚫</span>
+                  <span class="permission-card__title">黑名单</span>
+                  <span class="permission-card__count">8 人</span>
+                </div>
+                <ul class="permission-card__list">
+                  <li>禁止预约座位</li>
+                  <li>禁止进入图书馆</li>
+                  <li>需管理员手动解封</li>
+                </ul>
+                <button class="btn btn--ghost btn--sm btn--full">查看名单</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="permission-section">
+            <div class="permission-header">
+              <h3 class="permission-title">批量权限操作</h3>
+              <p class="permission-desc">快速调整用户权限等级</p>
+            </div>
+            <div class="batch-actions">
+              <div class="batch-action-item">
+                <span class="batch-action-item__label">升级为VIP</span>
+                <span class="batch-action-item__desc">选择用户后批量升级为VIP权限</span>
+                <button class="btn btn--secondary btn--sm">选择用户</button>
+              </div>
+              <div class="batch-action-item">
+                <span class="batch-action-item__label">降级为普通</span>
+                <span class="batch-action-item__desc">将VIP用户降级为普通权限</span>
+                <button class="btn btn--secondary btn--sm">选择用户</button>
+              </div>
+              <div class="batch-action-item">
+                <span class="batch-action-item__label">批量解封</span>
+                <span class="batch-action-item__desc">解除黑名单用户的限制</span>
+                <button class="btn btn--secondary btn--sm">选择用户</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- 用户详情侧边面板 -->
+    <div class="detail-panel" id="userDetailPanel">
+      <div class="detail-panel__header">
+        <h3 class="detail-panel__title">用户详情</h3>
+        <button class="detail-panel__close" onclick="closeUserDetail()">✕</button>
+      </div>
+      <div class="detail-panel__content">
+        <div class="detail-user-info">
+          <div class="detail-user-info__avatar">张</div>
+          <div class="detail-user-info__main">
+            <h4 class="detail-user-info__name">张晓明</h4>
+            <span class="status-badge status-badge--vip">VIP</span>
+          </div>
+          <p class="detail-user-info__meta">2021112573 · 计算机科学 · 大三</p>
+          <p class="detail-user-info__email">zhangxm@edu.cn</p>
+        </div>
+
+        <div class="detail-stats">
+          <div class="detail-stat">
+            <span class="detail-stat__value">142h</span>
+            <span class="detail-stat__label">累计学习</span>
+          </div>
+          <div class="detail-stat">
+            <span class="detail-stat__value">86次</span>
+            <span class="detail-stat__label">预约次数</span>
+          </div>
+          <div class="detail-stat">
+            <span class="detail-stat__value">0次</span>
+            <span class="detail-stat__label">违约次数</span>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h5 class="detail-section__title">预约历史</h5>
+          <div class="detail-history">
+            <div class="detail-history__item">
+              <span class="detail-history__date">今天 14:00-18:00</span>
+              <span class="detail-history__seat">A区-23号</span>
+              <span class="detail-history__status detail-history__status--active">使用中</span>
+            </div>
+            <div class="detail-history__item">
+              <span class="detail-history__date">昨天 09:00-12:00</span>
+              <span class="detail-history__seat">A区-15号</span>
+              <span class="detail-history__status detail-history__status--done">已完成</span>
+            </div>
+            <div class="detail-history__item">
+              <span class="detail-history__date">12月9日 14:00-17:00</span>
+              <span class="detail-history__seat">B区-08号</span>
+              <span class="detail-history__status detail-history__status--done">已完成</span>
+            </div>
+          </div>
+          <button class="btn btn--ghost btn--sm btn--full">查看全部记录</button>
+        </div>
+
+        <div class="detail-section">
+          <h5 class="detail-section__title">学习偏好</h5>
+          <div class="detail-preferences">
+            <div class="detail-pref-item">
+              <span class="detail-pref-item__label">常用区域</span>
+              <span class="detail-pref-item__value">A区（静音区）</span>
+            </div>
+            <div class="detail-pref-item">
+              <span class="detail-pref-item__label">常用时段</span>
+              <span class="detail-pref-item__value">下午 14:00-18:00</span>
+            </div>
+            <div class="detail-pref-item">
+              <span class="detail-pref-item__label">平均时长</span>
+              <span class="detail-pref-item__value">3.2 小时/次</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-actions">
+          <button class="btn btn--secondary btn--sm">编辑信息</button>
+          <button class="btn btn--secondary btn--sm">调整权限</button>
+          <button class="btn btn--danger btn--sm">禁用账户</button>
+        </div>
+      </div>
+    </div>
+    <div class="detail-panel__overlay" id="panelOverlay" onclick="closeUserDetail()"></div>
+  </div>
+
+  <script>
+    // Tab 切换
+    document.querySelectorAll('.tab-nav__item').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tab-nav__item').forEach(t => t.classList.remove('tab-nav__item--active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('tab-content--active'));
+        this.classList.add('tab-nav__item--active');
+        const tabId = this.dataset.tab + 'Tab';
+        document.getElementById(tabId).classList.add('tab-content--active');
+      });
+    });
+
+    // 下拉筛选
+    function toggleDropdown(id) {
+      const dropdown = document.getElementById(id);
+      const isOpen = dropdown.classList.contains('filter-dropdown--open');
+      document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('filter-dropdown--open'));
+      if (!isOpen) dropdown.classList.add('filter-dropdown--open');
+    }
+    
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.filter-dropdown')) {
+        document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('filter-dropdown--open'));
+      }
+    });
+
+    // 用户详情面板
+    function openUserDetail(name) {
+      document.getElementById('userDetailPanel').classList.add('detail-panel--open');
+      document.getElementById('panelOverlay').classList.add('detail-panel__overlay--visible');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeUserDetail() {
+      document.getElementById('userDetailPanel').classList.remove('detail-panel--open');
+      document.getElementById('panelOverlay').classList.remove('detail-panel__overlay--visible');
+      document.body.style.overflow = '';
+    }
+  </script>
+</body>
+</html>

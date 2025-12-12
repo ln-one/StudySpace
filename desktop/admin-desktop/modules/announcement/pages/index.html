@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>公告通知 - StudySpace 管理后台</title>
+  <link rel="stylesheet" href="../../../core/styles/main.css">
+  <link rel="stylesheet" href="../../../core/layouts/admin-layout/style.css">
+  <link rel="stylesheet" href="../../../core/components/sidebar/style.css">
+  <link rel="stylesheet" href="../../../core/components/navbar/style.css">
+  <link rel="stylesheet" href="../../../core/components/search-bar/style.css">
+  <link rel="stylesheet" href="../../../core/components/button/style.css">
+  <link rel="stylesheet" href="../../../core/components/filter-dropdown/style.css">
+  <link rel="stylesheet" href="../../../core/components/data-card/style.css">
+  <link rel="stylesheet" href="../styles/announcement.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <span class="sidebar__logo-text">StudySpace</span>
+      </div>
+      <nav class="sidebar__nav">
+        <a href="../../dashboard/pages/overview.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">预约管理</span>
+        </a>
+        <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">座位管理</span>
+        </a>
+        <a href="../../study-record/pages/index.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">学习记录</span>
+        </a>
+        <a href="../../user-management/pages/index.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">用户管理</span>
+        </a>
+        <a href="index.html" class="sidebar__nav-item sidebar__nav-item--active">
+          <span class="sidebar__nav-text">公告通知</span>
+        </a>
+        <a href="../../settings/pages/index.html" class="sidebar__nav-item">
+          <span class="sidebar__nav-text">管理员设置</span>
+        </a>
+      </nav>
+    </aside>
+
+    <div class="admin-layout__main">
+      <header class="navbar navbar--fixed">
+        <div class="search-bar">
+          <input type="text" class="search-bar__input" placeholder="搜索公告标题...">
+        </div>
+        <div class="navbar__actions">
+          <button class="btn btn--primary btn--sm" onclick="openModal('newAnnouncementModal')">+ 发布公告</button>
+        </div>
+      </header>
+
+      <main class="admin-layout__content">
+        <!-- Tab 切换 -->
+        <div class="tab-nav">
+          <button class="tab-nav__item tab-nav__item--active" data-tab="announcements">公告管理</button>
+          <button class="tab-nav__item" data-tab="messages">消息通知</button>
+          <button class="tab-nav__item" data-tab="history">历史记录</button>
+        </div>
+
+        <!-- 公告管理 Tab -->
+        <div class="tab-content tab-content--active" id="announcementsTab">
+          <div class="stats-grid">
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">总公告数</span>
+                <span class="data-card__icon">📢</span>
+              </div>
+              <div class="data-card__value">48</div>
+              <div class="data-card__footer">
+                <span class="data-card__desc">累计发布</span>
+              </div>
+            </div>
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">本月发布</span>
+                <span class="data-card__icon">📝</span>
+              </div>
+              <div class="data-card__value">6</div>
+              <div class="data-card__footer">
+                <span class="data-card__trend data-card__trend--up">↑ 2</span>
+                <span class="data-card__desc">较上月</span>
+              </div>
+            </div>
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">待发布</span>
+                <span class="data-card__icon">⏰</span>
+              </div>
+              <div class="data-card__value">3</div>
+              <div class="data-card__footer">
+                <span class="data-card__desc">定时发布</span>
+              </div>
+            </div>
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">平均阅读率</span>
+                <span class="data-card__icon">👁️</span>
+              </div>
+              <div class="data-card__value">78%</div>
+              <div class="data-card__footer">
+                <span class="data-card__trend data-card__trend--up">↑ 5%</span>
+                <span class="data-card__desc">较上月</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-dropdown" id="typeDropdown">
+              <button class="filter-dropdown__trigger" onclick="toggleDropdown('typeDropdown')">
+                <span class="filter-dropdown__label">全部类型</span>
+                <span class="filter-dropdown__arrow">▾</span>
+              </button>
+              <div class="filter-dropdown__menu">
+                <div class="filter-dropdown__item filter-dropdown__item--active">全部类型</div>
+                <div class="filter-dropdown__item">系统公告</div>
+                <div class="filter-dropdown__item">维护通知</div>
+                <div class="filter-dropdown__item">活动通知</div>
+                <div class="filter-dropdown__item">规则更新</div>
+              </div>
+            </div>
+            <div class="filter-dropdown" id="statusDropdown">
+              <button class="filter-dropdown__trigger" onclick="toggleDropdown('statusDropdown')">
+                <span class="filter-dropdown__label">全部状态</span>
+                <span class="filter-dropdown__arrow">▾</span>
+              </button>
+              <div class="filter-dropdown__menu">
+                <div class="filter-dropdown__item filter-dropdown__item--active">全部状态</div>
+                <div class="filter-dropdown__item">已发布</div>
+                <div class="filter-dropdown__item">待发布</div>
+                <div class="filter-dropdown__item">已下线</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="announcement-list">
+            <div class="announcement-item announcement-item--pinned">
+              <div class="announcement-item__header">
+                <div class="announcement-item__meta">
+                  <span class="announcement-type announcement-type--system">系统公告</span>
+                  <span class="announcement-pin">📌 置顶</span>
+                </div>
+                <span class="announcement-status announcement-status--published">已发布</span>
+              </div>
+              <h3 class="announcement-item__title">图书馆座位预约系统升级通知</h3>
+              <p class="announcement-item__content">为提升用户体验，系统将于12月15日凌晨2:00-6:00进行升级维护，届时预约功能将暂停使用，请各位同学提前做好安排...</p>
+              <div class="announcement-item__footer">
+                <div class="announcement-item__info">
+                  <span>发布：2024-12-10 09:00</span>
+                  <span>·</span>
+                  <span>阅读 1,156</span>
+                  <span>·</span>
+                  <span>阅读率 94%</span>
+                </div>
+                <div class="announcement-item__actions">
+                  <button class="action-btn" onclick="openModal('editAnnouncementModal')">编辑</button>
+                  <button class="action-btn">取消置顶</button>
+                  <button class="action-btn action-btn--danger">下线</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="announcement-item">
+              <div class="announcement-item__header">
+                <div class="announcement-item__meta">
+                  <span class="announcement-type announcement-type--activity">活动通知</span>
+                </div>
+                <span class="announcement-status announcement-status--published">已发布</span>
+              </div>
+              <h3 class="announcement-item__title">期末考试周延长开放时间通知</h3>
+              <p class="announcement-item__content">为配合期末考试复习，图书馆将于12月20日-1月10日期间延长开放时间至晚上23:00，欢迎同学们前来学习...</p>
+              <div class="announcement-item__footer">
+                <div class="announcement-item__info">
+                  <span>发布：2024-12-08 14:30</span>
+                  <span>·</span>
+                  <span>阅读 892</span>
+                  <span>·</span>
+                  <span>阅读率 72%</span>
+                </div>
+                <div class="announcement-item__actions">
+                  <button class="action-btn">编辑</button>
+                  <button class="action-btn">置顶</button>
+                  <button class="action-btn action-btn--danger">下线</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="announcement-item">
+              <div class="announcement-item__header">
+                <div class="announcement-item__meta">
+                  <span class="announcement-type announcement-type--maintenance">维护通知</span>
+                </div>
+                <span class="announcement-status announcement-status--scheduled">待发布</span>
+              </div>
+              <h3 class="announcement-item__title">空调系统维护通知</h3>
+              <p class="announcement-item__content">B区空调系统将于12月18日进行维护，届时B区温度可能略有波动，请同学们注意保暖...</p>
+              <div class="announcement-item__footer">
+                <div class="announcement-item__info">
+                  <span>定时发布：2024-12-16 08:00</span>
+                </div>
+                <div class="announcement-item__actions">
+                  <button class="action-btn">编辑</button>
+                  <button class="action-btn action-btn--primary">立即发布</button>
+                  <button class="action-btn action-btn--danger">删除</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 消息通知 Tab -->
+        <div class="tab-content" id="messagesTab">
+          <div class="stats-grid stats-grid--3">
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">今日发送</span>
+                <span class="data-card__icon">📨</span>
+              </div>
+              <div class="data-card__value">156</div>
+              <div class="data-card__footer">
+                <span class="data-card__desc">系统自动通知</span>
+              </div>
+            </div>
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">预约提醒</span>
+                <span class="data-card__icon">⏰</span>
+              </div>
+              <div class="data-card__value">89</div>
+              <div class="data-card__footer">
+                <span class="data-card__desc">今日已发送</span>
+              </div>
+            </div>
+            <div class="data-card">
+              <div class="data-card__header">
+                <span class="data-card__title">违约通知</span>
+                <span class="data-card__icon">⚠️</span>
+              </div>
+              <div class="data-card__value">12</div>
+              <div class="data-card__footer">
+                <span class="data-card__desc">今日已发送</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="message-section">
+            <div class="message-section__header">
+              <h3 class="message-section__title">消息模板</h3>
+              <button class="btn btn--secondary btn--sm">+ 新建模板</button>
+            </div>
+            <div class="message-templates">
+              <div class="message-template">
+                <div class="message-template__header">
+                  <span class="message-template__icon">⏰</span>
+                  <span class="message-template__name">预约开始提醒</span>
+                  <span class="message-template__status message-template__status--active">启用中</span>
+                </div>
+                <p class="message-template__preview">【预约提醒】您预约的{座位号}将于{时间}开始，请准时到达签到。</p>
+                <div class="message-template__config">
+                  <span>提前 15 分钟发送</span>
+                  <span>·</span>
+                  <span>今日已发送 89 条</span>
+                </div>
+                <div class="message-template__actions">
+                  <button class="action-btn">编辑</button>
+                  <button class="action-btn">禁用</button>
+                </div>
+              </div>
+
+              <div class="message-template">
+                <div class="message-template__header">
+                  <span class="message-template__icon">✅</span>
+                  <span class="message-template__name">签到成功通知</span>
+                  <span class="message-template__status message-template__status--active">启用中</span>
+                </div>
+                <p class="message-template__preview">【签到成功】您已成功签到{座位号}，预约时段{时间}，祝学习愉快！</p>
+                <div class="message-template__config">
+                  <span>签到后立即发送</span>
+                  <span>·</span>
+                  <span>今日已发送 67 条</span>
+                </div>
+                <div class="message-template__actions">
+                  <button class="action-btn">编辑</button>
+                  <button class="action-btn">禁用</button>
+                </div>
+              </div>
+
+              <div class="message-template">
+                <div class="message-template__header">
+                  <span class="message-template__icon">⚠️</span>
+                  <span class="message-template__name">违约警告通知</span>
+                  <span class="message-template__status message-template__status--active">启用中</span>
+                </div>
+                <p class="message-template__preview">【违约提醒】您于{时间}的预约因{原因}被记录为违约，当前违约{次数}次。</p>
+                <div class="message-template__config">
+                  <span>违约后立即发送</span>
+                  <span>·</span>
+                  <span>今日已发送 12 条</span>
+                </div>
+                <div class="message-template__actions">
+                  <button class="action-btn">编辑</button>
+                  <button class="action-btn">禁用</button>
+                </div>
+              </div>
+
+              <div class="message-template message-template--disabled">
+                <div class="message-template__header">
+                  <span class="message-template__icon">🎉</span>
+                  <span class="message-template__name">学习成就通知</span>
+                  <span class="message-template__status">已禁用</span>
+                </div>
+                <p class="message-template__preview">【学习成就】恭喜！您本周累计学习{时长}小时，获得"{成就}"徽章！</p>
+                <div class="message-template__config">
+                  <span>每周日 20:00 发送</span>
+                </div>
+                <div class="message-template__actions">
+                  <button class="action-btn action-btn--primary">启用</button>
+                  <button class="action-btn">编辑</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 历史记录 Tab -->
+        <div class="tab-content" id="historyTab">
+          <div class="filter-bar">
+            <div class="filter-dropdown" id="historyTypeDropdown">
+              <button class="filter-dropdown__trigger" onclick="toggleDropdown('historyTypeDropdown')">
+                <span class="filter-dropdown__label">全部类型</span>
+                <span class="filter-dropdown__arrow">▾</span>
+              </button>
+              <div class="filter-dropdown__menu">
+                <div class="filter-dropdown__item filter-dropdown__item--active">全部类型</div>
+                <div class="filter-dropdown__item">系统公告</div>
+                <div class="filter-dropdown__item">维护通知</div>
+                <div class="filter-dropdown__item">活动通知</div>
+              </div>
+            </div>
+            <div class="filter-dropdown" id="historyTimeDropdown">
+              <button class="filter-dropdown__trigger" onclick="toggleDropdown('historyTimeDropdown')">
+                <span class="filter-dropdown__label">最近30天</span>
+                <span class="filter-dropdown__arrow">▾</span>
+              </button>
+              <div class="filter-dropdown__menu">
+                <div class="filter-dropdown__item">最近7天</div>
+                <div class="filter-dropdown__item filter-dropdown__item--active">最近30天</div>
+                <div class="filter-dropdown__item">最近90天</div>
+                <div class="filter-dropdown__item">全部</div>
+              </div>
+            </div>
+            <button class="btn btn--secondary btn--sm">导出记录</button>
+          </div>
+
+          <div class="history-list-card">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>公告标题</th>
+                  <th>类型</th>
+                  <th>发布时间</th>
+                  <th>下线时间</th>
+                  <th>阅读量</th>
+                  <th>阅读率</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="title-cell">国庆节假期开放时间调整</td>
+                  <td><span class="announcement-type announcement-type--activity">活动通知</span></td>
+                  <td>2024-09-28 09:00</td>
+                  <td>2024-10-08 00:00</td>
+                  <td>1,089</td>
+                  <td>88%</td>
+                  <td>
+                    <div class="action-group">
+                      <button class="action-btn">查看</button>
+                      <button class="action-btn">复用</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="title-cell">中秋节图书馆开放安排</td>
+                  <td><span class="announcement-type announcement-type--activity">活动通知</span></td>
+                  <td>2024-09-14 10:00</td>
+                  <td>2024-09-18 00:00</td>
+                  <td>956</td>
+                  <td>77%</td>
+                  <td>
+                    <div class="action-group">
+                      <button class="action-btn">查看</button>
+                      <button class="action-btn">复用</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="title-cell">新学期预约规则说明</td>
+                  <td><span class="announcement-type announcement-type--rule">规则更新</span></td>
+                  <td>2024-09-01 08:00</td>
+                  <td>2024-10-01 00:00</td>
+                  <td>1,234</td>
+                  <td>100%</td>
+                  <td>
+                    <div class="action-group">
+                      <button class="action-btn">查看</button>
+                      <button class="action-btn">复用</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="title-cell">暑假期间系统维护通知</td>
+                  <td><span class="announcement-type announcement-type--maintenance">维护通知</span></td>
+                  <td>2024-07-15 09:00</td>
+                  <td>2024-07-20 00:00</td>
+                  <td>423</td>
+                  <td>34%</td>
+                  <td>
+                    <div class="action-group">
+                      <button class="action-btn">查看</button>
+                      <button class="action-btn">复用</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="pagination">
+              <div class="pagination__info">显示 1-4 条，共 42 条记录</div>
+              <div class="pagination__controls">
+                <button class="pagination__btn" disabled>上一页</button>
+                <button class="pagination__btn pagination__btn--active">1</button>
+                <button class="pagination__btn">2</button>
+                <button class="pagination__btn">3</button>
+                <button class="pagination__btn">...</button>
+                <button class="pagination__btn">11</button>
+                <button class="pagination__btn">下一页</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- 发布公告弹窗 -->
+    <div class="modal" id="newAnnouncementModal">
+      <div class="modal__overlay" onclick="closeModal('newAnnouncementModal')"></div>
+      <div class="modal__content">
+        <div class="modal__header">
+          <h3 class="modal__title">发布新公告</h3>
+          <button class="modal__close" onclick="closeModal('newAnnouncementModal')">✕</button>
+        </div>
+        <div class="modal__body">
+          <div class="form-group">
+            <label class="form-label">公告类型</label>
+            <div class="type-selector">
+              <label class="type-option type-option--active">
+                <input type="radio" name="type" value="system" checked>
+                <span class="type-option__icon">📢</span>
+                <span class="type-option__text">系统公告</span>
+              </label>
+              <label class="type-option">
+                <input type="radio" name="type" value="maintenance">
+                <span class="type-option__icon">🔧</span>
+                <span class="type-option__text">维护通知</span>
+              </label>
+              <label class="type-option">
+                <input type="radio" name="type" value="activity">
+                <span class="type-option__icon">🎉</span>
+                <span class="type-option__text">活动通知</span>
+              </label>
+              <label class="type-option">
+                <input type="radio" name="type" value="rule">
+                <span class="type-option__icon">📋</span>
+                <span class="type-option__text">规则更新</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">公告标题</label>
+            <input type="text" class="form-input" placeholder="请输入公告标题">
+          </div>
+          <div class="form-group">
+            <label class="form-label">公告内容</label>
+            <textarea class="form-textarea" rows="6" placeholder="请输入公告内容..."></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group form-group--half">
+              <label class="form-label">发布方式</label>
+              <select class="form-select">
+                <option>立即发布</option>
+                <option>定时发布</option>
+              </select>
+            </div>
+            <div class="form-group form-group--half">
+              <label class="form-label">是否置顶</label>
+              <select class="form-select">
+                <option>否</option>
+                <option>是</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal__footer">
+          <button class="btn btn--secondary" onclick="closeModal('newAnnouncementModal')">取消</button>
+          <button class="btn btn--primary">发布公告</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab 切换
+    document.querySelectorAll('.tab-nav__item').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tab-nav__item').forEach(t => t.classList.remove('tab-nav__item--active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('tab-content--active'));
+        this.classList.add('tab-nav__item--active');
+        const tabId = this.dataset.tab + 'Tab';
+        document.getElementById(tabId).classList.add('tab-content--active');
+      });
+    });
+
+    // 下拉筛选
+    function toggleDropdown(id) {
+      const dropdown = document.getElementById(id);
+      const isOpen = dropdown.classList.contains('filter-dropdown--open');
+      document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('filter-dropdown--open'));
+      if (!isOpen) dropdown.classList.add('filter-dropdown--open');
+    }
+    
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.filter-dropdown')) {
+        document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('filter-dropdown--open'));
+      }
+    });
+
+    // 弹窗控制
+    function openModal(id) {
+      document.getElementById(id).classList.add('modal--open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('modal--open');
+      document.body.style.overflow = '';
+    }
+
+    // 类型选择
+    document.querySelectorAll('.type-option input').forEach(input => {
+      input.addEventListener('change', function() {
+        document.querySelectorAll('.type-option').forEach(opt => opt.classList.remove('type-option--active'));
+        this.closest('.type-option').classList.add('type-option--active');
+      });
+    });
+  </script>
+</body>
+</html>
