@@ -419,7 +419,7 @@
       <div class="form-message" id="formMessage" aria-live="polite"></div>
       <div class="submit-row">
         <button class="btn-primary" type="button" id="submitBtn">提交注册</button>
-        <button class="btn-ghost" type="button" onclick="window.location.href='index.html'">返回</button>
+        <button class="btn-ghost" type="button" onclick="window.location.href='桌面端-登录.html'">返回</button>
       </div>
     </section>
 
@@ -497,7 +497,7 @@
     submitBtn?.addEventListener('click', () => {
       formMessage.style.display = 'flex';
       if (!validate()) return;
-      showMessage('注册信息已提交（示例），请稍候...', 'success');
+      showMessage('注册信息已提交，请稍候...', 'success');
     });
   </script>
 </body>

@@ -227,6 +227,74 @@
     .form-message--error { display: flex; background: var(--color-error-bg); color: var(--color-error); border: 1px solid rgba(255, 59, 48, 0.2); }
     .form-message--success { display: flex; background: var(--color-success-bg); color: var(--color-success); border: 1px solid rgba(52, 199, 89, 0.2); }
 
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 2000;
+    }
+
+    .modal-backdrop.is-open { display: flex; }
+
+    .modal {
+      width: min(540px, 100%);
+      min-height: 60vh;
+      max-height: 80vh;
+      background: #fff;
+      border-radius: var(--radius-xxl);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--color-border-secondary);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--color-border-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-sm);
+      background: linear-gradient(135deg, #F8FBFF 0%, #EEF4FF 60%, #FFFFFF 100%);
+    }
+
+    .modal-header strong { font-size: 16px; }
+
+    .modal-body {
+      padding: 14px 18px;
+      overflow-y: auto;
+      display: grid;
+      gap: 10px;
+      line-height: 1.6;
+      color: var(--color-text-secondary);
+    }
+
+    .modal-body h4 { margin: 0; color: var(--color-text-primary); font-size: 15px; }
+    .modal-body ul { margin: 0 0 6px 16px; padding: 0; }
+    .modal-body li { margin-bottom: 4px; }
+
+    .modal-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--color-border-secondary);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background: rgba(249, 250, 252, 0.9);
+    }
+
+    .btn-link {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+    }
+
     @media (max-width: 480px) {
       body { padding: 20px 12px; }
       .phone-shell { padding: 14px 12px 18px; border-radius: 46px; min-height: 600px; }
@@ -276,7 +344,7 @@
       <div class="policy" aria-label="协议提示">
         <label class="policy-check">
           <input type="checkbox" id="agreePolicy">
-          <span>注册即表示同意 <a href="#" title="用户协议">《用户协议》</a> 与 <a href="#" title="隐私政策">《隐私政策》</a>，我们将为你保留预约记录、签到记录等学习数据。</span>
+          <span>注册即表示同意 <a href="#" title="用户协议" class="open-modal" data-type="tos">《用户协议》</a> 与 <a href="#" title="隐私政策" class="open-modal" data-type="privacy">《隐私政策》</a>，我们将为你保留预约记录、签到记录等学习数据。</span>
         </label>
       </div>
 
@@ -352,6 +420,98 @@
 
     document.querySelector('#backToLogin')?.addEventListener('click', () => goTo('移动用户端-登录.html'));
     document.querySelector('#toTask')?.addEventListener('click', () => goTo('移动用户端-任务.html'));
+
+    // Modal for TOS / Privacy
+    const modalBackdrop = (() => {
+      const el = document.createElement('div');
+      el.className = 'modal-backdrop';
+      el.innerHTML = `
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+          <div class="modal-header">
+            <strong id="modalTitle">标题</strong>
+            <button class="btn-link" type="button" id="closeModal">关闭</button>
+          </div>
+          <div class="modal-body" id="modalBody"></div>
+          <div class="modal-footer">
+            <button class="btn-ghost" type="button" id="modalOk">我已知晓</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(el);
+      return el;
+    })();
+
+    const modalTitle = modalBackdrop.querySelector('#modalTitle');
+    const modalBody = modalBackdrop.querySelector('#modalBody');
+    const closeModalBtn = modalBackdrop.querySelector('#closeModal');
+    const modalOk = modalBackdrop.querySelector('#modalOk');
+
+    const modalContent = {
+      tos: {
+        title: '用户协议要点',
+        body: `
+          <h4>账号使用</h4>
+          <ul>
+            <li>请使用本人手机号/邮箱注册，不得冒用他人信息。</li>
+            <li>账号仅限本人使用，分享/出租/转让将导致封禁。</li>
+          </ul>
+          <h4>使用规范</h4>
+          <ul>
+            <li>禁止发布违规内容、恶意脚本或破坏性操作。</li>
+            <li>尊重他人隐私，未经允许不得导出或传播团队资料。</li>
+          </ul>
+          <h4>数据与安全</h4>
+          <ul>
+            <li>开启二次验证保障账号安全，遗失密码可通过绑定方式找回。</li>
+            <li>异常登录会提醒并可能触发二次验证。</li>
+          </ul>
+        `
+      },
+      privacy: {
+        title: '隐私政策要点',
+        body: `
+          <h4>收集与使用</h4>
+          <ul>
+            <li>基础信息：手机号、邮箱、昵称，用于登录与通知。</li>
+            <li>学习数据：预约、签到、任务进度，用于同步与统计。</li>
+          </ul>
+          <h4>存储与保护</h4>
+          <ul>
+            <li>数据加密存储，敏感字段脱敏展示。</li>
+            <li>仅在业务需要的最短时间内保留，可随时申请删除。</li>
+          </ul>
+          <h4>你的权利</h4>
+          <ul>
+            <li>可请求导出/更正/删除个人数据。</li>
+            <li>可随时撤回同意，但可能影响相关功能的正常使用。</li>
+          </ul>
+        `
+      }
+    };
+
+    function openModal(type = 'tos') {
+      const content = modalContent[type] || modalContent.tos;
+      modalTitle.textContent = content.title;
+      modalBody.innerHTML = content.body;
+      modalBackdrop.classList.add('is-open');
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove('is-open');
+    }
+
+    closeModalBtn?.addEventListener('click', closeModal);
+    modalOk?.addEventListener('click', closeModal);
+    modalBackdrop?.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    document.querySelectorAll('.open-modal').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal(link.dataset.type);
+      });
+    });
   </script>
 </body>
 </html>

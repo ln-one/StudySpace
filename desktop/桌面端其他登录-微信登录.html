@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudySpace - 企业微信登录</title>
+  <link rel="stylesheet" href="admin-desktop/core/styles/main.css">
+  <style>
+    :root {
+      --auth-bg: radial-gradient(circle at 18% 22%, rgba(0, 122, 255, 0.12), transparent 34%), radial-gradient(circle at 78% 18%, rgba(90, 200, 250, 0.12), transparent 36%), radial-gradient(circle at 50% 82%, rgba(0, 122, 255, 0.08), transparent 38%), linear-gradient(180deg, #F2F3F7 0%, #E7E9F2 100%);
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-family-primary);
+      background: var(--auth-bg);
+      color: var(--color-text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--spacing-lg);
+      gap: var(--spacing-lg);
+    }
+    .brand-bar {
+      width: min(1040px, 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-lg);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-xl);
+      padding: calc(var(--spacing-md) - 4px) var(--spacing-xl);
+      box-shadow: var(--shadow-md);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+    }
+    .brand-logo { width: 46px; height: 46px; border-radius: 50%; background: var(--color-primary-gradient); display: grid; place-items: center; color: #fff; font-weight: var(--font-weight-bold); letter-spacing: 0.02em; box-shadow: var(--shadow-lg); }
+    .brand-title { display: flex; flex-direction: column; gap: 2px; }
+    .brand-title strong { font-size: 18px; letter-spacing: var(--letter-spacing-tight); }
+    .brand-title span { color: var(--color-text-secondary); font-size: 14px; }
+    .brand-left { display: flex; align-items: center; gap: var(--spacing-md); }
+    .auth-grid { width: min(1040px, 100%); display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-md); align-items: stretch; }
+    .login-panel {
+      background: var(--glass-bg-dark);
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-xxl);
+      padding: var(--spacing-xxl);
+      padding-block: calc(var(--spacing-xxl) + 8px);
+      box-shadow: var(--shadow-xl);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      display: grid;
+      gap: var(--spacing-lg);
+    }
+    .login-panel h2 { margin: 0; text-align: center; font-size: 26px; letter-spacing: var(--letter-spacing-tight); }
+    .wechat-box { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--spacing-lg); align-items: center; }
+    .qr-card { border: 1px solid var(--color-border-secondary); border-radius: var(--radius-xl); background: rgba(255, 255, 255, 0.95); padding: var(--spacing-lg); box-shadow: var(--shadow-lg); display: grid; gap: var(--spacing-sm); place-items: center; }
+    .qr-image { width: 220px; height: 220px; border-radius: var(--radius-lg); background: repeating-linear-gradient(45deg, rgba(0,122,255,0.18), rgba(0,122,255,0.18) 12px, rgba(90,200,250,0.12) 12px, rgba(90,200,250,0.12) 24px); display: grid; place-items: center; color: var(--color-primary); font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-tight); border: 1px solid var(--color-border-secondary); box-shadow: inset 0 1px 0 rgba(255,255,255,0.6); }
+    .steps { display: grid; gap: var(--spacing-sm); }
+    .step { display: grid; grid-template-columns: auto 1fr; gap: var(--spacing-sm); align-items: flex-start; padding: 12px 14px; border-radius: var(--radius-lg); border: 1px solid var(--color-border-secondary); background: rgba(245,245,247,0.9); box-shadow: var(--shadow-sm); }
+    .step strong { display: block; }
+    .actions { display: flex; justify-content: center; gap: var(--spacing-md); }
+    .btn-primary { border: none; background: var(--color-primary-gradient); color: #fff; padding: 12px 24px; border-radius: var(--radius-lg); font-size: 15px; font-weight: var(--font-weight-semibold); cursor: pointer; box-shadow: var(--shadow-button); transition: transform var(--transition-bounce), box-shadow var(--transition-normal); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-card-hover); }
+    .btn-ghost { border: 1px solid var(--color-border-secondary); background: rgba(255,255,255,0.9); color: var(--color-text-primary); padding: 12px 20px; border-radius: var(--radius-lg); font-size: 15px; font-weight: var(--font-weight-semibold); cursor: pointer; transition: transform var(--transition-bounce), box-shadow var(--transition-normal), border-color var(--transition-normal); }
+    .btn-ghost:hover { transform: translateY(-1px); border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
+    .side-links { background: rgba(255, 255, 255, 0.9); border: 1px solid var(--color-border-secondary); border-radius: var(--radius-xxl); padding: var(--spacing-lg); padding-block: calc(var(--spacing-lg) + 12px); box-shadow: var(--shadow-lg); display: grid; gap: var(--spacing-sm); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); margin-top: -10px; }
+    .side-links h3 { margin: var(--spacing-lg) 0 var(--spacing-sm); font-size: 20px; letter-spacing: var(--letter-spacing-tight); text-align: center; }
+    .link-block { border: 1px solid var(--color-border-secondary); border-radius: var(--radius-lg); background: rgba(245, 245, 247, 0.85); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-sm); text-decoration: none; color: inherit; transition: transform var(--transition-bounce), box-shadow var(--transition-normal), border-color var(--transition-normal), background var(--transition-normal); }
+    .link-block:hover { transform: translateY(-1px); border-color: var(--color-primary); background: rgba(245, 245, 247, 1); box-shadow: var(--shadow-md); }
+    .link-content { display: flex; align-items: center; gap: var(--spacing-sm); }
+    .link-content .icon { width: 36px; height: 36px; border-radius: var(--radius-md); display: grid; place-items: center; background: var(--color-primary-bg); color: var(--color-primary); font-size: 18px; }
+    .link-content .text strong { display: block; font-weight: var(--font-weight-semibold); color: var(--color-text-primary); }
+    .link-content .text small { display: block; color: var(--color-text-secondary); font-size: 12px; margin-top: 2px; }
+    .link-block .arrow { font-weight: var(--font-weight-semibold); color: var(--color-text-secondary); }
+    @media (max-width: 1024px) { body { padding: var(--spacing-lg); } .auth-grid { grid-template-columns: 1fr; } .side-links { order: -1; } .wechat-box { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .actions { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <header class="brand-bar">
+    <div class="brand-left">
+      <div class="brand-logo">SS</div>
+      <div class="brand-title">
+        <strong>StudySpace 企业微信登录</strong>
+        <span>用企业微信扫码，安全进入学习空间</span>
+      </div>
+    </div>
+    <button class="btn-ghost" type="button" onclick="window.location.href='桌面端-登录.html'">返回账号密码登录</button>
+  </header>
+
+  <main class="auth-grid">
+    <section class="login-panel" aria-label="微信扫码登录">
+      <h2>企业微信扫码</h2>
+      <div class="wechat-box">
+        <div class="qr-card">
+          <div class="qr-image">扫码区域</div>
+          <div style="text-align:center; color:var(--color-text-secondary); font-size:13px;">请使用企业微信“扫一扫”完成登录</div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <strong>1. 打开企业微信</strong>
+            <span>进入“扫一扫”或工作台扫码入口。</span>
+          </div>
+          <div class="step">
+            <strong>2. 对准二维码</strong>
+            <span>保持网络畅通，等待系统自动识别并确认。</span>
+          </div>
+          <div class="step">
+            <strong>3. 登录成功跳转</strong>
+            <span>授权后自动进入桌面端主界面，无需再次输入密码。</span>
+          </div>
+          <div class="actions">
+            <button class="btn-primary" type="button" id="mockLogin">确认</button>
+            <button class="btn-ghost" type="button" onclick="window.location.href='桌面端-登录.html'">返回</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="side-links" aria-label="帮助中心">
+      <h3>提示</h3>
+      <a href="桌面端-其他登录-邮箱登录.html" class="link-block">
+        <div class="link-content">
+          <span class="icon">✉️</span>
+          <div class="text">
+            <strong>邮箱验证码登录</strong>
+            <small>切换到邮箱验证码方式</small>
+          </div>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+      <a href="桌面端-用户端-任务.html" class="link-block">
+        <div class="link-content">
+          <span class="icon">🏠</span>
+          <div class="text">
+            <strong>直接进入首页</strong>
+            <small>访客体验快速进入</small>
+          </div>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+    </aside>
+  </main>
+
+  <script>
+    const routes = { main: '桌面端-用户端-任务.html' };
+    document.querySelector('#mockLogin')?.addEventListener('click', () => {
+      window.location.href = routes.main;
+    });
+  </script>
+</body>
+</html>

@@ -469,7 +469,7 @@
 
     <aside class="side-links" aria-label="帮助中心">
       <h3>帮助中心</h3>
-      <a href="#" class="link-block">
+      <a href="桌面端登录-找回密码.html" class="link-block">
         <div class="link-content">
           <span class="icon">🔒</span>
           <div class="text">
@@ -479,7 +479,7 @@
         </div>
         <span class="arrow">→</span>
       </a>
-      <a href="#" class="link-block">
+      <a href="桌面端登录-联系管理员.html" class="link-block">
         <div class="link-content">
           <span class="icon">🎧</span>
           <div class="text">
@@ -489,7 +489,7 @@
         </div>
         <span class="arrow">→</span>
       </a>
-      <a href="#" class="link-block">
+      <a href="桌面端登录-使用手册.html" class="link-block">
         <div class="link-content">
           <span class="icon">📘</span>
           <div class="text">
@@ -518,6 +518,17 @@
     const formMessage = document.querySelector('#formMessage');
     const loginBtn = document.querySelector('#loginBtn');
     const sendCodeBtn = document.querySelector('#sendCodeBtn');
+    const routes = {
+      main: '桌面端-用户端-任务.html',
+      admin: '桌面端-管理员端-数据概览.html',
+      wechat: '桌面端其他登录-微信登录.html',
+      email: '桌面端其他登录-邮箱登录.html'
+    };
+
+    const jumpTo = (path) => {
+      if (!path) return;
+      window.location.href = path;
+    };
 
     function showMessage(text, type = 'error') {
       formMessage.textContent = text;
@@ -550,7 +561,7 @@
         }
       }, 1000);
       formMessage.style.display = 'flex';
-      showMessage('验证码已发送到您的账号（示例提示）', 'success');
+      showMessage('验证码已发送到您的账号', 'success');
     });
 
     form?.addEventListener('submit', (e) => {
@@ -571,6 +582,8 @@
         if (password.length >= 6) {
           formMessage.style.display = 'flex';
           showMessage('登录成功，即将跳转...', 'success');
+          const targetPage = account.toLowerCase().includes('admin') ? routes.admin : routes.main;
+          setTimeout(() => jumpTo(targetPage), 500);
         } else {
           formMessage.style.display = 'flex';
           showMessage('密码长度不足，请重试');
@@ -581,18 +594,15 @@
     });
 
     document.querySelector('#wechatScan')?.addEventListener('click', () => {
-      showMessage('请使用企业微信扫一扫窗口登录（示例）', 'success');
-      formMessage.style.display = 'flex';
+      jumpTo(routes.wechat);
     });
 
     document.querySelector('#emailLogin')?.addEventListener('click', () => {
-      showMessage('将跳转邮箱验证码登录流程（示例）', 'success');
-      formMessage.style.display = 'flex';
+      jumpTo(routes.email);
     });
 
     document.querySelector('#guestLogin')?.addEventListener('click', () => {
-      showMessage('已进入访客模式体验（示例）', 'success');
-      formMessage.style.display = 'flex';
+      jumpTo(routes.main);
     });
   </script>
 </body>
