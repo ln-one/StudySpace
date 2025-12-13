@@ -19,12 +19,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: var(--spacing-xl);
+      padding: var(--spacing-lg);
       gap: var(--spacing-lg);
     }
 
     .brand-bar {
-      width: min(1160px, 100%);
+      width: min(1040px, 100%);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -32,7 +32,7 @@
       background: rgba(255, 255, 255, 0.9);
       border: 1px solid var(--color-border-secondary);
       border-radius: var(--radius-xl);
-      padding: var(--spacing-md) var(--spacing-xl);
+      padding: calc(var(--spacing-md) - 4px) var(--spacing-xl);
       box-shadow: var(--shadow-md);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
@@ -104,7 +104,7 @@
     }
 
     .auth-grid {
-    width: min(1160px, 100%);
+      width: min(1040px, 100%);
     display: grid;
     
     grid-template-columns: 2fr 1fr; 
@@ -119,6 +119,7 @@
       border: 1px solid var(--color-border-secondary);
       border-radius: var(--radius-xxl);
       padding: var(--spacing-xxl);
+      padding-block: calc(var(--spacing-xxl) + 8px);
       box-shadow: var(--shadow-xl);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
@@ -146,10 +147,11 @@
       grid-template-columns: 140px 1fr;
       align-items: center;
       gap: var(--spacing-md);
+      justify-items: center;
     }
 
     .form-row label {
-      font-size: 15px;
+      font-size: 18px;
       color: var(--color-text-primary);
       font-weight: var(--font-weight-medium);
       text-align: right;
@@ -157,7 +159,7 @@
 
     .input {
       width: 100%;
-      padding: 12px 14px;
+      padding: 20px 18px;
       border-radius: var(--radius-lg);
       border: 1px solid var(--color-border-secondary);
       background: rgba(255, 255, 255, 0.92);
@@ -175,8 +177,8 @@
       border: 1px solid var(--color-border-secondary);
       background: rgba(255, 255, 255, 0.9);
       border-radius: var(--radius-md);
-      padding: 10px 12px;
-      font-size: 13px;
+      padding: 18px 16px;
+      font-size: 14px;
       cursor: pointer;
       transition: transform var(--transition-bounce), box-shadow var(--transition-normal), border-color var(--transition-normal);
     }
@@ -188,6 +190,7 @@
       display: flex;
       justify-content: center;
       grid-column: 1 / -1;
+      margin-top: var(--spacing-md);
     }
 
     .form-row--captcha {
@@ -254,8 +257,10 @@
     .side-links {
       background: rgba(255, 255, 255, 0.9);
       border: 1px solid var(--color-border-secondary);
+
       border-radius: var(--radius-xxl);
       padding: var(--spacing-lg);
+      padding-block: calc(var(--spacing-lg) + 12px);
       box-shadow: var(--shadow-lg);
       display: grid;
       gap: var(--spacing-sm);
@@ -328,21 +333,22 @@
     }
 
     .footer-actions {
-      width: min(1160px, 100%);
+      width: min(1040px, 100%);
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: var(--spacing-md);
+      margin-top: 0;
     }
 
     .other-login {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: var(--spacing-md);
-      padding: var(--spacing-md);
+      padding: calc(var(--spacing-md) + 1px);
       border-radius: var(--radius-xl);
       border: 1px solid var(--color-border-secondary);
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: var(--shadow-md);
+      background: linear-gradient(135deg, #F9FBFF 0%, #F2F6FF 60%, #FFFFFF 100%);
+      box-shadow: var(--shadow-lg);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
     }
@@ -350,20 +356,43 @@
     .ghost-btn {
       border: 1px solid var(--color-border-secondary);
       border-radius: var(--radius-lg);
-      background: rgba(245, 245, 247, 0.9);
-      padding: 12px;
+      background: linear-gradient(135deg, #F8FAFF 0%, #F5F7FB 50%, #F8FAFF 100%);
+      padding: 16px 18px;
       font-weight: var(--font-weight-semibold);
+      font-size: 15px;
       cursor: pointer;
       transition: transform var(--transition-bounce), box-shadow var(--transition-normal), border-color var(--transition-normal);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .ghost-btn:hover { transform: translateY(-1px); border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
 
+    .btn-wechat {
+      background: linear-gradient(135deg, #F2F7FF 0%, #EAF3FF 60%, #F6FAFF 100%);
+      border-color: rgba(0, 122, 255, 0.22);
+      color: #205AA8;
+    }
+
+    .btn-email {
+      background: linear-gradient(135deg, #F4F6FF 0%, #EDF0FF 60%, #F8FAFF 100%);
+      border-color: rgba(92, 116, 255, 0.22);
+      color: #364682;
+    }
+
+    .btn-guest {
+      background: linear-gradient(135deg, #F5FBFF 0%, #EFF9FF 60%, #FBFDFF 100%);
+      border-color: rgba(0, 122, 255, 0.2);
+      color: #205AA8;
+    }
+
     .register-card {
       border-radius: var(--radius-xl);
       border: 1px solid var(--color-border-secondary);
-      background: rgba(255, 255, 255, 0.95);
-      padding: var(--spacing-md);
+      background: linear-gradient(135deg, #F8FBFF 0%, #F1F6FF 60%, #FFFFFF 100%);
+      padding: calc(var(--spacing-md) + 6px);
       display: grid;
       place-items: center;
       box-shadow: var(--shadow-md);
@@ -373,8 +402,9 @@
 
     .register-card .ghost-btn {
       width: 100%;
-      background: var(--color-primary-bg);
+      background: linear-gradient(135deg, rgba(0, 122, 255, 0.12) 0%, rgba(0, 122, 255, 0.06) 100%);
       color: var(--color-primary);
+      border-color: rgba(0, 122, 255, 0.2);
     }
 
     @media (max-width: 1024px) {
@@ -474,12 +504,12 @@
 
   <section class="footer-actions" aria-label="其他方式与注册">
     <div class="other-login">
-      <button class="ghost-btn" type="button" id="wechatScan">企业微信扫码</button>
-      <button class="ghost-btn" type="button" id="emailLogin">邮箱验证码登录</button>
-      <button class="ghost-btn" type="button" id="guestLogin">访客模式体验</button>
+      <button class="ghost-btn btn-wechat" type="button" id="wechatScan"><span class="btn-icon">📷</span> 企业微信扫码</button>
+      <button class="ghost-btn btn-email" type="button" id="emailLogin"><span class="btn-icon">✉️</span> 邮箱验证码登录</button>
+      <button class="ghost-btn btn-guest" type="button" id="guestLogin"><span class="btn-icon">👀</span> 访客模式体验</button>
     </div>
     <div class="register-card">
-      <button class="ghost-btn" type="button" onclick="window.location.href='桌面端-注册.html'">新用户注册</button>
+      <button class="ghost-btn" type="button" onclick="window.location.href='桌面端-注册.html'"><span class="btn-icon">🌟</span> 新用户注册</button>
     </div>
   </section>
 
