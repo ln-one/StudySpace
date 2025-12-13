@@ -321,9 +321,9 @@
 
       <div class="helper-row" aria-label="辅助链接">
         <strong>忘记密码？</strong>
-        <a href="#" title="通过手机号找回密码">手机号找回</a>
-        <a href="#" title="通过邮箱找回密码">邮箱找回</a>
-        <a href="#" title="联系客服帮助您找回密码">联系客服</a>
+        <a href="移动端-手机号找回密码.html" title="通过手机号找回密码">手机号找回</a>
+        <a href="移动端-邮箱找回密码.html" title="通过邮箱找回密码">邮箱找回</a>
+        <a href="忘记密码-联系客服.html" title="联系客服帮助您找回密码">联系客服</a>
       </div>
 
       <section class="other-login" aria-label="其他登录方式">
@@ -408,20 +408,9 @@
       }, 700);
     });
 
-    document.querySelector("#wechatScan")?.addEventListener("click", () => {
-      formMessage.style.display = "flex";
-      showMessage("请使用企业微信扫一扫窗口登录（示例）", "success");
-    });
-
-    document.querySelector("#emailLogin")?.addEventListener("click", () => {
-      formMessage.style.display = "flex";
-      showMessage("将跳转邮箱验证码登录流程（示例）", "success");
-    });
-
-    document.querySelector("#guestLogin")?.addEventListener("click", () => {
-      formMessage.style.display = "flex";
-      showMessage("已进入访客模式体验（示例）", "success");
-    });
+    document.querySelector("#wechatScan")?.addEventListener("click", () => goTo("移动端-微信登录.html"));
+    document.querySelector("#emailLogin")?.addEventListener("click", () => goTo("移动端-邮箱登录.html"));
+    document.querySelector("#guestLogin")?.addEventListener("click", () => goTo("移动用户端-任务.html"));
   </script>
 </body>
 </html>
