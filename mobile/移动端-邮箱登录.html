@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>StudySpace - 邮箱登录</title>
   <link rel="stylesheet" href="../desktop/admin-desktop/core/styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --auth-bg: radial-gradient(circle at 18% 22%, rgba(0, 122, 255, 0.12), transparent 34%),
@@ -30,14 +31,39 @@
       background: rgba(255, 255, 255, 0.9);
       border: 1px solid var(--color-border-secondary);
       border-radius: 46px;
-      padding: 18px 16px 22px;
+      padding: 10px 16px 14px;
       box-shadow: var(--shadow-xl);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
-      min-height: 720px;
+      min-height: 780px;
       display: grid;
-      gap: var(--spacing-md);
+      gap: 12px;
     }
+
+    .status-bar {
+      height: 44px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      border-radius: 26px;
+      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+      font-size: 14px;
+      color: var(--color-text-primary);
+      letter-spacing: 0.02em;
+    }
+
+    .status-bar__time { font-weight: 600; }
+
+    .status-bar__icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      color: var(--color-text-primary);
+    }
+
+    .status-bar__icons i { font-size: 14px; }
 
     .card-header {
       display: flex;
@@ -93,13 +119,21 @@
 
     @media (max-width: 480px) {
       body { padding: 20px 12px; }
-      .phone-shell { padding: 14px 12px 18px; border-radius: 46px; min-height: 600px; }
+      .phone-shell { padding: 14px 12px 18px; border-radius: 46px; min-height: 640px; }
     }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="phone-shell">
+      <div class="status-bar" aria-label="手机状态栏">
+        <div class="status-bar__time" id="currentTime">14:30</div>
+        <div class="status-bar__icons" aria-hidden="true">
+          <i class="fas fa-signal"></i>
+          <i class="fas fa-wifi"></i>
+          <i class="fas fa-battery-three-quarters"></i>
+        </div>
+      </div>
       <div class="card-header" aria-label="邮箱登录标题">
         <div class="brand-logo">SS</div>
         <div class="brand-title">
@@ -125,7 +159,7 @@
           <div class="form-message" id="formMessage" aria-live="polite"></div>
           <div class="actions">
             <button class="btn-primary" type="submit" id="loginBtn">登录</button>
-            <button class="link-button" type="button" onclick="window.location.href='移动用户端-登录.html'">返回登录</button>
+            <button class="link-button" type="button" onclick="window.location.href='移动用户端-进入页面.html'">返回登录</button>
           </div>
         </form>
       </section>
@@ -133,6 +167,15 @@
   </div>
 
   <script>
+    function updateCurrentTime() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+      const timeEl = document.getElementById('currentTime');
+      if (timeEl) timeEl.textContent = timeStr;
+    }
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 60000);
+
     const form = document.querySelector('#emailLoginForm');
     const formMessage = document.querySelector('#formMessage');
     const sendCodeBtn = document.querySelector('#sendCodeBtn');
