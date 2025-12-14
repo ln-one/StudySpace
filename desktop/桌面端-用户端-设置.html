@@ -34,14 +34,16 @@
     }
 
     *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;}
-    html,body{width:100%;height:100%;overflow:hidden;}
+    html,body{width:100%;height:100%;overflow:auto;}
+
     body{
       min-height:100vh;
       background:linear-gradient(135deg,#f5f7fa 0%,#e4e7ec 100%);
       color:var(--text-main);
       display:flex;
     }
-    .app-container{display:flex;width:100%;height:100vh;}
+
+    .app-container{display:flex;width:100%;min-height:100vh;}
 
     /* sidebar */
     .sidebar{
@@ -64,7 +66,9 @@
     .sidebar__user-id{font-size:12px;color:var(--text-tertiary);}
 
     /* main */
-    .main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:24px;gap:24px;min-width:0;}
+
+    .main-content{flex:1;display:flex;flex-direction:column;overflow:auto;padding:24px;gap:24px;min-width:0;}
+
     .page-header{background:var(--bg-white);border-radius:var(--radius-lg);padding:20px 24px;box-shadow:var(--shadow-sm);border:1px solid var(--border);}
     .page-header__top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px;flex-wrap:wrap;}
     .page-title{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:900;letter-spacing:-0.4px;}
@@ -132,7 +136,9 @@
           </div>
           <div class="header-actions">
             <button class="btn" onclick="window.location.href='桌面端-用户端-任务.html'">回到任务</button>
-            <button class="btn btn-primary">保存更改</button>
+
+            <button class="btn btn-primary" id="saveBtn" type="button">保存更改</button>
+
           </div>
         </div>
         <div class="page-desc">管理个人资料、安全偏好以及学习体验设置，保持账号信息最新。</div>
@@ -145,24 +151,24 @@
           <div class="field-group">
             <div class="field">
               <label>昵称</label>
-              <input type="text" value="StudyUser123" />
+              <input type="text" name="nickname" value="StudyUser123" />
             </div>
             <div class="field">
               <label>邮箱</label>
-              <input type="email" value="student@studyspace.com" />
+              <input type="email" name="email" value="student@studyspace.com" />
             </div>
             <div class="field">
               <label>手机号</label>
-              <input type="tel" value="138****7321" />
+              <input type="tel" name="phone" value="138****7321" />
             </div>
             <div class="field">
               <label>年级 / 专业</label>
-              <input type="text" placeholder="如：大三 · 计算机科学" />
+              <input type="text" name="grade" placeholder="如：大三 · 计算机科学" />
             </div>
           </div>
           <div class="field" style="margin-top:12px;">
             <label>个人签名</label>
-            <textarea placeholder="写点什么吧…">保持专注，每天都在进步。</textarea>
+            <textarea name="signature" placeholder="写点什么吧…">保持专注，每天都在进步。</textarea>
           </div>
         </div>
 
@@ -184,29 +190,29 @@
             <div class="field">
               <label>登录密码</label>
               <div style="display:flex;gap:8px;align-items:center;">
-                <input type="password" value="********" style="flex:1;" />
+                <input type="password" name="password" value="********" style="flex:1;" />
                 <button class="btn" type="button">修改</button>
               </div>
             </div>
             <div class="field">
               <label>双重验证</label>
               <div style="display:flex;gap:8px;align-items:center;">
-                <div class="toggle is-on" aria-label="已开启双重验证"></div>
+                <div class="toggle is-on" data-key="twoFactor" aria-label="已开启双重验证"></div>
                 <span style="color:var(--text-secondary);font-weight:700;">手机号 · 尾号 7321</span>
               </div>
             </div>
           </div>
           <div class="toggle-row">
             <span>新设备登录提醒</span>
-            <div class="toggle is-on"></div>
+            <div class="toggle is-on" data-key="newDevice"></div>
           </div>
           <div class="toggle-row">
             <span>每日自动备份学习数据</span>
-            <div class="toggle is-on"></div>
+            <div class="toggle is-on" data-key="backup"></div>
           </div>
           <div class="toggle-row">
             <span>允许在座位预约时自动同步到日历</span>
-            <div class="toggle"></div>
+            <div class="toggle" data-key="syncCalendar"></div>
           </div>
         </div>
 
@@ -216,7 +222,7 @@
           <div class="field-group">
             <div class="field">
               <label>提醒频率</label>
-              <select>
+              <select name="reminder">
                 <option>默认 · 适中</option>
                 <option>轻提醒 · 不打扰</option>
                 <option>强化提醒 · 保持专注</option>
@@ -224,7 +230,7 @@
             </div>
             <div class="field">
               <label>番茄钟时长</label>
-              <select>
+              <select name="pomodoro">
                 <option>25 分钟</option>
                 <option>45 分钟</option>
                 <option>60 分钟</option>
@@ -232,14 +238,14 @@
             </div>
             <div class="field">
               <label>主题</label>
-              <select>
+              <select name="theme">
                 <option>浅色 · 默认</option>
                 <option>深色 · 护眼</option>
               </select>
             </div>
             <div class="field">
               <label>首选座位区域</label>
-              <select>
+              <select name="seatPref">
                 <option>图书馆 自习区</option>
                 <option>创新工坊 静音区</option>
                 <option>学习咖啡厅</option>
@@ -248,7 +254,82 @@
           </div>
         </div>
       </section>
+      <div id="saveToast" role="status" aria-live="polite" style="position:fixed;right:24px;bottom:24px;min-width:240px;padding:14px 16px;border-radius:12px;background:rgba(45,129,255,0.95);color:#fff;font-weight:800;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(10px);transition:all .25s ease;pointer-events:none;">已保存你的设置</div>
     </main>
   </div>
+
+  <script>
+    const storageKey = 'studyspace-settings';
+    const saveBtn = document.getElementById('saveBtn');
+    const toast = document.getElementById('saveToast');
+    const fields = Array.from(document.querySelectorAll('.field input, .field select, .field textarea'));
+    const toggles = Array.from(document.querySelectorAll('.toggle'));
+
+    const toggleState = new Proxy({}, {
+      get: (obj, key) => obj[key] ?? false,
+      set: (obj, key, value) => { obj[key] = value; return true; }
+    });
+
+    function syncToggleVisual(el, isOn){
+      el.classList.toggle('is-on', isOn);
+      el.setAttribute('aria-checked', isOn);
+    }
+
+    toggles.forEach(toggle => {
+      const key = toggle.dataset.key || '';
+      toggle.addEventListener('click', () => {
+        const next = !toggle.classList.contains('is-on');
+        syncToggleVisual(toggle, next);
+        if(key) toggleState[key] = next;
+      });
+    });
+
+    function showToast(){
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+      }, 1500);
+    }
+
+    function saveSettings(){
+      const data = { fields: {}, toggles: {} };
+      fields.forEach(input => { if(input.name) data.fields[input.name] = input.value; });
+      toggles.forEach(t => { const key = t.dataset.key; if(key) data.toggles[key] = t.classList.contains('is-on'); });
+      localStorage.setItem(storageKey, JSON.stringify(data));
+      showToast();
+    }
+
+    function restoreSettings(){
+      const saved = localStorage.getItem(storageKey);
+      if(!saved) return;
+      try{
+        const data = JSON.parse(saved);
+        if(data.fields){
+          fields.forEach(input => {
+            if(input.name && data.fields[input.name] !== undefined){
+              input.value = data.fields[input.name];
+            }
+          });
+        }
+        if(data.toggles){
+          toggles.forEach(t => {
+            const key = t.dataset.key;
+            if(key && data.toggles[key] !== undefined){
+              const state = !!data.toggles[key];
+              toggleState[key] = state;
+              syncToggleVisual(t, state);
+            }
+          });
+        }
+      }catch(err){
+        console.warn('无法读取已保存的设置', err);
+      }
+    }
+
+    saveBtn.addEventListener('click', saveSettings);
+    restoreSettings();
+  </script>
 </body>
 </html>
