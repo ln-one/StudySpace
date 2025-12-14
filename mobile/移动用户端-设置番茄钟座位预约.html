@@ -1671,24 +1671,34 @@
                 </div>
             </div>
 
-            <!-- 任务模块（预留） -->
+            <!-- 任务模块（跳转入口） -->
             <div class="module" id="moduleTask">
                 <div class="card" style="height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
                     <div>
                         <i class="fas fa-tasks" style="font-size: 64px; margin-bottom: 24px; color: var(--primary-light); display: block;"></i>
-                        <div style="font-size: 20px; margin-bottom: 12px; font-weight: 700;">任务页面</div>
-                        <div style="font-size: 15px; color: var(--text-secondary); opacity: 0.7;">（待开发）</div>
+                        <div style="font-size: 20px; margin-bottom: 12px; font-weight: 700;">回到任务清单</div>
+                        <div style="font-size: 15px; color: var(--text-secondary); opacity: 0.7;">与番茄钟同步的任务视图</div>
+                        <div style="margin-top: 18px; display: flex; justify-content: center;">
+                            <a class="btn btn-primary" style="text-decoration: none;" href="移动用户端-任务.html">
+                                <i class="fas fa-arrow-right"></i> 前往任务页
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 日历模块（预留） -->
+            <!-- 日历模块（跳转入口） -->
             <div class="module" id="moduleCalendar">
                 <div class="card" style="height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
                     <div>
                         <i class="fas fa-calendar-alt" style="font-size: 64px; margin-bottom: 24px; color: var(--primary-light); display: block;"></i>
-                        <div style="font-size: 20px; margin-bottom: 12px; font-weight: 700;">日历页面</div>
-                        <div style="font-size: 15px; color: var(--text-secondary); opacity: 0.7;">（待开发）</div>
+                        <div style="font-size: 20px; margin-bottom: 12px; font-weight: 700;">查看周视图</div>
+                        <div style="font-size: 15px; color: var(--text-secondary); opacity: 0.7;">保持与任务/预约的互跳</div>
+                        <div style="margin-top: 18px; display: flex; justify-content: center;">
+                            <a class="btn btn-primary" style="text-decoration: none;" href="移动端用户端-日历.html">
+                                <i class="fas fa-calendar-day"></i> 打开日历
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2608,7 +2618,19 @@
     // -------------------------- 初始化 --------------------------
     // 初始化页面
     document.addEventListener('DOMContentLoaded', () => {
-        switchModule('modulePomodoro');
+        const params = new URLSearchParams(window.location.search);
+        const hashModule = window.location.hash.replace('#', '');
+        const moduleKey = (params.get('module') || hashModule || 'pomodoro').toLowerCase();
+        const moduleMap = {
+            'pomodoro': 'modulePomodoro',
+            'reserve': 'moduleReserve',
+            'task': 'moduleTask',
+            'calendar': 'moduleCalendar',
+            'settings': 'moduleSettings'
+        };
+        const initialModule = moduleMap[moduleKey] || 'modulePomodoro';
+
+        switchModule(initialModule);
         topBack.style.display = 'none';
         topAvatar.style.display = 'flex';
         bottomNav.style.display = 'flex';
