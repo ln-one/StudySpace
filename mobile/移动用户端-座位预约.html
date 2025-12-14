@@ -1593,38 +1593,6 @@
                 </div>
             </div>
 
-            <!-- 任务模块（跳转入口） -->
-            <div class="module" id="moduleTask">
-                <div class="card" style="height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
-                    <div>
-                        <i class="fas fa-tasks" style="font-size: 64px; margin-bottom: 24px; color: var(--primary-light); display: block;"></i>
-                        <div style="font-size: 20px; margin-bottom: 12px; font-weight: 700;">回到任务清单</div>
-                        <div style="font-size: 15px; color: var(--text-secondary); opacity: 0.7;">与番茄钟同步的任务视图</div>
-                        <div style="margin-top: 18px; display: flex; justify-content: center;">
-                            <a class="btn btn-primary" style="text-decoration: none;" href="移动用户端-任务.html">
-                                <i class="fas fa-arrow-right"></i> 前往任务页
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 日历模块（跳转入口） -->
-            <div class="module" id="moduleCalendar">
-                <div class="card" style="height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
-                    <div>
-                        <i class="fas fa-calendar-alt" style="font-size: 64px; margin-bottom: 24px; color: var(--primary-light); display: block;"></i>
-                        <div style="font-size: 20px; margin-bottom: 12px; font-weight: 700;">查看周视图</div>
-                        <div style="font-size: 15px; color: var(--text-secondary); opacity: 0.7;">保持与任务/预约的互跳</div>
-                        <div style="margin-top: 18px; display: flex; justify-content: center;">
-                            <a class="btn btn-primary" style="text-decoration: none;" href="移动端用户端-日历.html">
-                                <i class="fas fa-calendar-day"></i> 打开日历
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- 设置模块 -->
             <div class="module" id="moduleSettings">
                 <div class="profile-card" onclick="showProfileModal()">
@@ -1702,14 +1670,14 @@
 
         <!-- 底部导航栏 -->
         <div class="bottom-nav" id="bottomNav">
-            <div class="nav-item" data-module="moduleTask">
+            <a class="nav-item" href="移动用户端-任务.html" style="text-decoration: none; color: inherit;">
                 <div class="nav-item__icon"><i class="fas fa-clipboard-list"></i></div>
                 <div>任务</div>
-            </div>
-            <div class="nav-item" data-module="moduleCalendar">
+            </a>
+            <a class="nav-item" href="移动端用户端-日历.html" style="text-decoration: none; color: inherit;">
                 <div class="nav-item__icon"><i class="fas fa-calendar-day"></i></div>
                 <div>日历</div>
-            </div>
+            </a>
             <a class="nav-item" href="移动用户端-设置番茄钟.html" style="text-decoration: none; color: inherit;">
                 <div class="nav-item__icon"><i class="fas fa-clock"></i></div>
                 <div>番茄钟</div>
@@ -1811,8 +1779,6 @@
 
         const titleMap = {
             moduleReserve: '座位预约',
-            moduleTask: '任务',
-            moduleCalendar: '日历',
             moduleSettings: '我的设置'
         };
         topTitle.textContent = titleMap[targetModule] || 'StudySpace';
@@ -2370,8 +2336,6 @@
         const moduleKey = (params.get('module') || hashModule || 'reserve').toLowerCase();
         const moduleMap = {
             'reserve': 'moduleReserve',
-            'task': 'moduleTask',
-            'calendar': 'moduleCalendar',
             'settings': 'moduleSettings'
         };
         const initialModule = moduleMap[moduleKey] || 'moduleReserve';
