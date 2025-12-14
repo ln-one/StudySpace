@@ -108,6 +108,39 @@
       color: var(--primary);
       border-left-color: var(--primary);
       font-weight: 800;
+
+    }
+
+    .sidebar__nav {
+      padding: 24px 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar__nav-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      text-decoration: none;
+      color: var(--color-text-secondary);
+      transition: all var(--transition-normal);
+      font-size: 15px;
+      font-weight: var(--font-weight-semibold);
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar__nav-item:hover {
+      background: rgba(245, 245, 247, 0.8);
+      color: var(--color-text-primary);
+    }
+
+    .sidebar__nav-item.active {
+      background: rgba(0, 122, 255, 0.12);
+      color: var(--color-primary);
+      border-left-color: var(--color-primary);
+      font-weight: var(--font-weight-bold);
     }
 
     .page-content {
@@ -457,6 +490,7 @@
         <a href="桌面端-用户端-学习记录.html" class="sidebar__nav-item active" aria-current="page">学习记录</a>
         <a href="桌面-用户端-座位预约.html" class="sidebar__nav-item">座位预约</a>
         <a href="桌面端-用户端-设置.html" class="sidebar__nav-item">个人设置</a>
+
       </nav>
     </aside>
 
