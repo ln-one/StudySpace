@@ -55,7 +55,6 @@
         .card { background: var(--glass-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 20px; margin-bottom: 16px; border: 1px solid var(--glass-border); backdrop-filter: var(--glass-blur); }
         .section-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
         .section-title { font-size: 17px; font-weight: 800; }
-        .section-sub { color: var(--text-secondary); font-size: 13px; }
         .badge { padding: 6px 10px; border-radius: 12px; background: var(--primary-light); color: var(--primary); font-weight: 700; font-size: 12px; }
 
         .week-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
@@ -172,7 +171,6 @@
         <div class="top-bar">
             <div class="top-bar__avatar">C</div>
             <div class="top-bar__title">周视图日历</div>
-            <a class="top-bar__action" href="移动用户端-任务.html"><i class="fa-regular fa-square-check"></i> 任务</a>
         </div>
 
         <div class="main-content">
@@ -180,7 +178,6 @@
                 <div class="section-header">
                     <div>
                         <div class="section-title">本周 · 10/14 - 10/20</div>
-                        <div class="section-sub">保持移动端简洁，仅保留周视图</div>
                     </div>
                     <span class="badge">同步开启</span>
                 </div>
@@ -222,9 +219,7 @@
                 <div class="section-header">
                     <div>
                         <div class="section-title">今日安排 · 周三</div>
-                        <div class="section-sub">向下滚动即可查看所有内容</div>
                     </div>
-                    <a class="ghost-btn" href="移动用户端-任务.html"><i class="fa-regular fa-square-check"></i> 任务清单</a>
                 </div>
                 <div class="event-list">
                     <div class="event-item">
@@ -258,7 +253,6 @@
                 <div class="section-header">
                     <div>
                         <div class="section-title">其他日期</div>
-                        <div class="section-sub">不用月视图也能快速扫一眼</div>
                     </div>
                 </div>
                 <div class="event-list">
@@ -281,20 +275,6 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">快捷入口</div>
-                        <div class="section-sub">与任务页互跳，风格统一</div>
-                    </div>
-                </div>
-                <div class="quick-actions">
-                    <a class="ghost-btn primary" href="移动用户端-任务.html"><i class="fa-regular fa-square-check"></i> 打开任务</a>
-                    <a class="ghost-btn" href="移动用户端-任务.html"><i class="fa-solid fa-link"></i> 同步任务</a>
-                    <a class="ghost-btn" href="#"><i class="fa-regular fa-calendar-plus"></i> 新建日程</a>
-                    <a class="ghost-btn" href="移动用户端-任务.html"><i class="fa-regular fa-clock"></i> 查看番茄钟</a>
-                </div>
-            </div>
         </div>
 
         <div class="bottom-nav" id="bottomNav">
