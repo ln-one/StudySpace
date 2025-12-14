@@ -164,11 +164,27 @@
     .time-tag small{display:block;margin-top:4px;color:var(--text-secondary);font-weight:900;} 
     .list-item__main{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;} 
     .list-item__title{font-size:15px;font-weight:900;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} 
-    .list-item__meta{font-size:12px;font-weight:800;color:var(--text-secondary);display:flex;gap:8px;flex-wrap:wrap;} 
-    .list-item__tags{display:flex;gap:6px;flex-wrap:wrap;} 
+    .list-item__meta{font-size:12px;font-weight:800;color:var(--text-secondary);display:flex;gap:8px;flex-wrap:wrap;}
+    .list-item__tags{display:flex;gap:6px;flex-wrap:wrap;}
 
-    .side-panel__footer{padding:14px 18px 18px;border-top:1px solid var(--border);display:flex;gap:10px;} 
-    .side-panel__footer .btn{flex:1;} 
+    .side-panel__footer{padding:14px 18px 18px;border-top:1px solid var(--border);display:flex;gap:10px;}
+    .side-panel__footer .btn{flex:1;}
+
+    /* ===== Modal ===== */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.14);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);z-index:2000;padding:18px;}
+    .modal.active{display:flex;}
+    .modal__body{background:var(--bg-white);border-radius:var(--radius-lg);padding:22px 24px;border:1px solid var(--glass-border);box-shadow:var(--shadow-lg);width:min(520px,94vw);}
+    .modal__title{font-size:18px;font-weight:900;margin-bottom:10px;letter-spacing:-0.2px;}
+    .modal__msg{font-size:14px;font-weight:700;color:var(--text-secondary);line-height:1.6;white-space:pre-line;margin-bottom:16px;display:none;}
+    .modal__actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .form-grid.single{grid-template-columns:1fr;}
+    .form-row{display:flex;flex-direction:column;gap:6px;}
+    .form-row label{font-size:13px;font-weight:800;color:var(--text-secondary);}
+    .form-row input,.form-row select{height:40px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg-white);font-size:14px;font-weight:700;}
+    .tag-options{display:flex;flex-wrap:wrap;gap:8px;}
+    .tag-option{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;border:1px solid var(--border);background:var(--bg-light);font-size:13px;font-weight:800;cursor:pointer;}
+    .tag-option input{accent-color:var(--primary);}
 
     @media (max-width: 1100px){.side-panel{display:none;}}
   </style>
@@ -295,6 +311,55 @@
         </aside>
       </section>
     </main>
+    <div class="modal" id="modal">
+      <div class="modal__body">
+        <div class="modal__title" id="modalTitle">提示</div>
+        <div class="modal__msg" id="modalMsg">—</div>
+
+        <div id="modalForm">
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="eventTitle">标题</label>
+              <input id="eventTitle" placeholder="如：自习 · 英语听力训练" />
+            </div>
+            <div class="form-row">
+              <label for="eventDate">日期</label>
+              <input id="eventDate" type="date" />
+            </div>
+            <div class="form-row">
+              <label for="eventStart">开始时间</label>
+              <input id="eventStart" type="time" />
+            </div>
+            <div class="form-row">
+              <label for="eventEnd">结束时间</label>
+              <input id="eventEnd" type="time" />
+            </div>
+          </div>
+          <div class="form-grid single" style="margin-top:10px;">
+            <div class="form-row">
+              <label for="eventLoc">地点</label>
+              <input id="eventLoc" placeholder="如：自习室 · A区 / 线上" />
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:10px;">
+            <label>标签</label>
+            <div class="tag-options" id="tagOptions">
+              <label class="tag-option"><input type="checkbox" value="学习计划"> 学习计划</label>
+              <label class="tag-option"><input type="checkbox" value="座位预约"> 座位预约</label>
+              <label class="tag-option"><input type="checkbox" value="个人事务"> 个人事务</label>
+              <label class="tag-option"><input type="checkbox" value="讨论"> 讨论</label>
+              <label class="tag-option"><input type="checkbox" value="复盘"> 复盘</label>
+              <label class="tag-option"><input type="checkbox" value="专注"> 专注</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal__actions">
+          <button class="btn" id="modalCancel">取消</button>
+          <button class="btn btn-primary" id="modalOk">确定</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -333,6 +398,18 @@
     const dTags = document.getElementById("dTags");
     const editBtn = document.getElementById("editBtn");
     const deleteBtn = document.getElementById("deleteBtn");
+    const modal = document.getElementById("modal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalMsg = document.getElementById("modalMsg");
+    const modalCancel = document.getElementById("modalCancel");
+    const modalOk = document.getElementById("modalOk");
+    const modalForm = document.getElementById("modalForm");
+    const inputTitle = document.getElementById("eventTitle");
+    const inputDate = document.getElementById("eventDate");
+    const inputStart = document.getElementById("eventStart");
+    const inputEnd = document.getElementById("eventEnd");
+    const inputLoc = document.getElementById("eventLoc");
+    const tagOptions = document.querySelectorAll('#tagOptions input[type="checkbox"]');
 
     const searchInput = document.getElementById("searchInput");
     const calendarSelect = document.getElementById("calendarSelect");
@@ -549,28 +626,106 @@
       setTimeout(scrollToNow, 80);
     }
 
+    /* ========= Modal ========= */
+    let modalOkHandler = null;
+    let modalMode = "create";
+    let editingId = null;
+
+    function resetForm(){
+      modalMsg.style.display = "none";
+      modalForm.style.display = "block";
+      inputTitle.value = "";
+      inputDate.value = toISODate(currentDate);
+      inputStart.value = "";
+      inputEnd.value = "";
+      inputLoc.value = "";
+      tagOptions.forEach(cb=>cb.checked=false);
+    }
+
+    function openEventForm(mode, ev){
+      modalMode = mode;
+      editingId = ev?.id || null;
+      resetForm();
+      modalTitle.textContent = mode === "edit" ? "编辑日程" : "新建日程";
+      modalOk.textContent = mode === "edit" ? "保存修改" : "保存日程";
+      if(ev){
+        inputTitle.value = ev.title || "";
+        inputDate.value = ev.date || toISODate(currentDate);
+        inputStart.value = ev.start || "";
+        inputEnd.value = ev.end || "";
+        inputLoc.value = ev.location || "";
+        tagOptions.forEach(cb=>cb.checked = (ev.tags||[]).includes(cb.value));
+      }
+      modal.classList.add("active");
+      modalOkHandler = handleSubmitForm;
+    }
+
+    function showConfirm(title, msg, onOk){
+      modalTitle.textContent = title;
+      modalMsg.textContent = msg;
+      modalMsg.style.display = "block";
+      modalForm.style.display = "none";
+      modalOk.textContent = "确定";
+      modal.classList.add("active");
+      modalOkHandler = onOk || null;
+    }
+
+    function closeModal(){
+      modal.classList.remove("active");
+      modalOkHandler = null;
+      editingId = null;
+    }
+
+    function handleSubmitForm(){
+      const title = inputTitle.value.trim();
+      const date = inputDate.value || toISODate(currentDate);
+      const start = inputStart.value || "";
+      const end = inputEnd.value || "";
+      if(!title){ alert("请填写标题"); return; }
+      if(start && end && timeToMinutes(end) < timeToMinutes(start)){ alert("结束时间需晚于开始时间"); return; }
+      const payload = {
+        id: editingId || `w${Date.now()}`,
+        title,
+        date,
+        start,
+        end,
+        location: inputLoc.value.trim(),
+        tags: Array.from(tagOptions).filter(cb=>cb.checked).map(cb=>cb.value),
+        tone: "normal"
+      };
+      if(modalMode === "edit"){
+        events = events.map(ev => ev.id === editingId ? { ...ev, ...payload } : ev);
+        selectedEventId = payload.id;
+      }else{
+        events.push(payload);
+        selectedEventId = payload.id;
+      }
+      closeModal();
+      rerender();
+      if(selectedEventId) selectEvent(selectedEventId);
+    }
+
     document.getElementById('prevWeekBtn').addEventListener('click', ()=>shiftWeek(-1));
     document.getElementById('nextWeekBtn').addEventListener('click', ()=>shiftWeek(1));
     document.getElementById('todayBtn').addEventListener('click', setThisWeek);
     document.getElementById('scrollNowBtn').addEventListener('click', scrollToNow);
 
-    document.getElementById('newEventBtn').addEventListener('click', ()=>{
-      alert('这里可以接入“新建日程”表单。');
-    });
+    document.getElementById('newEventBtn').addEventListener('click', ()=>openEventForm('create'));
 
     editBtn.addEventListener('click', ()=>{
       const ev = events.find(e=>e.id===selectedEventId);
-      if(ev) alert(`编辑：${ev.title}`);
+      if(ev) openEventForm('edit', ev);
     });
     deleteBtn.addEventListener('click', ()=>{
       const ev = events.find(e=>e.id===selectedEventId);
       if(!ev) return;
-      if(confirm(`确认删除【${ev.title}】吗？`)){
+      showConfirm(`删除确认`, `确认删除【${ev.title}】吗？`, ()=>{
         events = events.filter(e=>e.id!==selectedEventId);
         selectedEventId = null;
         resetDetail();
         rerender();
-      }
+        closeModal();
+      });
     });
 
     searchInput.addEventListener('input', ()=>{resetDetail();rerender();});
@@ -579,6 +734,11 @@
       ROW_HEIGHT = densitySelect.value === 'compact' ? 48 : 56;
       rerender();
       setTimeout(renderNowLine, 10);
+    });
+    modalCancel.addEventListener('click', closeModal);
+    modalOk.addEventListener('click', ()=>{
+      if(typeof modalOkHandler === 'function') modalOkHandler();
+      else closeModal();
     });
 
     // ====== 视图跳转（周 -> 日 / 月），并携带 date ======

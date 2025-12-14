@@ -457,24 +457,34 @@
 
     /* ===== Modal ===== */
     .modal{
-      position:fixed;top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      background:var(--glass-bg);
+      position:fixed;inset:0;
+      display:none;align-items:center;justify-content:center;
+      background:rgba(0,0,0,0.14);
       backdrop-filter:var(--glass-blur);
       -webkit-backdrop-filter:var(--glass-blur);
-      border:1px solid var(--glass-border);
-      border-radius:var(--radius-lg);
-      padding:26px 28px;
-      box-shadow:var(--shadow-lg);
       z-index:2000;
-      width:min(440px, 92vw);
-      display:none;
-      animation:fadeIn .25s ease-out;
+      padding:18px;
     }
-    .modal.active{display:block;}
+    .modal.active{display:flex;}
+    .modal__body{
+      background:var(--bg-white);
+      border-radius:var(--radius-lg);
+      padding:22px 24px;
+      border:1px solid var(--glass-border);
+      box-shadow:var(--shadow-lg);
+      width:min(520px,94vw);
+    }
     .modal__title{font-size:18px;font-weight:900;margin-bottom:10px;letter-spacing:-0.2px;}
-    .modal__msg{font-size:14px;font-weight:700;color:var(--text-secondary);line-height:1.6;white-space:pre-line;margin-bottom:16px;}
-    .modal__actions{display:flex;gap:10px;justify-content:flex-end;}
+    .modal__msg{font-size:14px;font-weight:700;color:var(--text-secondary);line-height:1.6;white-space:pre-line;margin-bottom:16px;display:none;}
+    .modal__actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .form-grid.single{grid-template-columns:1fr;}
+    .form-row{display:flex;flex-direction:column;gap:6px;}
+    .form-row label{font-size:13px;font-weight:800;color:var(--text-secondary);}
+    .form-row input,.form-row select{height:40px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg-white);font-size:14px;font-weight:700;}
+    .tag-options{display:flex;flex-wrap:wrap;gap:8px;}
+    .tag-option{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;border:1px solid var(--border);background:var(--bg-light);font-size:13px;font-weight:800;cursor:pointer;}
+    .tag-option input{accent-color:var(--primary);}
     @keyframes fadeIn{
       from{opacity:0; transform:translate(-50%,-54%);}
       to{opacity:1; transform:translate(-50%,-50%);}
@@ -623,11 +633,52 @@
     </main>
 
     <div class="modal" id="modal">
-      <div class="modal__title" id="modalTitle">提示</div>
-      <div class="modal__msg" id="modalMsg">—</div>
-      <div class="modal__actions">
-        <button class="btn" id="modalCancel">取消</button>
-        <button class="btn btn-primary" id="modalOk">确定</button>
+      <div class="modal__body">
+        <div class="modal__title" id="modalTitle">提示</div>
+        <div class="modal__msg" id="modalMsg">—</div>
+
+        <div id="modalForm">
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="eventTitle">标题</label>
+              <input id="eventTitle" placeholder="如：自习 · 英语听力训练" />
+            </div>
+            <div class="form-row">
+              <label for="eventDate">日期</label>
+              <input id="eventDate" type="date" />
+            </div>
+            <div class="form-row">
+              <label for="eventStart">开始时间</label>
+              <input id="eventStart" type="time" />
+            </div>
+            <div class="form-row">
+              <label for="eventEnd">结束时间</label>
+              <input id="eventEnd" type="time" />
+            </div>
+          </div>
+          <div class="form-grid single" style="margin-top:10px;">
+            <div class="form-row">
+              <label for="eventLoc">地点</label>
+              <input id="eventLoc" placeholder="如：自习室 · A区 / 线上" />
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:10px;">
+            <label>标签</label>
+            <div class="tag-options" id="tagOptions">
+              <label class="tag-option"><input type="checkbox" value="学习计划"> 学习计划</label>
+              <label class="tag-option"><input type="checkbox" value="座位预约"> 座位预约</label>
+              <label class="tag-option"><input type="checkbox" value="个人事务"> 个人事务</label>
+              <label class="tag-option"><input type="checkbox" value="讨论"> 讨论</label>
+              <label class="tag-option"><input type="checkbox" value="复盘"> 复盘</label>
+              <label class="tag-option"><input type="checkbox" value="专注"> 专注</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal__actions">
+          <button class="btn" id="modalCancel">取消</button>
+          <button class="btn btn-primary" id="modalOk">确定</button>
+        </div>
       </div>
     </div>
   </div>
@@ -741,6 +792,13 @@
     const modalMsg = document.getElementById("modalMsg");
     const modalCancel = document.getElementById("modalCancel");
     const modalOk = document.getElementById("modalOk");
+    const modalForm = document.getElementById("modalForm");
+    const inputTitle = document.getElementById("eventTitle");
+    const inputDate = document.getElementById("eventDate");
+    const inputStart = document.getElementById("eventStart");
+    const inputEnd = document.getElementById("eventEnd");
+    const inputLoc = document.getElementById("eventLoc");
+    const tagOptions = document.querySelectorAll('#tagOptions input[type="checkbox"]');
 
     /* ========= 状态 ========= */
     let currentDate = getQueryDate() || new Date();
@@ -923,8 +981,10 @@
     function filterEvents(){
       const q = (searchInput.value || "").trim().toLowerCase();
       const source = calendarSelect.value;
+      const dateStr = toISODate(currentDate);
 
       return events.filter(ev => {
+        if(ev.date && ev.date !== dateStr) return false;
         if(source !== "all"){
           const tagMap = { study:"学习计划", seat:"座位预约", life:"个人事务" };
           const must = tagMap[source];
@@ -956,15 +1016,80 @@
 
     /* ========= Modal ========= */
     let modalOkHandler = null;
-    function showModal(title, msg, onOk){
+    let modalMode = "create";
+    let editingId = null;
+
+    function resetForm(){
+      modalMsg.style.display = "none";
+      modalForm.style.display = "block";
+      inputTitle.value = "";
+      inputDate.value = toISODate(currentDate);
+      inputStart.value = "";
+      inputEnd.value = "";
+      inputLoc.value = "";
+      tagOptions.forEach(cb=>cb.checked=false);
+    }
+
+    function openEventForm(mode, ev){
+      modalMode = mode;
+      editingId = ev?.id || null;
+      resetForm();
+      modalTitle.textContent = mode === "edit" ? "编辑日程" : "新建日程";
+      modalOk.textContent = mode === "edit" ? "保存修改" : "保存日程";
+      if(ev){
+        inputTitle.value = ev.title || "";
+        inputStart.value = ev.start || "";
+        inputEnd.value = ev.end || "";
+        inputLoc.value = ev.location || "";
+        inputDate.value = ev.date || toISODate(currentDate);
+        tagOptions.forEach(cb=>cb.checked = (ev.tags||[]).includes(cb.value));
+      }
+      modal.classList.add("active");
+      modalOkHandler = handleSubmitForm;
+    }
+
+    function showConfirm(title, msg, onOk){
       modalTitle.textContent = title;
       modalMsg.textContent = msg;
+      modalMsg.style.display = "block";
+      modalForm.style.display = "none";
+      modalOk.textContent = "确定";
       modal.classList.add("active");
       modalOkHandler = onOk || null;
     }
+
     function closeModal(){
       modal.classList.remove("active");
       modalOkHandler = null;
+      editingId = null;
+    }
+
+    function handleSubmitForm(){
+      const title = inputTitle.value.trim();
+      const date = inputDate.value || toISODate(currentDate);
+      const start = inputStart.value || "";
+      const end = inputEnd.value || "";
+      if(!title){ alert("请填写标题"); return; }
+      if(start && end && timeToMinutes(end) < timeToMinutes(start)){ alert("结束时间需晚于开始时间"); return; }
+      const payload = {
+        id: editingId || `e${Date.now()}`,
+        title,
+        date,
+        start,
+        end,
+        location: inputLoc.value.trim(),
+        tags: Array.from(tagOptions).filter(cb=>cb.checked).map(cb=>cb.value),
+        tone: "normal"
+      };
+      if(modalMode === "edit"){
+        events = events.map(ev => ev.id === editingId ? { ...ev, ...payload } : ev);
+        selectedEventId = payload.id;
+      }else{
+        events.push(payload);
+        selectedEventId = payload.id;
+      }
+      closeModal();
+      rerender();
     }
 
     /* ========= 绑定 ========= */
@@ -973,27 +1098,18 @@
     document.getElementById("todayBtn").addEventListener("click", setToday);
     document.getElementById("scrollNowBtn").addEventListener("click", scrollToNow);
 
-    document.getElementById("newEventBtn").addEventListener("click", ()=>{
-      showModal(
-        "新建日程（示例）",
-        "这里是占位交互：你可以在这里接入“新建日程”的表单。\n\n建议字段：标题 / 开始时间 / 结束时间 / 地点 / 标签。",
-        ()=>closeModal()
-      );
-    });
+    document.getElementById("newEventBtn").addEventListener("click", ()=>openEventForm("create"));
 
     editBtn.addEventListener("click", ()=>{
       const ev = events.find(e => e.id === selectedEventId);
       if(!ev) return;
-      showModal("编辑日程（示例）",
-        `你选择了：${ev.title}\n时间：${ev.start}-${ev.end}\n\n这里接入编辑表单即可。`,
-        ()=>closeModal()
-      );
+      openEventForm("edit", ev);
     });
 
     deleteBtn.addEventListener("click", ()=>{
       const ev = events.find(e => e.id === selectedEventId);
       if(!ev) return;
-      showModal("删除确认",
+      showConfirm("删除确认",
         `确认删除该日程？\n\n${ev.title}\n${ev.start}-${ev.end}`,
         ()=>{
           events = events.filter(e => e.id !== selectedEventId);
