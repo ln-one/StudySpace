@@ -63,32 +63,17 @@
         .day.active { border-color: var(--primary); box-shadow: 0 6px 18px rgba(45,129,255,0.16); }
         .day-name { color: var(--text-secondary); font-size: 12px; }
         .day-num { font-weight: 800; font-size: 18px; margin-top: 2px; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); display: inline-block; margin-top: 6px;}
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); display: inline-block; margin-top: 6px; }
 
-        .schedule-board { margin-top: 16px; border: 1px solid var(--glass-border); border-radius: 22px; overflow: hidden; box-shadow: var(--shadow-sm); background: #fff; }
-        .schedule-grid { display: grid; grid-template-columns: 64px repeat(7, 1fr); gap: 0; position: relative; }
-        .time-column { background: #f9fafc; border-right: 1px solid var(--border); padding: 12px 6px; display: grid; grid-template-rows: repeat(12, 48px); color: var(--text-secondary); font-size: 11px; }
-        .time-column span { align-self: start; }
-        .day-column { position: relative; min-height: calc(12 * 48px); border-right: 1px solid var(--border); background: linear-gradient(to bottom, rgba(229,229,231,0.35) 1px, transparent 1px); background-size: 100% 48px; padding: 12px 8px; }
-        .day-column:last-child { border-right: none; }
-        .day-column .day-label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-weight: 700; font-size: 13px; }
-        .day-column .day-label small { color: var(--text-secondary); font-weight: 500; }
-        .event-card { position: absolute; left: 8%; right: 8%; padding: 8px 10px; background: linear-gradient(135deg, #eef4ff, #ffffff); border-radius: 14px; border: 1px solid var(--glass-border); box-shadow: 0 8px 22px rgba(0,0,0,0.06); color: var(--text-main); font-size: 12px; overflow: hidden; cursor: pointer; }
-        .event-card small { color: var(--text-secondary); display: block; font-size: 11px; }
-        .event-card strong { font-size: 13px; display: block; margin-bottom: 2px; }
-        .event-card.active { border-color: var(--primary); box-shadow: 0 12px 28px rgba(45,129,255,0.22); }
+        .event-list { display: flex; flex-direction: column; gap: 12px; }
+        .event-item { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; background: #fff; box-shadow: inset 0 0 0 0 rgba(0,0,0,0); }
+        .event-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; color: var(--text-secondary); font-size: 13px; }
+        .event-title { font-weight: 700; margin-bottom: 4px; }
+        .event-desc { color: var(--text-secondary); font-size: 13px; }
 
-        .edit-panel { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
-        .form-control { display: flex; flex-direction: column; gap: 6px; }
-        .form-control label { font-size: 13px; color: var(--text-secondary); }
-        .form-control input, .form-control textarea { border-radius: 12px; border: 1px solid var(--border); padding: 10px 12px; background: #fff; font-size: 14px; color: var(--text-main); box-shadow: inset 0 1px 2px rgba(0,0,0,0.03); }
-        .form-control textarea { min-height: 64px; resize: vertical; }
-        .edit-actions { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-top: 12px; }
+        .quick-actions { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
         .ghost-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border); text-decoration: none; color: var(--text-main); background: #fff; font-weight: 700; }
         .ghost-btn.primary { background: linear-gradient(135deg, var(--primary), #64b5ff); color: #fff; border: none; box-shadow: var(--shadow-sm); }
-
-        .floating-actions { position: fixed; right: 28px; bottom: 110px; display: flex; flex-direction: column; gap: 10px; z-index: 20; }
-        .fab { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, var(--primary), #64b5ff); color: #fff; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 14px 28px rgba(45,129,255,0.25); border: none; font-size: 20px; }
 
         .bottom-nav {
             height: 76px;
@@ -193,7 +178,6 @@
                 <div class="section-header">
                     <div>
                         <div class="section-title">本周 · 10/14 - 10/20</div>
-                        <div style="color:var(--text-secondary); font-size: 13px;">周视图作为主体，日程卡片直接落在时间表里</div>
                     </div>
                     <span class="badge">同步开启</span>
                 </div>
@@ -229,108 +213,68 @@
                         <div class="day-num">20</div>
                     </div>
                 </div>
-
-                <div class="schedule-board">
-                    <div class="schedule-grid">
-                        <div class="time-column">
-                            <span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span><span>17:00</span><span>18:00</span><span>19:00</span>
-                        </div>
-                        <div class="day-column">
-                            <div class="day-label"><span>周一</span><small>10/14</small></div>
-                            <div class="event-card" style="top:calc((9-8)*48px);height:calc(1.5*48px);" data-title="晨读英语" data-time="09:00 - 10:30" data-place="宿舍窗边" data-note="轻量复习词汇">
-                                <strong>晨读英语</strong>
-                                <small>09:00 - 10:30 · 宿舍窗边</small>
-                            </div>
-                        </div>
-                        <div class="day-column">
-                            <div class="day-label"><span>周二</span><small>10/15</small></div>
-                            <div class="event-card" style="top:calc((14-8)*48px);height:calc(1*48px);" data-title="课设讨论" data-time="14:00 - 15:00" data-place="腾讯会议" data-note="输出行动项，缩减会议时长">
-                                <strong>课设讨论</strong>
-                                <small>14:00 - 15:00 · 腾讯会议</small>
-                            </div>
-                        </div>
-                        <div class="day-column">
-                            <div class="day-label"><span>周三</span><small>10/16</small></div>
-                            <div class="event-card" style="top:calc((9-8)*48px);height:calc(1.5*48px);" data-title="《计算机网络》练习" data-time="09:00 - 10:30" data-place="图书馆 3F" data-note="巩固 30 题，进度登记">
-                                <strong>《计算机网络》练习</strong>
-                                <small>09:00 - 10:30 · 图书馆 3F</small>
-                            </div>
-                            <div class="event-card" style="top:calc((14-8)*48px);height:calc(1*48px);" data-title="课程大作业对齐" data-time="14:00 - 15:00" data-place="在线会议" data-note="分工确认，记录到任务页">
-                                <strong>课程大作业对齐</strong>
-                                <small>14:00 - 15:00 · 在线会议</small>
-                            </div>
-                            <div class="event-card" style="top:calc((19-8)*48px);height:calc(0.75*48px);" data-title="晚间自习座位" data-time="19:00 - 19:45" data-place="自习室" data-note="进场前提醒，检查资料">
-                                <strong>晚间自习座位</strong>
-                                <small>19:00 - 19:45 · 自习室</small>
-                            </div>
-                        </div>
-                        <div class="day-column">
-                            <div class="day-label"><span>周四</span><small>10/17</small></div>
-                            <div class="event-card" style="top:calc((10-8)*48px);height:calc(1*48px);" data-title="论文初稿上传" data-time="10:00 - 11:00" data-place="线上" data-note="提交前再核对图片与引用">
-                                <strong>论文初稿上传</strong>
-                                <small>10:00 - 11:00 · 线上</small>
-                            </div>
-                        </div>
-                        <div class="day-column">
-                            <div class="day-label"><span>周五</span><small>10/18</small></div>
-                            <div class="event-card" style="top:calc((8.5-8)*48px);height:calc(0.75*48px);" data-title="早间签到回顾" data-time="08:30 - 09:15" data-place="学习广场" data-note="签到后复盘任务清单">
-                                <strong>早间签到回顾</strong>
-                                <small>08:30 - 09:15 · 学习广场</small>
-                            </div>
-                        </div>
-                        <div class="day-column">
-                            <div class="day-label"><span>周六</span><small>10/19</small></div>
-                            <div class="event-card" style="top:calc((15-8)*48px);height:calc(1.5*48px);" data-title="团队复盘" data-time="15:00 - 16:30" data-place="研讨间" data-note="复盘本周计划，轻量更新进度">
-                                <strong>团队复盘</strong>
-                                <small>15:00 - 16:30 · 研讨间</small>
-                            </div>
-                        </div>
-                        <div class="day-column">
-                            <div class="day-label"><span>周日</span><small>10/20</small></div>
-                            <div class="event-card" style="top:calc((10-8)*48px);height:calc(1*48px);" data-title="运动恢复" data-time="10:00 - 11:00" data-place="操场" data-note="低强度拉伸，避免时间遮挡">
-                                <strong>运动恢复</strong>
-                                <small>10:00 - 11:00 · 操场</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <div class="card" id="editCard">
+            <div class="card">
                 <div class="section-header">
                     <div>
-                        <div class="section-title">日程编辑</div>
-                        <div style="color:var(--text-secondary); font-size: 13px;">点击时间表里的日程卡片即可编辑</div>
-                    </div>
-                    <span class="badge" id="selectedBadge">未选择</span>
-                </div>
-                <div class="edit-panel">
-                    <div class="form-control">
-                        <label for="eventTitle">标题</label>
-                        <input id="eventTitle" type="text" placeholder="选择日程以填充" />
-                    </div>
-                    <div class="form-control">
-                        <label for="eventTime">时间</label>
-                        <input id="eventTime" type="text" placeholder="09:00 - 10:30" />
-                    </div>
-                    <div class="form-control">
-                        <label for="eventPlace">地点</label>
-                        <input id="eventPlace" type="text" placeholder="地点或会议链接" />
-                    </div>
-                    <div class="form-control">
-                        <label for="eventNote">备注</label>
-                        <textarea id="eventNote" placeholder="备注、提醒或同步信息"></textarea>
+                        <div class="section-title">今日安排 · 周三</div>
                     </div>
                 </div>
-                <div class="edit-actions">
-                    <button class="ghost-btn"><i class="fa-solid fa-pen"></i> 保存编辑</button>
-                    <button class="ghost-btn primary"><i class="fa-solid fa-share-from-square"></i> 同步到任务</button>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span>09:00 - 10:30</span>
+                            <span class="badge" style="background:#eafaf1;color:#1b8a3d;">自习</span>
+                        </div>
+                        <div class="event-title">《计算机网络》第三章练习</div>
+                        <div class="event-desc">图书馆 3 楼 · 30 题巩固</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span>14:00 - 15:00</span>
+                            <span class="badge">讨论</span>
+                        </div>
+                        <div class="event-title">课程大作业需求对齐</div>
+                        <div class="event-desc">腾讯会议 · 分工与时间表</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span>19:00 - 20:00</span>
+                            <span class="badge" style="background:#fff3e8;color:#c76b00;">提醒</span>
+                        </div>
+                        <div class="event-title">晚间自习座位确认</div>
+                        <div class="event-desc">入场前 15 分钟提醒</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="floating-actions">
-            <button class="fab" aria-label="新建日程"><i class="fa-solid fa-plus"></i></button>
+            <div class="card">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">其他日期</div>
+                    </div>
+                </div>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span>周四 · 10:00</span>
+                            <span class="badge" style="background:#fff; color: var(--text-main); border:1px solid var(--border);">提交</span>
+                        </div>
+                        <div class="event-title">论文初稿上传</div>
+                        <div class="event-desc">截止前 2 小时推送提醒</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span>周五 · 08:30</span>
+                            <span class="badge" style="background:#eafaf1;color:#1b8a3d;">签到</span>
+                        </div>
+                        <div class="event-title">早间签到 + 日程回顾</div>
+                        <div class="event-desc">保持连续打卡，自动同步任务</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="bottom-nav" id="bottomNav">
@@ -357,40 +301,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    const cards = document.querySelectorAll('.event-card');
-    const titleInput = document.getElementById('eventTitle');
-    const timeInput = document.getElementById('eventTime');
-    const placeInput = document.getElementById('eventPlace');
-    const noteInput = document.getElementById('eventNote');
-    const badge = document.getElementById('selectedBadge');
-    const fab = document.querySelector('.fab');
-
-    function fillForm(card) {
-        cards.forEach(c => c.classList.remove('active'));
-        card.classList.add('active');
-        titleInput.value = card.dataset.title || '';
-        timeInput.value = card.dataset.time || '';
-        placeInput.value = card.dataset.place || '';
-        noteInput.value = card.dataset.note || '';
-        badge.textContent = '已选 · ' + (card.dataset.time || '');
-    }
-
-    cards.forEach(card => {
-        card.addEventListener('click', () => fillForm(card));
-    });
-
-    if (cards[0]) fillForm(cards[0]);
-
-    fab.addEventListener('click', () => {
-        cards.forEach(c => c.classList.remove('active'));
-        titleInput.value = '';
-        timeInput.value = '';
-        placeInput.value = '';
-        noteInput.value = '';
-        badge.textContent = '新建日程';
-    });
-</script>
 </body>
 </html>

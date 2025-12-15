@@ -32,7 +32,11 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html, body { width: 100%; height: 100%; overflow: hidden; }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
 
         body {
             margin: 0;
@@ -48,7 +52,12 @@
             padding: 20px;
         }
 
-        .page { width: min(430px, 100%); height: calc(100vh - 40px); display: flex; flex-direction: column; }
+        .page {
+            width: min(430px, 100%);
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
 
         .app-container {
             width: 100%;
@@ -65,7 +74,19 @@
             flex-direction: column;
         }
 
-        .status-bar { height: 44px; background: var(--bg-white); display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 15px; font-weight: 600; color: var(--text-main); border-bottom: 1px solid var(--border); }
+        .status-bar {
+            height: 44px;
+            background: var(--bg-white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+        }
+
         .status-bar__icons { display: flex; gap: 6px; align-items: center; }
 
         .top-bar {
@@ -109,38 +130,42 @@
             text-decoration: none;
         }
 
-        .main-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 16px; background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0)); }
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 16px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0));
+        }
+
         .main-content::-webkit-scrollbar { display: none; }
 
-        .card { background: var(--glass-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 20px; margin-bottom: 16px; border: 1px solid var(--glass-border); backdrop-filter: var(--glass-blur); }
+        .card {
+            background: var(--glass-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-blur);
+        }
+
         .section-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
         .section-title { font-size: 17px; font-weight: 800; }
-
+        
         .task-list { display: flex; flex-direction: column; gap: 12px; }
-        .task-item { padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border); background: #fff; box-shadow: inset 0 0 0 0 rgba(0,0,0,0); transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+        .task-item { padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border); background: #fff; box-shadow: inset 0 0 0 0 rgba(0,0,0,0); transition: transform 0.2s, box-shadow 0.2s; }
         .task-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .task-item.active { border-color: var(--primary); box-shadow: 0 12px 28px rgba(45,129,255,0.16); }
-        .task-item__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; }
+        .task-item__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .badge { padding: 6px 10px; border-radius: 12px; background: var(--primary-light); color: var(--primary); font-weight: 700; font-size: 12px; }
         .task-title { font-size: 16px; font-weight: 700; margin: 0; }
         .task-meta { display: flex; gap: 10px; color: var(--text-secondary); font-size: 13px; align-items: center; flex-wrap: wrap; }
         .progress { height: 6px; background: var(--bg-light); border-radius: 8px; overflow: hidden; margin-top: 10px; }
         .progress-bar { height: 100%; background: linear-gradient(135deg, var(--primary), #64b5ff); width: 50%; }
-        .task-actions { display: flex; gap: 8px; position: absolute; top: 12px; right: 12px; }
-        .icon-btn { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--border); background: #fff; display: inline-flex; align-items: center; justify-content: center; color: var(--text-secondary); box-shadow: var(--shadow-sm); }
 
         .quick-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
         .ghost-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border); text-decoration: none; color: var(--text-main); background: #fff; font-weight: 700; }
         .ghost-btn.primary { background: linear-gradient(135deg, var(--primary), #64b5ff); color: #fff; border: none; box-shadow: var(--shadow-sm); }
-
-        .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-        .form-control { display: flex; flex-direction: column; gap: 6px; }
-        .form-control label { font-size: 13px; color: var(--text-secondary); }
-        .form-control input, .form-control textarea, .form-control select { border-radius: 12px; border: 1px solid var(--border); padding: 10px 12px; background: #fff; font-size: 14px; color: var(--text-main); box-shadow: inset 0 1px 2px rgba(0,0,0,0.03); }
-        .form-control textarea { resize: vertical; min-height: 64px; }
-
-        .floating-actions { position: fixed; right: 28px; bottom: 110px; display: flex; flex-direction: column; gap: 10px; z-index: 20; }
-        .fab { width: 54px; height: 54px; border-radius: 16px; background: linear-gradient(135deg, var(--primary), #64b5ff); color: #fff; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 14px 28px rgba(45,129,255,0.25); border: none; }
 
         .bottom-nav {
             height: 76px;
@@ -182,8 +207,13 @@
             text-decoration: none;
         }
 
-        .nav-item:hover { background: var(--bg-light); }
-        .nav-item.active { color: var(--primary); }
+        .nav-item:hover {
+            background: var(--bg-light);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
 
         .nav-item__icon {
             width: 48px;
@@ -240,12 +270,11 @@
                 <div class="section-header">
                     <div>
                         <div class="section-title">今日任务</div>
-                        <div style="color:var(--text-secondary); font-size: 13px;">支持随时编辑与同步到日历</div>
                     </div>
                     <span class="badge">3 个</span>
                 </div>
                 <div class="task-list">
-                    <div class="task-item" data-title="复习数据结构章节" data-due="2024-10-16T18:00" data-priority="中" data-estimate="45" data-note="同步到周视图，开始前 10 分钟提醒。">
+                    <div class="task-item">
                         <div class="task-item__top">
                             <h4 class="task-title">复习数据结构章节</h4>
                             <span class="badge">到期 18:00</span>
@@ -256,12 +285,8 @@
                             <i class="fa-regular fa-calendar"></i><span>已同步到周视图</span>
                         </div>
                         <div class="progress"><div class="progress-bar" style="width:60%"></div></div>
-                        <div class="task-actions">
-                            <button class="icon-btn" aria-label="编辑"><i class="fa-solid fa-pen"></i></button>
-                            <button class="icon-btn" aria-label="完成"><i class="fa-regular fa-square-check"></i></button>
-                        </div>
                     </div>
-                    <div class="task-item" data-title="整理周报提纲" data-due="2024-10-16T16:00" data-priority="中" data-estimate="30" data-note="提前 10 分钟提醒，保持篇幅精简。">
+                    <div class="task-item">
                         <div class="task-item__top">
                             <h4 class="task-title">整理周报提纲</h4>
                             <span class="badge" style="background:#eef4ff;color:var(--text-main);">轻量</span>
@@ -272,15 +297,10 @@
                             <i class="fa-regular fa-square-check"></i><span>进度 40%</span>
                         </div>
                         <div class="progress"><div class="progress-bar" style="width:40%"></div></div>
-                        <div class="task-actions">
-                            <button class="icon-btn" aria-label="编辑"><i class="fa-solid fa-pen"></i></button>
-                            <button class="icon-btn" aria-label="完成"><i class="fa-regular fa-square-check"></i></button>
-                        </div>
                     </div>
-                    <div class="task-item" data-title="阅读《程序修炼之道》" data-due="2024-10-16T21:00" data-priority="低" data-estimate="25" data-note="番茄钟陪伴，随时记录心得。">
+                    <div class="task-item">
                         <div class="task-item__top">
-                            <h4 class="task-title">阅读《程序修炼之道》</h4>
-                            <span class="badge" style="background:#fff3e8; color:#c76b00;">番茄钟</span>
+                            <h4 class="task-title">阅读《程序员修炼之道》</h4>
                         </div>
                         <div class="task-meta">
                             <i class="fa-regular fa-clock"></i><span>25 分钟番茄钟</span>
@@ -288,10 +308,6 @@
                             <i class="fa-regular fa-note-sticky"></i><span>备注随时同步</span>
                         </div>
                         <div class="progress"><div class="progress-bar" style="width:30%"></div></div>
-                        <div class="task-actions">
-                            <button class="icon-btn" aria-label="编辑"><i class="fa-solid fa-pen"></i></button>
-                            <button class="icon-btn" aria-label="完成"><i class="fa-regular fa-square-check"></i></button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -300,25 +316,17 @@
                 <div class="section-header">
                     <div>
                         <div class="section-title">待安排</div>
-                        <div style="color:var(--text-secondary); font-size: 13px;">先编辑，再安排时间</div>
                     </div>
                     <span class="badge" style="background:#fff3e8; color:#c76b00;">待排</span>
                 </div>
                 <div class="task-list">
-                    <div class="task-item" style="background:var(--primary-light); border-color: rgba(45,129,255,0.2);" data-title="安排实验室例会" data-due="2024-10-17T15:00" data-priority="中" data-estimate="20" data-note="参会人、议题可随时编辑">
+                    <div class="task-item" style="background:var(--primary-light); border-color: rgba(45,129,255,0.2);">
                         <div class="task-item__top">
                             <h4 class="task-title">安排实验室例会</h4>
                             <span class="badge" style="background: #fff; color: var(--text-main); border: 1px solid var(--border);">未同步</span>
                         </div>
-                        <div class="task-meta">
-                            <i class="fa-regular fa-note-sticky"></i><span>参会人、议题可随时编辑</span>
-                        </div>
-                        <div class="task-actions">
-                            <button class="icon-btn" aria-label="编辑"><i class="fa-solid fa-pen"></i></button>
-                            <button class="icon-btn" aria-label="上移"><i class="fa-solid fa-arrow-up"></i></button>
-                        </div>
                     </div>
-                    <div class="task-item" data-title="备份学习资料" data-due="2024-10-18T12:00" data-priority="低" data-estimate="30" data-note="整理三份资料与链接，便于周末回顾。">
+                    <div class="task-item">
                         <div class="task-item__top">
                             <h4 class="task-title">备份学习资料</h4>
                             <span class="badge" style="background:#eafaf1; color:#1b8a3d;">整理</span>
@@ -326,97 +334,10 @@
                         <div class="task-meta">
                             <i class="fa-regular fa-square-check"></i><span>0/3 子任务</span>
                         </div>
-                        <div class="task-actions">
-                            <button class="icon-btn" aria-label="编辑"><i class="fa-solid fa-pen"></i></button>
-                            <button class="icon-btn" aria-label="拆分"><i class="fa-solid fa-list-check"></i></button>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">编辑任务</div>
-                        <div style="color:var(--text-secondary); font-size: 13px;">快速修改任务内容并保存</div>
-                    </div>
-                    <span class="badge">即时保存</span>
-                </div>
-                <div class="form-grid">
-                    <div class="form-control">
-                        <label for="taskTitle">任务标题</label>
-                        <input id="taskTitle" type="text" value="复习数据结构章节">
-                    </div>
-                    <div class="form-control">
-                        <label for="taskDue">截止时间</label>
-                        <input id="taskDue" type="datetime-local" value="2024-10-16T18:00">
-                    </div>
-                    <div class="form-control">
-                        <label for="taskPriority">优先级</label>
-                        <select id="taskPriority">
-                            <option>高</option>
-                            <option selected>中</option>
-                            <option>低</option>
-                        </select>
-                    </div>
-                    <div class="form-control">
-                        <label for="taskEstimate">预计耗时</label>
-                        <input id="taskEstimate" type="number" value="45" placeholder="分钟">
-                    </div>
-                    <div class="form-control" style="grid-column: span 2;">
-                        <label for="taskNote">备注</label>
-                        <textarea id="taskNote" placeholder="补充提醒、关联资料等">同步到周视图，开始前 10 分钟提醒。</textarea>
-                    </div>
-                </div>
-                <div class="quick-actions" style="margin-top: 12px;">
-                    <button class="ghost-btn"><i class="fa-solid fa-pen"></i> 保存编辑</button>
-                    <button class="ghost-btn primary"><i class="fa-solid fa-calendar-plus"></i> 同步到日历</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">新建任务</div>
-                        <div style="color:var(--text-secondary); font-size: 13px;">快速创建并添加到列表或日历</div>
-                    </div>
-                    <span class="badge" style="background:#eafaf1; color:#1b8a3d;">新建</span>
-                </div>
-                <div class="form-grid">
-                    <div class="form-control">
-                        <label for="newTaskTitle">任务标题</label>
-                        <input id="newTaskTitle" type="text" placeholder="如：撰写论文方法章节">
-                    </div>
-                    <div class="form-control">
-                        <label for="newTaskDue">截止日期</label>
-                        <input id="newTaskDue" type="date" value="2024-10-18">
-                    </div>
-                    <div class="form-control">
-                        <label for="newTaskRemind">提醒</label>
-                        <select id="newTaskRemind">
-                            <option>不提醒</option>
-                            <option selected>提前 10 分钟</option>
-                            <option>提前 1 小时</option>
-                        </select>
-                    </div>
-                    <div class="form-control">
-                        <label for="newTaskEstimate">预计耗时</label>
-                        <input id="newTaskEstimate" type="number" placeholder="分钟" value="30">
-                    </div>
-                    <div class="form-control" style="grid-column: span 2;">
-                        <label for="newTaskNote">备注</label>
-                        <textarea id="newTaskNote" placeholder="子任务、资料链接或地点等"></textarea>
-                    </div>
-                </div>
-                <div class="quick-actions" style="margin-top: 12px;">
-                    <button class="ghost-btn"><i class="fa-solid fa-plus"></i> 添加到列表</button>
-                    <button class="ghost-btn primary"><i class="fa-solid fa-share-from-square"></i> 新建并同步</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="floating-actions">
-            <button class="fab" aria-label="新建任务"><i class="fa-solid fa-plus"></i></button>
         </div>
 
         <div class="bottom-nav" id="bottomNav">
@@ -442,42 +363,6 @@
             </a>
         </div>
     </div>
-    </div>
-    <script>
-    const taskItems = document.querySelectorAll('.task-item');
-    const titleInput = document.getElementById('taskTitle');
-    const dueInput = document.getElementById('taskDue');
-    const priorityInput = document.getElementById('taskPriority');
-    const estimateInput = document.getElementById('taskEstimate');
-    const noteInput = document.getElementById('taskNote');
-    const fab = document.querySelector('.fab');
-
-    function fillTask(card) {
-        taskItems.forEach(item => item.classList.remove('active'));
-        card.classList.add('active');
-        titleInput.value = card.dataset.title || '';
-        dueInput.value = card.dataset.due || '';
-        priorityInput.value = card.dataset.priority || '中';
-        estimateInput.value = card.dataset.estimate || '';
-        noteInput.value = card.dataset.note || '';
-    }
-
-    taskItems.forEach(card => {
-        card.addEventListener('click', () => fillTask(card));
-    });
-
-    if (taskItems[0]) {
-        fillTask(taskItems[0]);
-    }
-
-    fab.addEventListener('click', () => {
-        taskItems.forEach(item => item.classList.remove('active'));
-        titleInput.value = '';
-        dueInput.value = '';
-        priorityInput.value = '中';
-        estimateInput.value = '';
-        noteInput.value = '';
-    });
-    </script>
+</div>
 </body>
 </html>
