@@ -1,1 +1,711 @@
-<!-- Placeholder for 移动用户端-任务 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>StudySpace - 任务</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2d81ff;
+            --primary-light: #f0f7ff;
+            --success: #4cd964;
+            --danger: #ff3b30;
+            --danger-light: #fff0f0;
+            --text-main: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --border: #e5e5e7;
+            --bg-light: #f5f5f7;
+            --bg-white: #fff;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --shadow-sm: 0 2px 20px rgba(0,0,0,0.06);
+            --shadow-md: 0 8px 32px rgba(0,0,0,0.12);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(229, 229, 231, 0.5);
+            --glass-blur: blur(20px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at 18% 22%, rgba(0, 122, 255, 0.12), transparent 34%),
+            radial-gradient(circle at 78% 18%, rgba(90, 200, 250, 0.12), transparent 36%),
+            radial-gradient(circle at 50% 82%, rgba(0, 122, 255, 0.08), transparent 38%),
+            linear-gradient(180deg, #F2F3F7 0%, #E7E9F2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        .page {
+            width: min(430px, 100%);
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-container {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--glass-border);
+            border-radius: 46px;
+            padding: 18px 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            height: 44px;
+            background: var(--bg-white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .status-bar__icons { display: flex; gap: 6px; align-items: center; }
+
+        .top-bar {
+            height: 56px;
+            background: var(--bg-white);
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .top-bar__avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--primary), #64b5ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            margin-right: 12px;
+            box-shadow: 0 4px 12px rgba(45, 129, 255, 0.18);
+        }
+
+        .top-bar__title { flex: 1; font-size: 18px; font-weight: 800; text-align: center; }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 16px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0));
+        }
+
+        .main-content::-webkit-scrollbar { display: none; }
+
+        .card {
+            background: var(--glass-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .section-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .section-title { font-size: 17px; font-weight: 800; }
+
+        .task-list { display: flex; flex-direction: column; gap: 12px; }
+        .task-item { padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border); background: #fff; box-shadow: inset 0 0 0 0 rgba(0,0,0,0); transition: transform 0.2s, box-shadow 0.2s; }
+        .task-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .task-item__top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .badge { padding: 6px 10px; border-radius: 12px; background: var(--primary-light); color: var(--primary); font-weight: 700; font-size: 12px; white-space: nowrap; }
+        .task-title { font-size: 16px; font-weight: 700; margin: 0; flex: 1; min-width: 0; }
+        .task-meta { display: flex; gap: 10px; color: var(--text-secondary); font-size: 13px; align-items: center; flex-wrap: wrap; }
+        .progress { height: 6px; background: var(--bg-light); border-radius: 8px; overflow: hidden; margin-top: 10px; }
+        .progress-bar { height: 100%; background: linear-gradient(135deg, var(--primary), #64b5ff); width: 50%; }
+
+        .bottom-nav {
+            height: 76px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            z-index: 1000;
+            padding: 10px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .bottom-nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+            opacity: 0.3;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+        }
+
+        .nav-item:hover { background: var(--bg-light); }
+        .nav-item.active { color: var(--primary); }
+
+        .nav-item__icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            transition: all 0.3s;
+            font-size: 22px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-item.active .nav-item__icon {
+            background: linear-gradient(135deg, var(--primary), #64b5ff);
+            color: white;
+            transform: translateY(-12px);
+            box-shadow: 0 10px 28px rgba(45, 129, 255, 0.25);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .fab {
+            position: fixed;
+            right: 28px;
+            bottom: 110px;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), #64b5ff);
+            color: #fff;
+            box-shadow: 0 14px 28px rgba(45, 129, 255, 0.22);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 20;
+        }
+        .fab:active { transform: translateY(1px); }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 30;
+        }
+
+        .modal-backdrop.active { opacity: 1; pointer-events: auto; }
+
+        .modal {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -46%);
+            width: min(360px, calc(100% - 24px));
+            max-height: 78vh;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            padding: 14px 16px 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 40;
+        }
+
+        .modal.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%); }
+
+        .modal__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .modal__title { font-size: 18px; font-weight: 900; }
+        .modal__close { border: none; background: transparent; font-size: 22px; cursor: pointer; color: var(--text-secondary); }
+
+        .modal__body {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .form { display: grid; gap: 12px; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field.full { grid-column: 1/-1; }
+        .label { font-weight: 800; color: var(--text-main); font-size: 14px; }
+        .input, .textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            background: #fff;
+            outline: none;
+        }
+        .textarea { min-height: 80px; resize: vertical; }
+
+        .modal__actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; flex-wrap: wrap; }
+        .btn { height: 42px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--border); background: #fff; font-weight: 800; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), #64b5ff); color: #fff; border: none; box-shadow: var(--shadow-sm); }
+        .btn-danger { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(255,59,48,0.25); }
+
+        /* 任务按钮：确保“删除”可见 */
+        .task-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+        .task-btn{
+            border:none;
+            padding: 6px 8px;      /* 更小 */
+            border-radius: 10px;   /* 更紧凑 */
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;              /* 图标与文字距离更小 */
+            line-height: 1;
+            white-space: nowrap;
+            font-size: 12px;       /* 文字更小 */
+        }
+        .task-btn i{ font-size: 12px; }  /* 图标更小 */
+
+
+        .task-complete { background: #eef8f0; color: #1f9d4a; }
+        .task-delete { background: var(--danger-light); color: var(--danger); }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="app-container">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-bar__icons">
+                <i class="fa-solid fa-signal"></i>
+                <i class="fa-solid fa-wifi"></i>
+                <i class="fa-solid fa-battery-three-quarters"></i>
+            </div>
+        </div>
+
+        <div class="top-bar">
+            <div class="top-bar__avatar">T</div>
+            <div class="top-bar__title">任务清单</div>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">今日任务</div>
+                    </div>
+                    <span class="badge" id="todayCount">0 个</span>
+                </div>
+                <div class="task-list" id="todayList"></div>
+            </div>
+
+            <div class="card">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">待安排</div>
+                    </div>
+                    <span class="badge" style="background:#fff3e8; color:#c76b00;" id="pendingCount">待排</span>
+                </div>
+                <div class="task-list" id="pendingList"></div>
+            </div>
+        </div>
+
+        <div class="bottom-nav" id="bottomNav">
+            <a class="nav-item active" href="移动用户端-任务.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-clipboard-list"></i></div>
+                <div>任务</div>
+            </a>
+            <a class="nav-item" href="移动端用户端-日历.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-calendar-day"></i></div>
+                <div>日历</div>
+            </a>
+            <a class="nav-item" href="移动用户端-设置番茄钟.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-clock"></i></div>
+                <div>番茄钟</div>
+            </a>
+            <a class="nav-item" href="移动用户端-学习记录.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-book-open"></i></div>
+                <div>学习记录</div>
+            </a>
+            <a class="nav-item" href="移动用户端-座位预约.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-couch"></i></div>
+                <div>座位预约</div>
+            </a>
+        </div>
+
+        <button class="fab" id="fabAdd" aria-label="新建任务"><i class="fa-solid fa-plus"></i></button>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop"></div>
+<div class="modal" id="taskModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal__header">
+        <div class="modal__title" id="modalTitle">新建任务</div>
+        <button class="modal__close" id="closeModalBtn" aria-label="关闭">&times;</button>
+    </div>
+    <div class="modal__body">
+        <div class="form">
+            <div class="field full">
+                <div class="label">标题</div>
+                <input class="input" id="fTitle" placeholder="输入任务标题" />
+            </div>
+            <div class="field full">
+                <div class="label">截止时间</div>
+                <input class="input" type="datetime-local" id="fEnd" />
+            </div>
+            <div class="field full">
+                <div class="label">标签（用逗号分隔）</div>
+                <input class="input" id="fTags" placeholder="学习计划, 提醒" />
+            </div>
+            <div class="field full">
+                <div class="label">备注</div>
+                <textarea class="textarea" id="fNote" placeholder="补充说明"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal__actions">
+        <button class="btn btn-danger" id="deleteBtn" style="display:none;">删除</button>
+        <button class="btn" id="cancelBtn">取消</button>
+        <button class="btn btn-primary" id="saveBtn">保存</button>
+    </div>
+</div>
+
+<script>
+    const todayList = document.getElementById("todayList");
+    const pendingList = document.getElementById("pendingList");
+    const todayCount = document.getElementById("todayCount");
+    const pendingCount = document.getElementById("pendingCount");
+
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const taskModal = document.getElementById("taskModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const fabAdd = document.getElementById("fabAdd");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const deleteBtn = document.getElementById("deleteBtn");
+
+    const fTitle = document.getElementById("fTitle");
+    const fEnd = document.getElementById("fEnd");
+    const fTags = document.getElementById("fTags");
+    const fNote = document.getElementById("fNote");
+
+    let modalMode = "create";
+    let editingId = null;
+
+    const tasks = [
+        {
+            id: "t1",
+            title: "复习数据结构章节",
+            start: "2024-05-05T16:00",
+            end: "2024-05-05T18:00",
+            status: "doing",
+            priority: "high",
+            tags: ["同步", "提醒"],
+            progress: 60,
+            note: "已同步到周视图",
+            scheduled: true,
+            meta: [
+                { icon: "fa-regular fa-clock", text: "预计 45 分钟" },
+                { icon: "fa-regular fa-calendar", text: "已同步到周视图" }
+            ]
+        },
+        {
+            id: "t2",
+            title: "整理周报提纲",
+            start: "2024-05-05T15:00",
+            end: "2024-05-05T17:00",
+            status: "todo",
+            priority: "mid",
+            tags: ["提醒"],
+            progress: 40,
+            note: "提前 10 分钟提醒",
+            scheduled: true,
+            meta: [
+                { icon: "fa-regular fa-bell", text: "提前 10 分钟提醒" },
+                { icon: "fa-regular fa-square-check", text: "进度 40%" }
+            ]
+        },
+        {
+            id: "t3",
+            title: "阅读《程序员修炼之道》",
+            start: "2024-05-05T20:00",
+            end: "2024-05-05T20:45",
+            status: "todo",
+            priority: "low",
+            tags: ["番茄钟"],
+            progress: 30,
+            note: "备注随时同步",
+            scheduled: true,
+            meta: [
+                { icon: "fa-regular fa-clock", text: "25 分钟番茄钟" },
+                { icon: "fa-regular fa-note-sticky", text: "备注随时同步" }
+            ]
+        },
+        {
+            id: "t4",
+            title: "安排实验室例会",
+            start: "2024-05-06T09:00",
+            end: "2024-05-06T10:00",
+            status: "todo",
+            priority: "mid",
+            tags: ["未同步"],
+            progress: 0,
+            note: "未同步",
+            scheduled: false,
+            meta: []
+        },
+        {
+            id: "t5",
+            title: "备份学习资料",
+            start: "2024-05-06T14:00",
+            end: "2024-05-06T15:00",
+            status: "doing",
+            priority: "mid",
+            tags: ["整理"],
+            progress: 0,
+            note: "0/3 子任务",
+            scheduled: false,
+            meta: [
+                { icon: "fa-regular fa-square-check", text: "0/3 子任务" }
+            ]
+        }
+    ];
+
+    function formatTime(value) {
+        if (!value) return "";
+        const date = new Date(value);
+        const h = String(date.getHours()).padStart(2, "0");
+        const m = String(date.getMinutes()).padStart(2, "0");
+        return `${h}:${m}`;
+    }
+
+    function badgeStyle(task) {
+        if (!task.end) return "";
+        if (task.priority === "high") return "background:#ffeef0;color:#c20000;";
+        if (task.priority === "low") return "background:#eef4ff;color:var(--text-main);";
+        return "";
+    }
+
+    function deleteTask(taskId) {
+        const idx = tasks.findIndex(t => t.id === taskId);
+        if (idx === -1) return;
+        tasks.splice(idx, 1);
+        if (taskModal.classList.contains("active") && editingId === taskId) closeModal();
+        renderTasks();
+    }
+
+    function completeTask(taskId) {
+        // 这里沿用你原来的逻辑：完成=移除
+        deleteTask(taskId);
+    }
+
+    function createTaskItem(task) {
+        const item = document.createElement("div");
+        item.className = "task-item";
+        if (!task.scheduled) {
+            item.style.background = "var(--primary-light)";
+            item.style.borderColor = "rgba(45,129,255,0.2)";
+        }
+        item.dataset.id = task.id;
+
+        const badgeText = task.end ? `到期 ${formatTime(task.end)}` : ((task.tags && task.tags[0]) || "");
+        item.innerHTML = `
+            <div class="task-item__top">
+                <h4 class="task-title">${task.title}</h4>
+                <div class="task-actions">
+                    <button class="task-btn task-complete" type="button" aria-label="完成任务">
+                        <i class="fa-solid fa-check"></i><span>完成</span>
+                    </button>
+                    <span class="badge" style="${badgeStyle(task)}">${badgeText}</span>
+                </div>
+            </div>
+            <div class="task-meta">
+                ${(task.meta || []).map((m, i) => {
+                    return `${i>0 ? '<i class="fa-solid fa-circle" style="font-size:6px; color:#d8dbe5;"></i>' : ''}<i class="${m.icon}"></i><span>${m.text}</span>`;
+                }).join("")}
+            </div>
+            <div class="progress"><div class="progress-bar" style="width:${task.progress || 0}%"></div></div>
+        `;
+
+        // 点卡片=编辑
+        item.addEventListener("click", () => openModal("edit", task.id));
+
+        // 完成按钮：阻止冒泡，避免触发编辑
+        const completeBtn = item.querySelector(".task-complete");
+        completeBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            completeTask(task.id);
+        });
+
+
+        return item;
+    }
+
+    function renderTasks() {
+        todayList.innerHTML = "";
+        pendingList.innerHTML = "";
+        const todays = tasks.filter(t => t.scheduled);
+        const pending = tasks.filter(t => !t.scheduled);
+
+        todays.forEach(task => todayList.appendChild(createTaskItem(task)));
+        pending.forEach(task => pendingList.appendChild(createTaskItem(task)));
+
+        todayCount.textContent = `${todays.length} 个`;
+        pendingCount.textContent = `待排 · ${pending.length} 个`;
+    }
+
+    function openModal(mode, taskId) {
+        modalMode = mode;
+        modalTitle.textContent = mode === "create" ? "新建任务" : "编辑任务";
+
+        if (mode === "edit") {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            editingId = task.id;
+            fTitle.value = task.title;
+            fEnd.value = task.end || "";
+            fTags.value = (task.tags || []).join(",");
+            fNote.value = task.note || "";
+            deleteBtn.style.display = "inline-flex";
+        } else {
+            editingId = null;
+            fTitle.value = "";
+            fEnd.value = "";
+            fTags.value = "";
+            fNote.value = "";
+            deleteBtn.style.display = "none";
+        }
+
+        modalBackdrop.classList.add("active");
+        taskModal.classList.add("active");
+        fTitle.focus();
+    }
+
+    function closeModal() {
+        modalBackdrop.classList.remove("active");
+        taskModal.classList.remove("active");
+    }
+
+    function saveTask() {
+        const existing = modalMode === "edit" ? tasks.find(t => t.id === editingId) : null;
+        const baseProgress = existing ? (existing.progress || 0) : 0;
+
+        const payload = {
+            title: fTitle.value.trim() || "未命名任务",
+            end: fEnd.value,
+            tags: fTags.value.split(",").map(t => t.trim()).filter(Boolean),
+            note: fNote.value.trim(),
+            meta: []
+        };
+
+        if (baseProgress) payload.meta.push({ icon: "fa-regular fa-square-check", text: `进度 ${baseProgress}%` });
+        if (payload.note) payload.meta.push({ icon: "fa-regular fa-note-sticky", text: payload.note });
+
+        if (modalMode === "create") {
+            const newTask = {
+                id: `t${Date.now()}`,
+                status: "todo",
+                priority: "mid",
+                progress: baseProgress,
+                start: "",
+                scheduled: true,
+                ...payload
+            };
+            tasks.unshift(newTask);
+        } else if (editingId) {
+            const idx = tasks.findIndex(t => t.id === editingId);
+            if (idx > -1) tasks[idx] = { ...tasks[idx], ...payload };
+        }
+
+        renderTasks();
+        closeModal();
+    }
+
+    fabAdd.addEventListener("click", () => openModal("create"));
+    closeModalBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", closeModal);
+    saveBtn.addEventListener("click", saveTask);
+
+
+    renderTasks();
+</script>
+</body>
+</html>

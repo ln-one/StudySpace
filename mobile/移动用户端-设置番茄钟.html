@@ -1568,131 +1568,6 @@
                 </div>
             </div>
 
-            <!-- 座位预约模块 -->
-            <div class="module" id="moduleReserve">
-                <div class="card reserve-card">
-                    <!-- 日期选择 -->
-                    <div class="date-picker">
-                        <div class="date-picker__date" id="currentDate">2025/12/08</div>
-                        <div class="date-picker__nav">
-                            <div class="date-picker__btn" id="datePrev">
-                                <i class="fas fa-chevron-left"></i>
-                            </div>
-                            <div style="font-size: 15px; color: var(--text-secondary);">选择日期</div>
-                            <div class="date-picker__btn" id="dateNext">
-                                <i class="fas fa-chevron-right"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 时间选择 -->
-                    <div class="time-picker">
-                        <div class="time-picker__title">
-                            <i class="far fa-clock"></i>选择具体时间
-                        </div>
-                        <div class="time-picker__item" data-time="08:00-12:00">
-                            <div class="time-picker__item-time">08:00-12:00</div>
-                            <div class="time-picker__item-desc">上午时段</div>
-                        </div>
-                        <div class="time-picker__item" data-time="12:00-16:00">
-                            <div class="time-picker__item-time">12:00-16:00</div>
-                            <div class="time-picker__item-desc">下午时段</div>
-                        </div>
-                        <div class="time-picker__item" data-time="16:00-20:00">
-                            <div class="time-picker__item-time">16:00-20:00</div>
-                            <div class="time-picker__item-desc">傍晚时段</div>
-                        </div>
-                        <div class="time-picker__item" data-time="20:00-24:00">
-                            <div class="time-picker__item-time">20:00-24:00</div>
-                            <div class="time-picker__item-desc">夜间时段</div>
-                        </div>
-                    </div>
-
-                    <!-- 楼层和区域选择 -->
-                    <div class="location-select">
-                        <div class="location-select__item">
-                            <label for="floorSelect">楼层</label>
-                            <select id="floorSelect">
-                                <option value="1">楼层 1</option>
-                                <option value="2" selected>楼层 2</option>
-                                <option value="3">楼层 3</option>
-                            </select>
-                        </div>
-                        <div class="location-select__item">
-                            <label for="areaSelect">区域</label>
-                            <select id="areaSelect">
-                                <option value="A">区域 A</option>
-                                <option value="B">区域 B</option>
-                                <option value="C" selected>区域 C</option>
-                                <option value="D">区域 D</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- 座位选择区域 -->
-                    <div class="seat-selection">
-                        <div class="seat-map-title">
-                            <i class="fas fa-chair"></i>选择座位
-                        </div>
-                        <div class="seat-map" id="seatMap"></div>
-
-                        <div class="seat-legends">
-                            <div class="seat-legend">
-                                <div class="seat-legend-color" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-color: #2d81ff;"></div>
-                                <span>可用</span>
-                            </div>
-                            <div class="seat-legend">
-                                <div class="seat-legend-color" style="background: linear-gradient(135deg, #ffd591 0%, #ffc069 100%); border-color: #ffa726;"></div>
-                                <span>已预约</span>
-                            </div>
-                            <div class="seat-legend">
-                                <div class="seat-legend-color" style="background: linear-gradient(135deg, #b7eb8f 0%, #95de64 100%); border-color: #73d13d;"></div>
-                                <span>使用中</span>
-                            </div>
-                            <div class="seat-legend">
-                                <div class="seat-legend-color" style="background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%); border-color: #d1d1d6;"></div>
-                                <span>不可用</span>
-                            </div>
-                            <div class="seat-legend">
-                                <div class="seat-legend-color" style="background: linear-gradient(135deg, #2d81ff 0%, #4d9eff 100%); border-color: #2d81ff;"></div>
-                                <span>已选中</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="reserve__btn-group">
-                        <button class="btn btn-text" id="btnMyReserve">
-                            <i class="fas fa-list"></i>我的预约
-                        </button>
-                        <button class="btn btn-primary" id="btnReserve">
-                            <i class="fas fa-check"></i>预约
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 任务模块（预留） -->
-            <div class="module" id="moduleTask">
-                <div class="card" style="height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
-                    <div>
-                        <i class="fas fa-tasks" style="font-size: 64px; margin-bottom: 24px; color: var(--primary-light); display: block;"></i>
-                        <div style="font-size: 20px; margin-bottom: 12px; font-weight: 700;">任务页面</div>
-                        <div style="font-size: 15px; color: var(--text-secondary); opacity: 0.7;">（待开发）</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 日历模块（预留） -->
-            <div class="module" id="moduleCalendar">
-                <div class="card" style="height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
-                    <div>
-                        <i class="fas fa-calendar-alt" style="font-size: 64px; margin-bottom: 24px; color: var(--primary-light); display: block;"></i>
-                        <div style="font-size: 20px; margin-bottom: 12px; font-weight: 700;">日历页面</div>
-                        <div style="font-size: 15px; color: var(--text-secondary); opacity: 0.7;">（待开发）</div>
-                    </div>
-                </div>
-            </div>
-
             <!-- 设置模块 -->
             <div class="module" id="moduleSettings">
                 <div class="profile-card" onclick="showProfileModal()">
@@ -1770,22 +1645,26 @@
 
         <!-- 底部导航栏 -->
         <div class="bottom-nav" id="bottomNav">
-            <div class="nav-item" data-module="moduleTask">
+            <a class="nav-item" href="移动用户端-任务.html" style="text-decoration: none; color: inherit;">
                 <div class="nav-item__icon"><i class="fas fa-clipboard-list"></i></div>
                 <div>任务</div>
-            </div>
-            <div class="nav-item" data-module="moduleCalendar">
+            </a>
+            <a class="nav-item" href="移动端用户端-日历.html" style="text-decoration: none; color: inherit;">
                 <div class="nav-item__icon"><i class="fas fa-calendar-day"></i></div>
                 <div>日历</div>
-            </div>
+            </a>
             <div class="nav-item active" data-module="modulePomodoro">
                 <div class="nav-item__icon"><i class="fas fa-clock"></i></div>
                 <div>番茄钟</div>
             </div>
-            <div class="nav-item" data-module="moduleReserve">
+            <a class="nav-item" href="移动用户端-学习记录.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-book-open"></i></div>
+                <div>学习记录</div>
+            </a>
+            <a class="nav-item" href="移动用户端-座位预约.html" style="text-decoration: none; color: inherit;">
                 <div class="nav-item__icon"><i class="fas fa-couch"></i></div>
                 <div>座位预约</div>
-            </div>
+            </a>
         </div>
     </div>
 </div>
@@ -1838,7 +1717,7 @@
     setInterval(updateCurrentTime, 60000);
 
     // -------------------------- 模块切换逻辑 --------------------------
-    const navItems = document.querySelectorAll('.nav-item');
+    const navItems = document.querySelectorAll('.nav-item[data-module]');
     const modules = document.querySelectorAll('.module');
     const topTitle = document.getElementById('topTitle');
     const topAvatar = document.getElementById('topAvatar');
@@ -1879,9 +1758,6 @@
 
         const titleMap = {
             modulePomodoro: '番茄钟',
-            moduleReserve: '座位预约',
-            moduleTask: '任务',
-            moduleCalendar: '日历',
             moduleSettings: '我的设置'
         };
         topTitle.textContent = titleMap[targetModule] || 'StudySpace';
@@ -2076,332 +1952,6 @@
         taskInput.value = '';
         showNotification('任务添加', `已添加任务：${taskName}`, 'success');
     });
-
-    // -------------------------- 座位预约逻辑 --------------------------
-    const seatMap = document.getElementById('seatMap');
-    const btnReserve = document.getElementById('btnReserve');
-    const btnMyReserve = document.getElementById('btnMyReserve');
-    const timeItems = document.querySelectorAll('.time-picker__item');
-    const floorSelect = document.getElementById('floorSelect');
-    const areaSelect = document.getElementById('areaSelect');
-    const currentDateEl = document.getElementById('currentDate');
-
-    let selectedSeat = null;
-    let selectedTime = '08:00-12:00';
-    let currentDate = new Date(2025, 11, 8);
-    let currentFloor = '2';
-    let currentArea = 'C';
-
-    // 我的预约数据
-    let myReservations = [
-        {
-            id: 1,
-            seatId: 'C10',
-            floor: '2',
-            area: 'C',
-            date: '2025/12/07',
-            time: '08:00-12:00',
-            status: 'confirmed'
-        },
-        {
-            id: 2,
-            seatId: 'A12',
-            floor: '1',
-            area: 'A',
-            date: '2025/12/06',
-            time: '12:00-16:00',
-            status: 'completed'
-        },
-        {
-            id: 3,
-            seatId: 'B08',
-            floor: '2',
-            area: 'B',
-            date: '2025/12/05',
-            time: '16:00-20:00',
-            status: 'cancelled'
-        }
-    ];
-
-    // 座位状态数据
-    const seatStatusTemplate = [
-        { status: 'available' }, { status: 'available' }, { status: 'available' }, { status: 'available' }, { status: 'available' },
-        { status: 'available' }, { status: 'available' }, { status: 'available' }, { status: 'available' }, { status: 'booked' },
-        { status: 'available' }, { status: 'available' }, { status: 'available' }, { status: 'available' }, { status: 'available' },
-        { status: 'using' }, { status: 'available' }, { status: 'available' }, { status: 'available' }, { status: 'available' },
-        { status: 'booked' }, { status: 'available' }, { status: 'available' }, { status: 'available' }, { status: 'available' },
-        { status: 'unavailable' }, { status: 'available' }, { status: 'available' }, { status: 'available' }, { status: 'available' }
-    ];
-
-    // 时间选择器
-    timeItems.forEach(item => {
-        item.addEventListener('click', () => {
-            timeItems.forEach(i => i.classList.remove('selected'));
-            item.classList.add('selected');
-            selectedTime = item.dataset.time;
-        });
-    });
-
-    timeItems[0].classList.add('selected');
-
-    // 更新日期显示
-    function updateDateDisplay() {
-        const year = currentDate.getFullYear();
-        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        const day = currentDate.getDate().toString().padStart(2, '0');
-        currentDateEl.textContent = `${year}/${month}/${day}`;
-    }
-
-    // 日期前进
-    document.getElementById('dateNext').addEventListener('click', () => {
-        currentDate.setDate(currentDate.getDate() + 1);
-        updateDateDisplay();
-        selectedSeat = null;
-        generateSeatMap();
-    });
-
-    // 日期后退
-    document.getElementById('datePrev').addEventListener('click', () => {
-        currentDate.setDate(currentDate.getDate() - 1);
-        updateDateDisplay();
-        selectedSeat = null;
-        generateSeatMap();
-    });
-
-    // 楼层选择
-    floorSelect.addEventListener('change', () => {
-        currentFloor = floorSelect.value;
-        generateSeatMap();
-        selectedSeat = null;
-    });
-
-    // 区域选择
-    areaSelect.addEventListener('change', () => {
-        currentArea = areaSelect.value;
-        generateSeatMap();
-        selectedSeat = null;
-    });
-
-    // 生成座位图
-    function generateSeatMap() {
-        seatMap.innerHTML = '';
-        const areaPrefix = currentArea;
-
-        seatStatusTemplate.forEach((seat, index) => {
-            const seatNumber = (index + 1).toString().padStart(2, '0');
-            const seatId = `${areaPrefix}${seatNumber}`;
-            const seatElement = document.createElement('div');
-            seatElement.className = `seat ${seat.status}`;
-            seatElement.textContent = seatId;
-            seatElement.dataset.id = seatId;
-            seatElement.dataset.status = seat.status;
-
-            seatElement.addEventListener('click', () => {
-                if (seat.status === 'unavailable' || seat.status === 'booked' || seat.status === 'using') {
-                    const message = seat.status === 'booked' ? '已被预约' :
-                        seat.status === 'using' ? '正在使用中' : '不可用';
-                    showNotification('座位不可用', `该座位${message}，请选择其他座位。`, 'error');
-                    return;
-                }
-
-                if (selectedSeat) {
-                    selectedSeat.classList.remove('selected');
-                }
-                seatElement.classList.add('selected');
-                selectedSeat = seatElement;
-            });
-
-            seatMap.appendChild(seatElement);
-        });
-    }
-
-    // 初始化座位图和日期
-    generateSeatMap();
-    updateDateDisplay();
-
-    // 打开预约详情弹窗
-    btnReserve.addEventListener('click', () => {
-        if (!selectedSeat) {
-            showNotification('提示', '请先选择座位！', 'error');
-            return;
-        }
-
-        const seatId = selectedSeat.textContent;
-
-        // 使用手机风格弹窗显示预约详情
-        const modalTitle = '预约详情';
-        const modalSubtitle = '请确认您的预约信息';
-        const modalBody = `
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">日期：</span>
-                <span class="mobile-modal__detail-value">${currentDateEl.textContent}</span>
-            </div>
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">时间段：</span>
-                <span class="mobile-modal__detail-value">${selectedTime}</span>
-            </div>
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">楼层：</span>
-                <span class="mobile-modal__detail-value">${currentFloor}楼</span>
-            </div>
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">区域：</span>
-                <span class="mobile-modal__detail-value">${currentArea}区</span>
-            </div>
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">座位：</span>
-                <span class="mobile-modal__detail-value">${seatId}</span>
-            </div>
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">预约时长：</span>
-                <span class="mobile-modal__detail-value">4小时</span>
-            </div>
-        `;
-
-        document.getElementById('mobileModalTitle').textContent = modalTitle;
-        document.getElementById('mobileModalSubtitle').textContent = modalSubtitle;
-        document.getElementById('mobileModalBody').innerHTML = modalBody;
-        document.getElementById('mobileModalBody').classList.add('details');
-
-        // 设置弹窗按钮
-        document.getElementById('mobileModalFooter').innerHTML = `
-            <button class="btn btn-text" onclick="closeMobileModal()">取消</button>
-            <button class="btn btn-primary" onclick="confirmReservation('${seatId}')">确认预约</button>
-        `;
-
-        document.getElementById('mobileModal').classList.add('active');
-    });
-
-    // 我的预约按钮
-    btnMyReserve.addEventListener('click', () => {
-        showMyReservations();
-    });
-
-    // 显示我的预约
-    function showMyReservations() {
-        const modalTitle = '我的预约';
-        const modalSubtitle = `共有 ${myReservations.length} 条预约记录`;
-
-        let modalBody = '<div class="reservation-list">';
-
-        if (myReservations.length === 0) {
-            modalBody += '<div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">暂无预约记录</div>';
-        } else {
-            myReservations.forEach(reservation => {
-                const statusText = reservation.status === 'confirmed' ? '已确认' :
-                    reservation.status === 'completed' ? '已完成' : '已取消';
-                const statusClass = reservation.status === 'confirmed' ? 'status-confirmed' :
-                    reservation.status === 'completed' ? 'status-completed' : 'status-cancelled';
-
-                modalBody += `
-                    <div class="reservation-item" onclick="showReservationDetail(${reservation.id})">
-                        <div class="reservation-info">
-                            <div class="reservation-seat">座位 ${reservation.seatId}</div>
-                            <div class="reservation-details">
-                                ${reservation.date} | ${reservation.time}<br>
-                                楼层 ${reservation.floor} | 区域 ${reservation.area}
-                            </div>
-                        </div>
-                        <div class="reservation-status ${statusClass}">${statusText}</div>
-                    </div>
-                `;
-            });
-        }
-
-        modalBody += '</div>';
-
-        document.getElementById('mobileModalTitle').textContent = modalTitle;
-        document.getElementById('mobileModalSubtitle').textContent = modalSubtitle;
-        document.getElementById('mobileModalBody').innerHTML = modalBody;
-        document.getElementById('mobileModalBody').classList.remove('details');
-
-        // 设置弹窗按钮
-        document.getElementById('mobileModalFooter').innerHTML = `
-            <button class="btn btn-primary" style="flex: 1;" onclick="closeMobileModal()">确定</button>
-        `;
-
-        document.getElementById('mobileModal').classList.add('active');
-    }
-
-    // 显示预约详情
-    function showReservationDetail(reservationId) {
-        const reservation = myReservations.find(r => r.id === reservationId);
-        if (!reservation) return;
-
-        const statusText = reservation.status === 'confirmed' ? '已确认' :
-            reservation.status === 'completed' ? '已完成' : '已取消';
-
-        const modalTitle = '预约详情';
-        const modalSubtitle = '预约信息详情';
-        const modalBody = `
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">座位号：</span>
-                <span class="mobile-modal__detail-value">${reservation.seatId}</span>
-            </div>
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">日期：</span>
-                <span class="mobile-modal__detail-value">${reservation.date}</span>
-            </div>
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">时间段：</span>
-                <span class="mobile-modal__detail-value">${reservation.time}</span>
-            </div>
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">楼层：</span>
-                <span class="mobile-modal__detail-value">${reservation.floor}楼</span>
-            </div>
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">区域：</span>
-                <span class="mobile-modal__detail-value">${reservation.area}区</span>
-            </div>
-            <div class="mobile-modal__detail-item">
-                <span class="mobile-modal__detail-label">状态：</span>
-                <span class="mobile-modal__detail-value">${statusText}</span>
-            </div>
-        `;
-
-        document.getElementById('mobileModalTitle').textContent = modalTitle;
-        document.getElementById('mobileModalSubtitle').textContent = modalSubtitle;
-        document.getElementById('mobileModalBody').innerHTML = modalBody;
-        document.getElementById('mobileModalBody').classList.add('details');
-
-        // 设置弹窗按钮
-        document.getElementById('mobileModalFooter').innerHTML = `
-            <button class="btn btn-primary" style="flex: 1;" onclick="closeMobileModal()">确定</button>
-        `;
-
-        document.getElementById('mobileModal').classList.add('active');
-    }
-
-    // 确认预约
-    function confirmReservation(seatId) {
-        closeMobileModal();
-
-        // 创建新的预约记录
-        const newReservation = {
-            id: myReservations.length + 1,
-            seatId: seatId,
-            floor: currentFloor,
-            area: currentArea,
-            date: currentDateEl.textContent,
-            time: selectedTime,
-            status: 'confirmed'
-        };
-
-        // 添加到我的预约列表
-        myReservations.unshift(newReservation);
-
-        // 更新座位状态
-        if (selectedSeat) {
-            selectedSeat.classList.remove('available', 'selected');
-            selectedSeat.classList.add('booked');
-            selectedSeat.dataset.status = 'booked';
-            selectedSeat = null;
-        }
-
-        // 显示成功通知
-        showNotification('预约成功', `座位：${seatId}\n楼层：${currentFloor}楼\n区域：${currentArea}区\n日期：${currentDateEl.textContent}\n时间段：${selectedTime}\n\n预约已添加到"我的预约"中`, 'success');
-    }
 
     // -------------------------- 设置模块弹窗逻辑 --------------------------
     // 显示个人资料弹窗
@@ -2608,7 +2158,16 @@
     // -------------------------- 初始化 --------------------------
     // 初始化页面
     document.addEventListener('DOMContentLoaded', () => {
-        switchModule('modulePomodoro');
+        const params = new URLSearchParams(window.location.search);
+        const hashModule = window.location.hash.replace('#', '');
+        const moduleKey = (params.get('module') || hashModule || 'pomodoro').toLowerCase();
+        const moduleMap = {
+            'pomodoro': 'modulePomodoro',
+            'settings': 'moduleSettings'
+        };
+        const initialModule = moduleMap[moduleKey] || 'modulePomodoro';
+
+        switchModule(initialModule);
         topBack.style.display = 'none';
         topAvatar.style.display = 'flex';
         bottomNav.style.display = 'flex';

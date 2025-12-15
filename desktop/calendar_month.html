@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudySpace - 日历（月视图）</title>
+  <style>
+    :root{
+      --primary:#2d81ff;
+      --primary-light:#f0f7ff;
+      --primary-dark:#1a6ee0;
+
+      --success:#4cd964;
+      --success-light:#e8f9eb;
+
+      --danger:#ff3b30;
+      --danger-light:#ffe6e6;
+
+      --warning:#ff9500;
+
+      --text-main:#1d1d1f;
+      --text-secondary:#6e6e73;
+      --text-tertiary:#8e8e93;
+
+      --border:#e5e5e7;
+      --border-light:#f2f2f7;
+
+      --bg-light:#f5f5f7;
+      --bg-white:#fff;
+      --bg-sidebar:#f8f9fa;
+
+      --radius-sm:6px;
+      --radius-md:12px;
+      --radius-lg:16px;
+
+      --shadow-sm:0 2px 8px rgba(0,0,0,0.06);
+      --shadow-lg:0 8px 24px rgba(0,0,0,0.12);
+
+      --glass-bg:rgba(255,255,255,0.95);
+      --glass-border:rgba(229,229,231,0.5);
+      --glass-blur:blur(10px);
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;}
+    html,body{width:100%;height:100%;overflow:hidden;}
+    body{min-height:100vh;background:linear-gradient(135deg,#f5f7fa 0%,#e4e7ec 100%);color:var(--text-main);display:flex;}
+
+    .app-container{display:flex;width:100%;height:100vh;}
+    .sidebar{width:240px;height:100%;background:var(--bg-sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
+    .sidebar__header{padding:24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+    .sidebar__logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#4d9eff);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:800;}
+    .sidebar__title{font-size:18px;font-weight:800;letter-spacing:-0.5px;}
+    .sidebar__nav{padding:24px 0;flex:1;display:flex;flex-direction:column;gap:4px;}
+    .sidebar__nav-item{display:flex;align-items:center;padding:14px 20px;text-decoration:none;color:var(--text-secondary);transition:all .2s;font-size:15px;font-weight:600;border-left:3px solid transparent;}
+    .sidebar__nav-item:hover{background:var(--bg-light);color:var(--text-main);}
+    .sidebar__nav-item.active{background:var(--primary-light);color:var(--primary);border-left-color:var(--primary);font-weight:800;}
+    .sidebar__footer{padding:20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+    .sidebar__avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#4d9eff);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;flex-shrink:0;}
+    .sidebar__user-name{font-size:14px;font-weight:800;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .sidebar__user-id{font-size:12px;color:var(--text-tertiary);}
+
+    .main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:24px;gap:24px;min-width:0;}
+    .page-header{background:var(--bg-white);border-radius:var(--radius-lg);padding:20px 24px;box-shadow:var(--shadow-sm);border:1px solid var(--border);}
+    .page-header__top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;}
+    .page-title{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:900;letter-spacing:-0.4px;}
+    .page-title .dot{width:10px;height:10px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 6px rgba(45,129,255,0.12);}
+    .header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+
+    .btn{height:42px;padding:0 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-white);color:var(--text-main);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;user-select:none;display:inline-flex;align-items:center;justify-content:center;}
+    .btn:hover{background:var(--bg-light);border-color:rgba(45,129,255,0.35);}
+    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-color:transparent;box-shadow:0 10px 28px rgba(45,129,255,0.18);}
+    .btn-primary:hover{transform:translateY(-1px);}
+    .date-chip{height:42px;padding:0 14px;min-width:200px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:var(--radius-md);background:var(--bg-light);border:1px solid var(--border);font-weight:900;letter-spacing:-0.2px;}
+    .date-chip small{font-weight:800;color:var(--text-secondary);}
+    .view-tabs{display:flex;gap:6px;padding:4px;background:var(--bg-light);border:1px solid var(--border);border-radius:var(--radius-md);}
+    .view-tab{height:34px;padding:0 12px;border:none;border-radius:var(--radius-sm);background:transparent;color:var(--text-secondary);font-weight:900;cursor:pointer;transition:all .2s;font-size:13px;}
+    .view-tab:hover{background:var(--bg-white);}
+    .view-tab.active{background:var(--primary);color:#fff;}
+    .page-header__bottom{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between;}
+    .search-box{flex:1;min-width:280px;display:flex;align-items:center;gap:10px;padding:0 12px;height:44px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-white);transition:all .2s;}
+    .search-box:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(45,129,255,0.12);}
+    .search-box input{border:none;outline:none;width:100%;font-size:14px;font-weight:700;color:var(--text-main);background:transparent;}
+    .search-box .kbd{font-size:12px;font-weight:900;color:var(--text-tertiary);border:1px solid var(--border);border-bottom-width:2px;padding:4px 8px;border-radius:10px;background:var(--bg-light);white-space:nowrap;}
+    .select{height:42px;padding:0 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-white);font-size:14px;font-weight:800;color:var(--text-main);cursor:pointer;transition:all .2s;}
+    .select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(45,129,255,0.12);}
+
+    .calendar-shell{flex:1;min-height:0;display:flex;gap:24px;overflow:hidden;}
+    .calendar-board{flex:1;min-width:0;min-height:0;background:var(--bg-white);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;}
+    .board-head{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(180deg,#fff 0%, #fbfbfd 100%);}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--primary-light);color:var(--primary);border:1px solid rgba(45,129,255,0.25);font-size:13px;font-weight:900;white-space:nowrap;}
+    .timezone{font-size:13px;color:var(--text-tertiary);font-weight:800;white-space:nowrap;}
+
+    /* 月视图 */
+    .month-grid{flex:1;min-height:0;display:grid;grid-template-rows:auto 1fr;}
+    .weekdays{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg-light);border-bottom:1px solid var(--border);}
+    .weekday{padding:10px 14px;font-weight:900;color:var(--text-secondary);font-size:13px;text-align:center;}
+
+    /* ✅ 关键修复：不再让 month-body 自己滚动；用动态 rows 填满面板 */
+    .month-body{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      overflow:hidden;
+      min-height:0;
+    }
+
+    .day-cell{
+      border-right:1px solid var(--border-light);
+      border-bottom:1px solid var(--border-light);
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-height:0; /* ✅ 关键修复：去掉 min-height:160px，避免挤出屏幕 */
+      background:var(--bg-white);
+      position:relative;
+      overflow:hidden;
+    }
+    .day-cell:nth-child(7n){border-right:none;}
+    .day-cell__header{display:flex;align-items:center;justify-content:space-between;}
+    .day-num{font-weight:900;font-size:16px;letter-spacing:-0.2px;}
+    .day-num small{margin-left:6px;font-size:11px;color:var(--text-tertiary);font-weight:800;}
+    .day-chip{padding:2px 8px;border-radius:999px;background:var(--primary-light);color:var(--primary);font-size:11px;font-weight:900;border:1px solid rgba(45,129,255,0.22);}
+    .day-cell--muted{background:var(--bg-light);color:var(--text-tertiary);}
+    .day-cell--today{box-shadow:inset 0 0 0 2px rgba(45,129,255,0.3);}
+
+    .day-events{display:flex;flex-direction:column;gap:8px;overflow:hidden;}
+    .event-tag{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:10px;border:1px solid var(--border);background:var(--bg-white);font-size:12px;font-weight:800;color:var(--text-secondary);cursor:pointer;transition:all .2s;min-width:0;}
+    .event-tag:hover{border-color:rgba(45,129,255,0.28);box-shadow:var(--shadow-sm);}
+    .event-tag__title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .tone-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);}
+    .tone-dot.focus{background:#4cd964;}
+    .tone-dot.warn{background:#ff9500;}
+    .tone-dot.danger{background:#ff3b30;}
+
+    .side-panel{width:360px;flex-shrink:0;min-height:0;background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden;display:flex;flex-direction:column;}
+    .side-panel__head{padding:18px 18px 14px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#fff 0%, #fbfbfd 100%);}
+    .side-panel__title{font-size:18px;font-weight:900;letter-spacing:-0.3px;margin-bottom:6px;}
+    .side-panel__sub{font-size:13px;color:var(--text-secondary);font-weight:700;}
+    .side-panel__body{padding:16px 18px 18px;overflow:auto;min-height:0;}
+    .card{background:var(--bg-light);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:14px;}
+    .kv{margin-bottom:12px;} .kv:last-child{margin-bottom:0;}
+    .kv__k{font-size:12px;color:var(--text-secondary);font-weight:900;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;}
+    .kv__v{font-size:14px;font-weight:900;color:var(--text-main);display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+    .pill{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:var(--bg-white);border:1px solid var(--border);color:var(--text-secondary);font-weight:900;}
+
+    .list{display:flex;flex-direction:column;gap:10px;}
+    .list-item{background:var(--bg-white);border:1px solid var(--border);border-radius:14px;padding:12px;display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:all .2s;min-height:110px;}
+    .list-item:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm);border-color:rgba(45,129,255,0.28);}
+    .time-tag{min-width:86px;text-align:center;padding:8px 10px;border-radius:12px;background:var(--primary-light);color:var(--primary);border:1px solid rgba(45,129,255,0.22);font-weight:900;font-size:12px;line-height:1.1;}
+    .time-tag small{display:block;margin-top:4px;color:var(--text-secondary);font-weight:900;}
+    .list-item__main{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;}
+    .list-item__title{font-size:15px;font-weight:900;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .list-item__meta{font-size:12px;font-weight:800;color:var(--text-secondary);display:flex;gap:8px;flex-wrap:wrap;}
+    .list-item__tags{display:flex;gap:6px;flex-wrap:wrap;}
+
+    .side-panel__footer{padding:14px 18px 18px;border-top:1px solid var(--border);display:flex;gap:10px;}
+    .side-panel__footer .btn{flex:1;}
+
+    /* ===== Modal ===== */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.14);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);z-index:2000;padding:18px;}
+    .modal.active{display:flex;}
+    .modal__body{background:var(--bg-white);border-radius:var(--radius-lg);padding:22px 24px;border:1px solid var(--glass-border);box-shadow:var(--shadow-lg);width:min(520px,94vw);}
+    .modal__title{font-size:18px;font-weight:900;margin-bottom:10px;letter-spacing:-0.2px;}
+    .modal__msg{font-size:14px;font-weight:700;color:var(--text-secondary);line-height:1.6;white-space:pre-line;margin-bottom:16px;display:none;}
+    .modal__actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .form-grid.single{grid-template-columns:1fr;}
+    .form-row{display:flex;flex-direction:column;gap:6px;}
+    .form-row label{font-size:13px;font-weight:800;color:var(--text-secondary);}
+    .form-row input,.form-row select{height:40px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg-white);font-size:14px;font-weight:700;}
+    .tag-options{display:flex;flex-wrap:wrap;gap:8px;}
+    .tag-option{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;border:1px solid var(--border);background:var(--bg-light);font-size:13px;font-weight:800;cursor:pointer;}
+    .tag-option input{accent-color:var(--primary);}
+
+    @media (max-width: 1100px){.side-panel{display:none;}}
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar__header">
+        <div class="sidebar__logo">S</div>
+        <div class="sidebar__title">StudySpace</div>
+      </div>
+      <nav class="sidebar__nav">
+        <a href="桌面端-用户端-任务.html" class="sidebar__nav-item">任务</a>
+        <a href="calendar_month.html" class="sidebar__nav-item active">日历</a>
+        <a href="桌面端-用户端-学习记录.html" class="sidebar__nav-item">学习记录</a>
+        <a href="桌面-用户端-座位预约.html" class="sidebar__nav-item">座位预约</a>
+        <a href="桌面端-用户端-设置.html" class="sidebar__nav-item">个人设置</a>
+
+      </nav>
+      <div class="sidebar__footer">
+        <div class="sidebar__avatar">用</div>
+        <div>
+          <div class="sidebar__user-name">StudyUser123</div>
+          <div class="sidebar__user-id">ID: 887654321</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <section class="page-header">
+        <div class="page-header__top">
+          <div class="page-title">
+            <span class="dot"></span>
+            <span>日历（月视图）</span>
+          </div>
+          <div class="header-actions">
+            <button class="btn" id="prevMonthBtn">上一月</button>
+            <div class="date-chip" id="dateChip">
+              <span id="dateChipMain">2025 / 12</span>
+              <small id="dateChipWeek">30 天 · 5 周</small>
+            </div>
+            <button class="btn" id="nextMonthBtn">下一月</button>
+            <div class="view-tabs" aria-label="视图切换">
+              <button class="view-tab" data-view="day">日</button>
+              <button class="view-tab" data-view="week">周</button>
+              <button class="view-tab active" data-view="month">月</button>
+            </div>
+            <button class="btn btn-primary" id="newEventBtn">新建日程</button>
+          </div>
+        </div>
+        <div class="page-header__bottom">
+          <div class="search-box" title="搜索日程">
+            <input id="searchInput" placeholder="搜索：标题 / 地点 / 标签…" />
+            <span class="kbd">Ctrl K</span>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+            <select class="select" id="calendarSelect" title="日历来源">
+              <option value="all" selected>全部日历</option>
+              <option value="study">学习计划</option>
+              <option value="seat">座位预约</option>
+              <option value="life">个人事务</option>
+            </select>
+            <button class="btn" id="todayBtn">回到本月</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="calendar-shell">
+        <div class="calendar-board">
+          <div class="board-head">
+            <div style="display:flex;align-items:center;gap:10px;min-width:0;flex-wrap:wrap;">
+              <span class="badge" id="summaryBadge">本月 8 个日程</span>
+              <span class="timezone">时区：Asia/Tokyo</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <button class="btn" id="toggleLegendBtn">显示图例</button>
+            </div>
+          </div>
+
+          <div class="month-grid">
+            <div class="weekdays" id="weekdays"></div>
+            <div class="month-body" id="monthBody"></div>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-panel__head">
+            <div class="side-panel__title" id="panelTitle">本月概览</div>
+            <div class="side-panel__sub" id="panelSub">点击左侧日程查看详情</div>
+          </div>
+          <div class="side-panel__body">
+            <div class="card" id="detailCard">
+              <div class="kv">
+                <div class="kv__k">标题</div>
+                <div class="kv__v" id="dTitle">—</div>
+              </div>
+              <div class="kv">
+                <div class="kv__k">时间</div>
+                <div class="kv__v" id="dTime">—</div>
+              </div>
+              <div class="kv">
+                <div class="kv__k">地点</div>
+                <div class="kv__v" id="dLoc">—</div>
+              </div>
+              <div class="kv">
+                <div class="kv__k">标签</div>
+                <div class="kv__v" id="dTags"><span class="pill">—</span></div>
+              </div>
+            </div>
+            <div class="kv" style="margin: 10px 0 8px;">
+              <div class="kv__k">日程列表</div>
+            </div>
+            <div class="list" id="agendaList"></div>
+          </div>
+          <div class="side-panel__footer">
+            <button class="btn" id="editBtn" disabled>编辑</button>
+            <button class="btn" id="deleteBtn" disabled style="border-color: rgba(255,59,48,0.35); color: var(--danger);">删除</button>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <div class="modal" id="modal">
+      <div class="modal__body">
+        <div class="modal__title" id="modalTitle">提示</div>
+        <div class="modal__msg" id="modalMsg">—</div>
+
+        <div id="modalForm">
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="eventTitle">标题</label>
+              <input id="eventTitle" placeholder="如：自习 · 英语听力训练" />
+            </div>
+            <div class="form-row">
+              <label for="eventDate">日期</label>
+              <input id="eventDate" type="date" />
+            </div>
+            <div class="form-row">
+              <label for="eventStart">开始时间</label>
+              <input id="eventStart" type="time" />
+            </div>
+            <div class="form-row">
+              <label for="eventEnd">结束时间</label>
+              <input id="eventEnd" type="time" />
+            </div>
+          </div>
+          <div class="form-grid single" style="margin-top:10px;">
+            <div class="form-row">
+              <label for="eventLoc">地点</label>
+              <input id="eventLoc" placeholder="如：自习室 · A区 / 线上" />
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:10px;">
+            <label>标签</label>
+            <div class="tag-options" id="tagOptions">
+              <label class="tag-option"><input type="checkbox" value="学习计划"> 学习计划</label>
+              <label class="tag-option"><input type="checkbox" value="座位预约"> 座位预约</label>
+              <label class="tag-option"><input type="checkbox" value="个人事务"> 个人事务</label>
+              <label class="tag-option"><input type="checkbox" value="讨论"> 讨论</label>
+              <label class="tag-option"><input type="checkbox" value="复盘"> 复盘</label>
+              <label class="tag-option"><input type="checkbox" value="专注"> 专注</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal__actions">
+          <button class="btn" id="modalCancel">取消</button>
+          <button class="btn btn-primary" id="modalOk">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const weekCN = ['周一','周二','周三','周四','周五','周六','周日'];
+    const pad2 = n => String(n).padStart(2,'0');
+    const tagMap = { study:'学习计划', seat:'座位预约', life:'个人事务' };
+
+    let events = [
+      { id:'m1', title:'英语听力训练', date:'2025-12-02', start:'09:00', end:'10:20', location:'自习室 · A区', tags:['学习计划','专注'], tone:'focus' },
+      { id:'m2', title:'座位预约：B12（确认入座）', date:'2025-12-03', start:'13:00', end:'15:00', location:'2楼 · 区域B', tags:['座位预约'], tone:'warn' },
+      { id:'m3', title:'阶段复盘', date:'2025-12-08', start:'20:00', end:'21:00', location:'线上', tags:['任务','复盘'], tone:'normal' },
+      { id:'m4', title:'健康拉伸 + 健走', date:'2025-12-10', start:'07:30', end:'08:10', location:'校内操场', tags:['个人事务'], tone:'focus' },
+      { id:'m5', title:'小组讨论：科研方法', date:'2025-12-17', start:'19:00', end:'20:30', location:'研讨室C', tags:['学习计划','讨论'], tone:'normal' },
+      { id:'m6', title:'阅读马拉松', date:'2025-12-21', start:'10:00', end:'12:00', location:'3楼 · 静音区', tags:['学习计划'], tone:'focus' },
+      { id:'m7', title:'座位预约：午后静读', date:'2025-12-21', start:'14:00', end:'16:30', location:'3楼 · 静音区', tags:['座位预约'], tone:'warn' },
+      { id:'m8', title:'月度总结 & 下月计划', date:'2025-12-29', start:'20:00', end:'21:30', location:'线上', tags:['任务','复盘'], tone:'danger' }
+    ];
+
+    let currentDate = new Date();
+    let selectedEventId = null;
+
+    const dateChipMain = document.getElementById('dateChipMain');
+    const dateChipWeek = document.getElementById('dateChipWeek');
+    const summaryBadge = document.getElementById('summaryBadge');
+    const weekdaysEl = document.getElementById('weekdays');
+    const monthBody = document.getElementById('monthBody');
+    const agendaList = document.getElementById('agendaList');
+
+    const dTitle = document.getElementById('dTitle');
+    const dTime = document.getElementById('dTime');
+    const dLoc = document.getElementById('dLoc');
+    const dTags = document.getElementById('dTags');
+    const editBtn = document.getElementById('editBtn');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMsg = document.getElementById('modalMsg');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalOk = document.getElementById('modalOk');
+    const modalForm = document.getElementById('modalForm');
+    const inputTitle = document.getElementById('eventTitle');
+    const inputDate = document.getElementById('eventDate');
+    const inputStart = document.getElementById('eventStart');
+    const inputEnd = document.getElementById('eventEnd');
+    const inputLoc = document.getElementById('eventLoc');
+    const tagOptions = document.querySelectorAll('#tagOptions input[type="checkbox"]');
+
+    const searchInput = document.getElementById('searchInput');
+    const calendarSelect = document.getElementById('calendarSelect');
+
+    function toISODate(d){
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const day = String(d.getDate()).padStart(2,'0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function formatDateCN(d){ return `${d.getFullYear()}/${pad2(d.getMonth()+1)}/${pad2(d.getDate())}`; }
+    function timeToMinutes(t){
+      if(!t) return 0;
+      const [h,m] = t.split(':').map(Number);
+      const hh = Number.isFinite(h) ? h : 0;
+      const mm = Number.isFinite(m) ? m : 0;
+      return hh*60 + mm;
+    }
+
+    function escapeHtml(str){ return String(str).replace(/[&<>"']/g, s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s])); }
+
+    function firstGridDate(date){
+      const first = new Date(date.getFullYear(), date.getMonth(), 1);
+      const day = first.getDay() === 0 ? 7 : first.getDay(); // 1..7 (Mon..Sun)
+      first.setDate(first.getDate() - (day - 1));
+      return first;
+    }
+
+    function daysInMonth(date){
+      return new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
+    }
+
+    function toneDotClass(tone){
+      if(tone === 'focus') return 'focus';
+      if(tone === 'warn') return 'warn';
+      if(tone === 'danger') return 'danger';
+      return '';
+    }
+
+    function renderWeekdayHeader(){
+      weekdaysEl.innerHTML = '';
+      weekCN.forEach(w=>{
+        const el = document.createElement('div');
+        el.className = 'weekday';
+        el.textContent = w;
+        weekdaysEl.appendChild(el);
+      });
+    }
+
+    function filterEvents(){
+      const q = (searchInput.value||'').trim().toLowerCase();
+      const source = calendarSelect.value;
+      return events.filter(ev => {
+        if(source !== 'all'){
+          const must = tagMap[source];
+          if(must && !(ev.tags||[]).includes(must)) return false;
+        }
+        if(!q) return true;
+        const blob = `${ev.title} ${ev.location||''} ${(ev.tags||[]).join(' ')} ${ev.date}`.toLowerCase();
+        return blob.includes(q);
+      });
+    }
+
+    function calcWeeksForMonth(date){
+      const days = daysInMonth(date);
+      const first = new Date(date.getFullYear(), date.getMonth(), 1);
+      const firstDow = (first.getDay() === 0 ? 7 : first.getDay()); // 1..7 (Mon..Sun)
+      return Math.ceil(((firstDow - 1) + days) / 7);
+    }
+
+    function renderMonthGrid(){
+      const filtered = filterEvents();
+
+      // ✅ 动态计算本月需要多少行（5 或 6）
+      const weeks = calcWeeksForMonth(currentDate);
+      monthBody.style.gridTemplateRows = `repeat(${weeks}, 1fr)`;
+
+      const first = firstGridDate(currentDate);
+      const totalCells = weeks * 7;
+
+      monthBody.innerHTML = '';
+      // ✅ 关键修复：不要用 toISOString（UTC），用本地 toISODate
+      const todayStr = toISODate(new Date());
+
+      for(let i=0;i<totalCells;i++){
+        const d = new Date(first.getFullYear(), first.getMonth(), first.getDate()+i);
+        const dateStr = toISODate(d);
+
+        const cell = document.createElement('div');
+        const inMonth = d.getMonth() === currentDate.getMonth();
+        cell.className = 'day-cell' + (inMonth ? '' : ' day-cell--muted') + (dateStr===todayStr ? ' day-cell--today' : '');
+
+        cell.innerHTML = `
+          <div class="day-cell__header">
+            <div class="day-num">${d.getDate()}${inMonth ? '' : '<small>上/下月</small>'}</div>
+            ${dateStr===todayStr ? '<span class="day-chip">今天</span>' : ''}
+          </div>
+          <div class="day-events"></div>
+        `;
+
+        const evtBox = cell.querySelector('.day-events');
+        filtered.filter(ev=>ev.date===dateStr).forEach(ev=>{
+          const tag = document.createElement('div');
+          tag.className = 'event-tag';
+          tag.dataset.id = ev.id;
+          tag.innerHTML = `<span class="tone-dot ${toneDotClass(ev.tone)}"></span><span class="event-tag__title">${escapeHtml(ev.title)}</span>`;
+          tag.addEventListener('click', ()=>selectEvent(ev.id));
+          evtBox.appendChild(tag);
+        });
+
+        monthBody.appendChild(cell);
+      }
+
+      summaryBadge.textContent = `本月 ${filtered.length} 个日程`;
+      renderAgendaList(filtered);
+    }
+
+    function renderAgendaList(filtered){
+      agendaList.innerHTML = '';
+      const sorted = [...filtered].sort((a,b)=> a.date.localeCompare(b.date));
+      sorted.forEach(ev=>{
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.dataset.id = ev.id;
+        item.innerHTML = `
+          <div class="time-tag">${ev.start || '--'}<small>${ev.date.replace(/-/g,'/')}</small></div>
+          <div class="list-item__main">
+            <div class="list-item__title">${escapeHtml(ev.title)}</div>
+            <div class="list-item__meta">${escapeHtml(ev.location || '未填写地点')}</div>
+            <div class="list-item__tags">${(ev.tags||[]).slice(0,3).map(t=>`<span class="pill">${escapeHtml(t)}</span>`).join('')}</div>
+          </div>
+        `;
+        item.addEventListener('click', ()=>selectEvent(ev.id));
+        agendaList.appendChild(item);
+      });
+    }
+
+    function selectEvent(id){
+      selectedEventId = id;
+      const ev = events.find(e=>e.id===id);
+      if(!ev) return;
+
+      // ✅ 关键修复：避免 new Date('YYYY-MM-DD') 按 UTC 解析导致错一天
+      const d = new Date(ev.date + "T00:00:00");
+
+      dTitle.textContent = ev.title;
+      dTime.textContent = `${formatDateCN(d)}  ${ev.start || '--'}${ev.end ? ' - '+ev.end : ''}`;
+      dLoc.textContent = ev.location || '—';
+      dTags.innerHTML = '';
+      (ev.tags && ev.tags.length ? ev.tags : ['—']).forEach(t=>{
+        const p = document.createElement('span');
+        p.className = 'pill';
+        p.textContent = t;
+        dTags.appendChild(p);
+      });
+
+      [...agendaList.querySelectorAll('.list-item')].forEach(n=>{
+        n.style.borderColor = n.dataset.id === id ? 'rgba(45,129,255,0.45)' : 'var(--border)';
+      });
+
+      editBtn.disabled = false;
+      deleteBtn.disabled = false;
+    }
+
+    function resetDetail(){
+      dTitle.textContent = '—';
+      dTime.textContent = '—';
+      dLoc.textContent = '—';
+      dTags.innerHTML = '<span class="pill">—</span>';
+      editBtn.disabled = true;
+      deleteBtn.disabled = true;
+    }
+
+    function renderHeader(){
+      const days = daysInMonth(currentDate);
+      const weeks = calcWeeksForMonth(currentDate);
+      dateChipMain.textContent = `${currentDate.getFullYear()} / ${pad2(currentDate.getMonth()+1)}`;
+      dateChipWeek.textContent = `${days} 天 · ${weeks} 周`;
+    }
+
+    function shiftMonth(delta){
+      currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth()+delta, 1);
+      selectedEventId = null;
+      resetDetail();
+      renderHeader();
+      renderMonthGrid();
+    }
+
+    /* ========= Modal ========= */
+    let modalOkHandler = null;
+    let modalMode = 'create';
+    let editingId = null;
+
+    function resetForm(){
+      modalMsg.style.display = 'none';
+      modalForm.style.display = 'block';
+      inputTitle.value = '';
+      inputDate.value = toISODate(currentDate);
+      inputStart.value = '';
+      inputEnd.value = '';
+      inputLoc.value = '';
+      tagOptions.forEach(cb=>cb.checked=false);
+    }
+
+    function openEventForm(mode, ev){
+      modalMode = mode;
+      editingId = ev?.id || null;
+      resetForm();
+      modalTitle.textContent = mode === 'edit' ? '编辑日程' : '新建日程';
+      modalOk.textContent = mode === 'edit' ? '保存修改' : '保存日程';
+      if(ev){
+        inputTitle.value = ev.title || '';
+        inputDate.value = ev.date || toISODate(currentDate);
+        inputStart.value = ev.start || '';
+        inputEnd.value = ev.end || '';
+        inputLoc.value = ev.location || '';
+        tagOptions.forEach(cb=>cb.checked = (ev.tags||[]).includes(cb.value));
+      }
+      modal.classList.add('active');
+      modalOkHandler = handleSubmitForm;
+    }
+
+    function showConfirm(title, msg, onOk){
+      modalTitle.textContent = title;
+      modalMsg.textContent = msg;
+      modalMsg.style.display = 'block';
+      modalForm.style.display = 'none';
+      modalOk.textContent = '确定';
+      modal.classList.add('active');
+      modalOkHandler = onOk || null;
+    }
+
+    function closeModal(){
+      modal.classList.remove('active');
+      modalOkHandler = null;
+      editingId = null;
+    }
+
+    function handleSubmitForm(){
+      const title = inputTitle.value.trim();
+      const date = inputDate.value || toISODate(currentDate);
+      const start = inputStart.value || '';
+      const end = inputEnd.value || '';
+      if(!title){ alert('请填写标题'); return; }
+      if(start && end && timeToMinutes(end) < timeToMinutes(start)){ alert('结束时间需晚于开始时间'); return; }
+
+      const payload = {
+        id: editingId || `m${Date.now()}`,
+        title,
+        date,
+        start,
+        end,
+        location: inputLoc.value.trim(),
+        tags: Array.from(tagOptions).filter(cb=>cb.checked).map(cb=>cb.value),
+        tone: 'normal'
+      };
+
+      if(modalMode === 'edit'){
+        events = events.map(ev => ev.id === editingId ? { ...ev, ...payload } : ev);
+        selectedEventId = payload.id;
+      }else{
+        events.push(payload);
+        selectedEventId = payload.id;
+      }
+
+      closeModal();
+      renderMonthGrid();
+      if(selectedEventId) selectEvent(selectedEventId);
+    }
+
+    document.getElementById('prevMonthBtn').addEventListener('click', ()=>shiftMonth(-1));
+    document.getElementById('nextMonthBtn').addEventListener('click', ()=>shiftMonth(1));
+    document.getElementById('todayBtn').addEventListener('click', ()=>{
+      currentDate = new Date();
+      renderHeader();
+      renderMonthGrid();
+    });
+
+    document.getElementById('newEventBtn').addEventListener('click', ()=>openEventForm('create'));
+    document.getElementById('toggleLegendBtn').addEventListener('click', ()=>alert('可在此处放置颜色图例或筛选器。'));
+
+    editBtn.addEventListener('click', ()=>{
+      const ev = events.find(e=>e.id===selectedEventId);
+      if(ev) openEventForm('edit', ev);
+    });
+
+    deleteBtn.addEventListener('click', ()=>{
+      const ev = events.find(e=>e.id===selectedEventId);
+      if(!ev) return;
+      showConfirm('删除确认', `确认删除【${ev.title}】吗？`, ()=>{
+        events = events.filter(e=>e.id!==selectedEventId);
+        selectedEventId = null;
+        resetDetail();
+        renderMonthGrid();
+        closeModal();
+      });
+    });
+
+    searchInput.addEventListener('input', ()=>{ resetDetail(); renderMonthGrid(); });
+    calendarSelect.addEventListener('change', ()=>{ resetDetail(); renderMonthGrid(); });
+
+    modalCancel.addEventListener('click', closeModal);
+    modalOk.addEventListener('click', ()=>{
+      // 表单模式下直接提交，避免回调丢失导致点击无响应
+      if(modalForm.style.display !== 'none'){
+        handleSubmitForm();
+        return;
+      }
+      if(typeof modalOkHandler === 'function') modalOkHandler();
+      else closeModal();
+    });
+
+    // ====== 视图跳转（月 -> 日 / 周），并携带 date ======
+    function parseDateParam(){
+      const p = new URLSearchParams(location.search);
+      const s = p.get("date"); // YYYY-MM-DD
+      if(!s) return null;
+
+      // ✅ 明确用本地 00:00 解析，避免 UTC 偏移
+      const d = new Date(s + "T00:00:00");
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    // 你的文件名现在是 .html.html（按截图来）
+    const VIEW_FILE = {
+      day:   "calendar_day.html",
+      week:  "calendar_week.html",
+      month: "calendar_month.html",
+    };
+
+    function goToView(view){
+      const dateStr = toISODate(currentDate);
+      const target = VIEW_FILE[view];
+      if(!target) return;
+      location.href = `${target}?date=${encodeURIComponent(dateStr)}`;
+    }
+
+    function setActiveTab(view){
+      document.querySelectorAll(".view-tab").forEach(b=>{
+        b.classList.toggle("active", b.dataset.view === view);
+      });
+    }
+
+    // 初始化：支持从 day/week 跳回来时带的 date
+    (function initViewDate(){
+      const d = parseDateParam();
+      if(d){
+        currentDate = new Date(d.getFullYear(), d.getMonth(), 1);
+      }
+      setActiveTab("month");
+    })();
+
+    document.querySelectorAll(".view-tab").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const v = btn.dataset.view;
+        if(v === "month") return;
+        goToView(v);
+      });
+    });
+
+    document.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='k'){
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    renderWeekdayHeader();
+    renderHeader();
+    renderMonthGrid();
+  </script>
+</body>
+</html>

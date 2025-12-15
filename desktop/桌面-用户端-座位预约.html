@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudySpace - 座位预约</title>
+
+  <style>
+    /* 全局变量 */
+    :root {
+      --primary: #2d81ff;
+      --primary-light: #f0f7ff;
+      --primary-dark: #1a6ee0;
+      --success: #4cd964;
+      --success-light: #e8f9eb;
+      --danger: #ff3b30;
+      --danger-light: #ffe6e6;
+      --warning: #ff9500;
+      --text-main: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary: #8e8e93;
+      --border: #e5e5e7;
+      --border-light: #f2f2f7;
+      --bg-light: #f5f5f7;
+      --bg-white: #fff;
+      --bg-sidebar: #f8f9fa;
+      --bg-card: #ffffff;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+      --glass-bg: rgba(255, 255, 255, 0.95);
+      --glass-border: rgba(229, 229, 231, 0.5);
+      --glass-blur: blur(10px);
+    }
+
+    /* 基础样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7ec 100%);
+      color: var(--text-main);
+      display: flex;
+    }
+
+    /* 整体布局 */
+    .app-container {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    /* 左侧导航栏 */
+    .sidebar {
+      width: 240px;
+      height: 100%;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 100;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .sidebar__header {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar__logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), #4d9eff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .sidebar__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar__nav {
+      padding: 24px 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar__nav-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      position: relative;
+      font-size: 15px;
+      font-weight: 600;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar__nav-item:hover {
+      background: var(--bg-light);
+      color: var(--text-main);
+    }
+
+    .sidebar__nav-item.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 800;
+    }
+
+    .sidebar__nav-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 16px;
+    }
+
+    .sidebar__nav-text {
+      flex: 1;
+    }
+
+    .sidebar__footer {
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar__avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #4d9eff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .sidebar__user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sidebar__user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar__user-id {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 24px;
+      position: relative;
+    }
+
+    /* 顶部搜索栏 */
+    .search-header {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .search-header__title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-header__title-icon {
+      color: var(--primary);
+      font-size: 22px;
+    }
+
+    .search-filters {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 150px;
+    }
+
+    .filter-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-select {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-white);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(45, 129, 255, 0.1);
+    }
+
+    .date-picker-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .date-picker {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-white);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .date-picker:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(45, 129, 255, 0.1);
+    }
+
+    .available-seats {
+      margin-left: auto;
+      padding: 12px 20px;
+      background: var(--success-light);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(76, 217, 100, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 120px;
+    }
+
+    .available-seats__label {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+
+    .available-seats__count {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--success);
+    }
+
+    /* 座位图区域 */
+    .seat-map-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .seat-map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .seat-map-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .seat-map-title-icon {
+      color: var(--primary);
+    }
+
+    .area-tabs {
+      display: flex;
+      gap: 8px;
+      background: var(--bg-light);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    .area-tab {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+    }
+
+    .area-tab:hover {
+      background: var(--bg-white);
+    }
+
+    .area-tab.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .seat-map-container {
+      flex: 1;
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      padding: 32px;
+      overflow-y: auto;
+      position: relative;
+      min-height: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .seat-map-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .seat-map-container::-webkit-scrollbar-track {
+      background: var(--bg-light);
+      border-radius: 4px;
+    }
+
+    .seat-map-container::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .seat-map-container::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
+    }
+
+    /* 座位图 - 6x5布局 */
+    .seat-map {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 900px;
+      height: 100%;
+      max-height: 500px;
+    }
+
+    .seat {
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+      min-height: 80px;
+    }
+
+    .seat::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: currentColor;
+      opacity: 0.1;
+      z-index: 1;
+    }
+
+    .seat:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* 座位状态 */
+    .seat.available {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      color: #2d81ff;
+      border-color: #2d81ff;
+    }
+
+    .seat.selected {
+      background: linear-gradient(135deg, #2d81ff 0%, #4d9eff 100%);
+      color: white;
+      border-color: #2d81ff;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(45, 129, 255, 0.3);
+      z-index: 2;
+    }
+
+    .seat.booked {
+      background: linear-gradient(135deg, #ffd591 0%, #ffc069 100%);
+      border-color: #ffa726;
+      color: #e65100;
+      cursor: not-allowed;
+    }
+
+    .seat.booked-by-me {
+      background: linear-gradient(135deg, #2d81ff 0%, #4d9eff 100%);
+      border-color: #2d81ff;
+      color: white;
+      cursor: pointer;
+    }
+
+    .seat.using {
+      background: linear-gradient(135deg, #b7eb8f 0%, #95de64 100%);
+      border-color: #73d13d;
+      color: #237804;
+      cursor: not-allowed;
+    }
+
+    .seat.unavailable {
+      background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+      border-color: #d1d1d6;
+      color: #8e8e93;
+      cursor: not-allowed;
+    }
+
+    /* 座位图例 */
+    .seat-legends {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+      padding: 16px;
+      background: var(--bg-light);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      justify-content: center;
+    }
+
+    .seat-legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      background: var(--bg-white);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .seat-legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 2px solid rgba(0,0,0,0.1);
+    }
+
+    /* 右侧座位详情 */
+    .seat-details {
+      width: 360px;
+      height: 100%;
+      background: var(--bg-white);
+      border-left: 1px solid var(--border);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    .seat-details__header {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .seat-details__title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .seat-details__subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .seat-details__content {
+      flex: 1;
+    }
+
+    .seat-info-card {
+      background: var(--bg-light);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .seat-info__item {
+      margin-bottom: 20px;
+    }
+
+    .seat-info__item:last-child {
+      margin-bottom: 0;
+    }
+
+    .seat-info__label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .seat-info__value {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .seat-number {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 12px 0;
+      text-align: center;
+    }
+
+    .facilities-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .facility-tag {
+      padding: 8px 14px;
+      background: var(--bg-white);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .facility-tag i {
+      font-size: 12px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .status-available {
+      background: rgba(76, 217, 100, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(76, 217, 100, 0.3);
+    }
+
+    .status-booked {
+      background: rgba(255, 149, 0, 0.1);
+      color: var(--warning);
+      border: 1px solid rgba(255, 149, 0, 0.3);
+    }
+
+    .status-booked-by-me {
+      background: rgba(45, 129, 255, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(45, 129, 255, 0.3);
+    }
+
+    .status-using {
+      background: rgba(76, 217, 100, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(76, 217, 100, 0.3);
+    }
+
+    .datetime-display {
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      border: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    .datetime-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      text-align: center;
+    }
+
+    /* 时间选择器 */
+    .time-picker-container {
+      margin-top: 16px;
+    }
+
+    .time-picker-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .time-slots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .time-slot {
+      flex: 1;
+      min-width: calc(50% - 8px);
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-white);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .time-slot:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .time-slot.selected {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* 按钮容器 */
+    .btn-container {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .btn {
+      width: 100%;
+      height: 56px;
+      color: white;
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      box-shadow: 0 6px 20px rgba(45, 129, 255, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(45, 129, 255, 0.3);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger), #ff6666);
+      box-shadow: 0 6px 20px rgba(255, 59, 48, 0.25);
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(255, 59, 48, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      background: var(--text-tertiary);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn i {
+      font-size: 18px;
+    }
+
+    /* 提示信息 */
+    .hint-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 32px 40px;
+      box-shadow: var(--shadow-lg);
+      z-index: 2000;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      display: none;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .hint-container.active {
+      display: block;
+    }
+
+    .hint-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #4d9eff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: white;
+      font-size: 28px;
+    }
+
+    .hint-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .hint-message {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .hint-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .hint-btn {
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      background: var(--bg-white);
+      color: var(--text-main);
+    }
+
+    .hint-btn-primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .hint-btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .hint-btn:hover {
+      background: var(--bg-light);
+    }
+
+    /* 动画 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -55%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 1200px) {
+      .seat-map {
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+      }
+
+      .seat-details {
+        width: 320px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .app-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .sidebar__nav {
+        flex-direction: row;
+        padding: 0;
+        margin: 0 20px;
+      }
+
+      .sidebar__nav-item {
+        padding: 14px 16px;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+      }
+
+      .sidebar__nav-item.active {
+        border-left: none;
+        border-bottom-color: var(--primary);
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .seat-details {
+        width: 100%;
+        height: auto;
+        border-left: none;
+        border-top: 1px solid var(--border);
+      }
+
+      .seat-map {
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .seat-map {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+      }
+
+      .search-filters {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .available-seats {
+        margin-left: 0;
+        margin-top: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <!-- 左侧导航栏 -->
+  <aside class="sidebar">
+    <div class="sidebar__header">
+      <div class="sidebar__logo">S</div>
+      <div class="sidebar__title">StudySpace</div>
+    </div>
+
+    <nav class="sidebar__nav">
+      <a href="桌面端-用户端-任务.html" class="sidebar__nav-item">任务</a>
+      <a href="calendar_day.html" class="sidebar__nav-item">日历</a>
+      <a href="桌面端-用户端-学习记录.html" class="sidebar__nav-item">学习记录</a>
+      <a href="桌面-用户端-座位预约.html" class="sidebar__nav-item active">座位预约</a>
+
+      <a href="桌面端-用户端-设置.html" class="sidebar__nav-item">个人设置</a>
+
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="sidebar__avatar">用</div>
+      <div class="sidebar__user-info">
+        <div class="sidebar__user-name">StudyUser123</div>
+        <div class="sidebar__user-id">ID: 887654321</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <div class="main-content">
+    <!-- 顶部搜索栏 -->
+    <div class="search-header">
+      <div class="search-header__title">
+        <div class="search-header__title-icon">💺</div>
+        <span>座位预约</span>
+      </div>
+
+      <div class="search-filters">
+        <div class="filter-group">
+          <div class="filter-label">楼层</div>
+          <select class="filter-select" id="floorSelect">
+            <option value="1">楼层 1</option>
+            <option value="2" selected>楼层 2</option>
+            <option value="3">楼层 3</option>
+            <option value="4">楼层 4</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">区域</div>
+          <select class="filter-select" id="areaSelect">
+            <option value="A" selected>区域 A</option>
+            <option value="B">区域 B</option>
+            <option value="C">区域 C</option>
+            <option value="D">区域 D</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">日期</div>
+          <div class="date-picker-container">
+            <input type="date" class="date-picker" id="datePicker" value="2025-11-29">
+          </div>
+        </div>
+
+        <div class="available-seats">
+          <div class="available-seats__label">空位数</div>
+          <div class="available-seats__count" id="availableSeatsCount">18</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 座位图区域 -->
+    <div class="seat-map-area">
+      <div class="seat-map-header">
+        <div class="seat-map-title">
+          <div class="seat-map-title-icon">📍</div>
+          <span id="seatMapTitle">区域 A - 座位图</span>
+        </div>
+
+        <div class="area-tabs">
+          <button class="area-tab active" data-area="A">区域 A</button>
+          <button class="area-tab" data-area="B">区域 B</button>
+          <button class="area-tab" data-area="C">区域 C</button>
+          <button class="area-tab" data-area="D">区域 D</button>
+        </div>
+      </div>
+
+      <div class="seat-map-container">
+        <div class="seat-map" id="seatMap">
+          <!-- 座位将通过JavaScript生成 -->
+        </div>
+      </div>
+
+      <!-- 座位图例 -->
+      <div class="seat-legends">
+        <div class="seat-legend">
+          <div class="seat-legend-color" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-color: #2d81ff;"></div>
+          <span>可用</span>
+        </div>
+        <div class="seat-legend">
+          <div class="seat-legend-color" style="background: linear-gradient(135deg, #ffd591 0%, #ffc069 100%); border-color: #ffa726;"></div>
+          <span>已预约(他人)</span>
+        </div>
+        <div class="seat-legend">
+          <div class="seat-legend-color" style="background: linear-gradient(135deg, #2d81ff 0%, #4d9eff 100%); border-color: #2d81ff;"></div>
+          <span>已预约(我的)</span>
+        </div>
+        <div class="seat-legend">
+          <div class="seat-legend-color" style="background: linear-gradient(135deg, #b7eb8f 0%, #95de64 100%); border-color: #73d13d;"></div>
+          <span>使用中</span>
+        </div>
+        <div class="seat-legend">
+          <div class="seat-legend-color" style="background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%); border-color: #d1d1d6;"></div>
+          <span>不可用</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右侧座位详情 -->
+  <div class="seat-details">
+    <div class="seat-details__header">
+      <div class="seat-details__title">座位详细信息</div>
+      <div class="seat-details__subtitle">选择座位查看详情并进行预约</div>
+    </div>
+
+    <div class="seat-details__content">
+      <div class="seat-info-card">
+        <div class="seat-info__item">
+          <div class="seat-info__label">座位号</div>
+          <div class="seat-number" id="seatNumber">A15</div>
+        </div>
+
+        <div class="seat-info__item">
+          <div class="seat-info__label">设施</div>
+          <div class="facilities-list" id="facilitiesList">
+            <div class="facility-tag">💡 台灯</div>
+            <div class="facility-tag">🔌 电源</div>
+            <div class="facility-tag">📶 WiFi</div>
+            <div class="facility-tag">🎧 隔音</div>
+          </div>
+        </div>
+
+        <div class="seat-info__item">
+          <div class="seat-info__label">预约状态</div>
+          <div class="seat-info__value">
+            <span id="seatStatus">可用</span>
+            <span class="status-badge status-available" id="statusBadge">空闲</span>
+          </div>
+        </div>
+
+        <!-- 时间选择器 -->
+        <div class="seat-info__item time-picker-container">
+          <div class="seat-info__label">预约时间</div>
+          <div class="time-slots" id="timeSlots">
+            <div class="time-slot" data-time="08:00-10:00">08:00-10:00</div>
+            <div class="time-slot" data-time="10:00-12:00">10:00-12:00</div>
+            <div class="time-slot" data-time="13:00-15:00">13:00-15:00</div>
+            <div class="time-slot" data-time="15:00-17:00">15:00-17:00</div>
+            <div class="time-slot" data-time="18:00-20:00">18:00-20:00</div>
+            <div class="time-slot" data-time="20:00-22:00">20:00-22:00</div>
+          </div>
+        </div>
+
+        <div class="seat-info__item">
+          <div class="seat-info__label">预约日期和时间</div>
+          <div class="datetime-display">
+            <div class="datetime-value" id="datetimeValue">2025/11/29 08:00-10:00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-container">
+        <button class="btn btn-primary" id="reserveBtn">
+          <i>✓</i>
+          <span>预约座位</span>
+        </button>
+        <button class="btn btn-danger" id="cancelBtn" disabled>
+          <i>✗</i>
+          <span>取消预约</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 提示信息 -->
+  <div class="hint-container" id="hintContainer">
+    <div class="hint-icon">💺</div>
+    <div class="hint-title" id="hintTitle">预约成功</div>
+    <div class="hint-message" id="hintMessage">座位 A15 已成功预约，预约时间：2025/11/29 08:00-10:00</div>
+    <div class="hint-actions">
+      <button class="hint-btn" onclick="closeHint()">取消</button>
+      <button class="hint-btn hint-btn-primary" onclick="closeHint()">确定</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 全局变量
+  let selectedSeat = null;
+  let selectedArea = 'A';
+  let selectedFloor = '2';
+  let selectedDate = '2025-11-29';
+  let selectedTime = '08:00-10:00';
+  let currentUserId = "user123"; // 当前用户ID
+
+  // 座位数据 - 模拟6x5布局（30个座位）
+  const generateSeatData = (area) => {
+    const seats = [];
+    const facilitiesOptions = [
+      ['💡 台灯', '🔌 电源', '📶 WiFi'],
+      ['💡 台灯', '🔌 电源'],
+      ['🔌 电源', '📶 WiFi'],
+      ['💡 台灯', '📶 WiFi', '🎧 隔音'],
+      ['💡 台灯', '🔌 电源', '📶 WiFi', '🎧 隔音']
+    ];
+
+    // 已预约的座位（模拟数据）
+    const bookedSeats = {
+      'A03': {userId: 'other456', time: '10:00-12:00'},
+      'A08': {userId: currentUserId, time: '13:00-15:00'}, // 当前用户预约的座位
+      'A11': {userId: 'other789', time: '15:00-17:00'},
+      'A18': {userId: 'other101', time: '18:00-20:00'},
+      'A22': {userId: currentUserId, time: '20:00-22:00'}, // 当前用户预约的座位
+      'B05': {userId: 'other202', time: '08:00-10:00'},
+      'B12': {userId: 'other303', time: '10:00-12:00'},
+      'C07': {userId: currentUserId, time: '15:00-17:00'}, // 当前用户预约的座位
+      'C14': {userId: 'other404', time: '18:00-20:00'},
+      'D09': {userId: 'other505', time: '20:00-22:00'}
+    };
+
+    // 使用中的座位
+    const usingSeats = ['A05', 'A15', 'B08', 'C12', 'D03'];
+
+    // 不可用的座位
+    const unavailableSeats = ['A17', 'B22', 'C08', 'D18'];
+
+    // 生成6x5座位布局
+    for (let i = 1; i <= 5; i++) {
+      for (let j = 1; j <= 6; j++) {
+        const seatNumber = `${area}${(i-1)*6 + j}`;
+
+        // 确定座位状态
+        let status, userId = null, bookedTime = null;
+
+        if (bookedSeats[seatNumber]) {
+          status = bookedSeats[seatNumber].userId === currentUserId ? 'booked-by-me' : 'booked';
+          userId = bookedSeats[seatNumber].userId;
+          bookedTime = bookedSeats[seatNumber].time;
+        } else if (usingSeats.includes(seatNumber)) {
+          status = 'using';
+        } else if (unavailableSeats.includes(seatNumber)) {
+          status = 'unavailable';
+        } else {
+          status = 'available';
+        }
+
+        // 随机选择设施
+        const facilities = facilitiesOptions[Math.floor(Math.random() * facilitiesOptions.length)];
+
+        seats.push({
+          seat: seatNumber,
+          status: status,
+          facilities: facilities,
+          userId: userId,
+          bookedTime: bookedTime
+        });
+      }
+    }
+
+    return seats;
+  };
+
+  // 初始化座位数据
+  const seatData = {
+    'A': generateSeatData('A'),
+    'B': generateSeatData('B'),
+    'C': generateSeatData('C'),
+    'D': generateSeatData('D')
+  };
+
+  // DOM元素
+  const seatMapElement = document.getElementById('seatMap');
+  const seatMapTitle = document.getElementById('seatMapTitle');
+  const floorSelect = document.getElementById('floorSelect');
+  const areaSelect = document.getElementById('areaSelect');
+  const datePicker = document.getElementById('datePicker');
+  const areaTabs = document.querySelectorAll('.area-tab');
+  const availableSeatsCount = document.getElementById('availableSeatsCount');
+  const seatNumber = document.getElementById('seatNumber');
+  const facilitiesList = document.getElementById('facilitiesList');
+  const seatStatus = document.getElementById('seatStatus');
+  const statusBadge = document.getElementById('statusBadge');
+  const datetimeValue = document.getElementById('datetimeValue');
+  const timeSlots = document.querySelectorAll('.time-slot');
+  const reserveBtn = document.getElementById('reserveBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const hintContainer = document.getElementById('hintContainer');
+  const hintTitle = document.getElementById('hintTitle');
+  const hintMessage = document.getElementById('hintMessage');
+
+  // 初始化函数
+  function init() {
+    // 初始化日期选择器
+    initDatePicker();
+
+    // 初始化座位图
+    generateSeatMap('A');
+
+    // 初始化时间选择器
+    initTimePicker();
+
+    // 初始化事件监听
+    initEventListeners();
+
+    // 更新可用座位数
+    updateAvailableSeatsCount();
+
+    // 默认选中A15座位
+    setTimeout(() => {
+      const defaultSeat = document.querySelector('[data-seat="A15"]');
+      if (defaultSeat) {
+        handleSeatClick(defaultSeat, seatData['A'].find(seat => seat.seat === 'A15'));
+      }
+    }, 100);
+  }
+
+  // 初始化日期选择器
+  function initDatePicker() {
+    // 设置默认日期为今天
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${year}-${month}-${day}`;
+
+    // 设置最小日期为今天
+    datePicker.min = todayStr;
+
+    // 设置最大日期为今天+30天
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 30);
+    const maxYear = maxDate.getFullYear();
+    const maxMonth = String(maxDate.getMonth() + 1).padStart(2, '0');
+    const maxDay = String(maxDate.getDate()).padStart(2, '0');
+    datePicker.max = `${maxYear}-${maxMonth}-${maxDay}`;
+
+    // 设置默认值
+    datePicker.value = selectedDate;
+  }
+
+  // 初始化时间选择器
+  function initTimePicker() {
+    timeSlots.forEach(slot => {
+      slot.addEventListener('click', () => {
+        // 移除所有选中状态
+        timeSlots.forEach(s => s.classList.remove('selected'));
+
+        // 设置当前选中
+        slot.classList.add('selected');
+        selectedTime = slot.dataset.time;
+
+        // 更新日期时间显示
+        updateDateTimeDisplay();
+      });
+    });
+
+    // 默认选中第一个时间段
+    timeSlots[0].classList.add('selected');
+  }
+
+  // 更新日期时间显示
+  function updateDateTimeDisplay() {
+    const dateStr = selectedDate.split('-').join('/');
+    datetimeValue.textContent = `${dateStr} ${selectedTime}`;
+  }
+
+  // 生成座位图
+  function generateSeatMap(area) {
+    seatMapElement.innerHTML = '';
+    selectedArea = area;
+
+    // 更新标题
+    seatMapTitle.textContent = `区域 ${area} - 座位图`;
+
+    // 更新区域选择器
+    areaSelect.value = area;
+
+    // 更新区域标签
+    areaTabs.forEach(tab => {
+      if (tab.dataset.area === area) {
+        tab.classList.add('active');
+      } else {
+        tab.classList.remove('active');
+      }
+    });
+
+    // 获取当前区域的座位数据
+    const seats = seatData[area];
+
+    // 生成座位元素
+    seats.forEach(seatData => {
+      const seatElement = document.createElement('div');
+      seatElement.className = `seat ${seatData.status}`;
+      seatElement.textContent = seatData.seat;
+      seatElement.dataset.seat = seatData.seat;
+      seatElement.dataset.status = seatData.status;
+      seatElement.dataset.userId = seatData.userId || '';
+      seatElement.dataset.bookedTime = seatData.bookedTime || '';
+      seatElement.dataset.facilities = seatData.facilities.join(',');
+
+      // 点击事件
+      seatElement.addEventListener('click', () => {
+        handleSeatClick(seatElement, seatData);
+      });
+
+      seatMapElement.appendChild(seatElement);
+    });
+
+    // 更新可用座位数
+    updateAvailableSeatsCount();
+  }
+
+  // 处理座位点击
+  function handleSeatClick(seatElement, seatData) {
+    const seatId = seatData.seat;
+    const seatStatusValue = seatData.status;
+
+    // 检查座位状态
+    if (seatStatusValue === 'unavailable') {
+      showHint('座位不可用', `座位 ${seatId} 不可用，请选择其他座位。`);
+      return;
+    }
+
+    if (seatStatusValue === 'using') {
+      showHint('座位使用中', `座位 ${seatId} 正在使用中，请选择其他座位。`);
+      return;
+    }
+
+    if (seatStatusValue === 'booked' && seatData.userId !== currentUserId) {
+      showHint('座位已预约', `座位 ${seatId} 已被他人预约，请选择其他座位。`);
+      return;
+    }
+
+    // 如果已选中其他座位，取消选中
+    if (selectedSeat && selectedSeat !== seatElement) {
+      selectedSeat.classList.remove('selected');
+    }
+
+    // 选中当前座位
+    seatElement.classList.add('selected');
+    selectedSeat = seatElement;
+
+    // 更新座位详情
+    updateSeatDetails(seatData);
+
+    // 根据座位状态更新按钮状态
+    if (seatStatusValue === 'available') {
+      reserveBtn.disabled = false;
+      cancelBtn.disabled = true;
+      reserveBtn.textContent = '预约座位';
+    } else if (seatStatusValue === 'booked-by-me') {
+      reserveBtn.disabled = true;
+      cancelBtn.disabled = false;
+      reserveBtn.textContent = '已预约(我的)';
+    } else if (seatStatusValue === 'booked') {
+      reserveBtn.disabled = true;
+      cancelBtn.disabled = true;
+      reserveBtn.textContent = '已预约(他人)';
+    } else if (seatStatusValue === 'using') {
+      reserveBtn.disabled = true;
+      cancelBtn.disabled = true;
+      reserveBtn.textContent = '使用中';
+    }
+  }
+
+  // 更新座位详情
+  function updateSeatDetails(seatData) {
+    seatNumber.textContent = seatData.seat;
+
+    // 更新设施列表
+    updateFacilitiesList(seatData.facilities);
+
+    // 更新状态
+    let statusText, statusClass, statusBadgeText;
+    switch(seatData.status) {
+      case 'available':
+        statusText = '可用';
+        statusClass = 'status-available';
+        statusBadgeText = '空闲';
+        break;
+      case 'booked':
+        statusText = '已预约';
+        statusClass = 'status-booked';
+        statusBadgeText = '他人预约';
+        break;
+      case 'booked-by-me':
+        statusText = '已预约';
+        statusClass = 'status-booked-by-me';
+        statusBadgeText = '我的预约';
+        break;
+      case 'using':
+        statusText = '使用中';
+        statusClass = 'status-using';
+        statusBadgeText = '使用中';
+        break;
+      case 'unavailable':
+        statusText = '不可用';
+        statusClass = 'status-unavailable';
+        statusBadgeText = '不可用';
+        break;
+    }
+
+    seatStatus.textContent = statusText;
+    statusBadge.textContent = statusBadgeText;
+    statusBadge.className = `status-badge ${statusClass}`;
+
+    // 如果是已预约的座位，显示预约时间
+    if (seatData.bookedTime) {
+      const dateStr = selectedDate.split('-').join('/');
+      datetimeValue.textContent = `${dateStr} ${seatData.bookedTime}`;
+    } else {
+      updateDateTimeDisplay();
+    }
+  }
+
+  // 更新设施列表
+  function updateFacilitiesList(facilities) {
+    facilitiesList.innerHTML = '';
+
+    facilities.forEach(facility => {
+      const facilityTag = document.createElement('div');
+      facilityTag.className = 'facility-tag';
+      facilityTag.textContent = facility;
+      facilitiesList.appendChild(facilityTag);
+    });
+  }
+
+  // 更新可用座位数
+  function updateAvailableSeatsCount() {
+    const currentAreaSeats = seatData[selectedArea];
+    const availableCount = currentAreaSeats.filter(seat => seat.status === 'available').length;
+    availableSeatsCount.textContent = availableCount;
+  }
+
+  // 初始化事件监听
+  function initEventListeners() {
+    // 楼层选择
+    floorSelect.addEventListener('change', () => {
+      selectedFloor = floorSelect.value;
+      showHint('楼层切换', `已切换到 ${selectedFloor} 楼`);
+      updateAvailableSeatsCount();
+    });
+
+    // 区域选择（下拉菜单）
+    areaSelect.addEventListener('change', () => {
+      generateSeatMap(areaSelect.value);
+      updateAvailableSeatsCount();
+      resetSelection();
+    });
+
+    // 区域标签
+    areaTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const area = tab.dataset.area;
+        generateSeatMap(area);
+        updateAvailableSeatsCount();
+        resetSelection();
+      });
+    });
+
+    // 日期选择
+    datePicker.addEventListener('change', () => {
+      selectedDate = datePicker.value;
+      updateDateTimeDisplay();
+      showHint('日期选择', `已选择日期：${selectedDate.split('-').join('/')}`);
+    });
+
+    // 预约按钮
+    reserveBtn.addEventListener('click', () => {
+      if (!selectedSeat) return;
+
+      const seatId = selectedSeat.dataset.seat;
+      const currentStatus = selectedSeat.dataset.status;
+
+      if (currentStatus === 'booked' || currentStatus === 'booked-by-me') {
+        showHint('提示', `座位 ${seatId} 已被预约，无法再次预约。`);
+      } else {
+        showReservationConfirm(seatId);
+      }
+    });
+
+    // 取消预约按钮
+    cancelBtn.addEventListener('click', () => {
+      if (!selectedSeat) return;
+
+      const seatId = selectedSeat.dataset.seat;
+      const currentUserIdAttr = selectedSeat.dataset.userId;
+
+      // 只能取消自己预约的座位
+      if (currentUserIdAttr === currentUserId) {
+        showCancelConfirm(seatId);
+      } else {
+        showHint('无法取消', `座位 ${seatId} 不是您预约的，无法取消。`);
+      }
+    });
+  }
+
+  // 重置选择
+  function resetSelection() {
+    selectedSeat = null;
+    seatNumber.textContent = '--';
+    seatStatus.textContent = '未选择';
+    statusBadge.textContent = '空闲';
+    statusBadge.className = 'status-badge status-available';
+    reserveBtn.disabled = true;
+    cancelBtn.disabled = true;
+    reserveBtn.textContent = '预约座位';
+
+    // 更新设施列表为默认
+    updateFacilitiesList(['💡 台灯', '🔌 电源', '📶 WiFi', '🎧 隔音']);
+
+    // 更新日期时间显示
+    updateDateTimeDisplay();
+  }
+
+  // 显示预约确认
+  function showReservationConfirm(seatId) {
+    hintTitle.textContent = '确认预约';
+    hintMessage.textContent = `确认预约座位 ${seatId} 吗？\n预约时间：${selectedDate.split('-').join('/')} ${selectedTime}\n楼层：${selectedFloor}楼，区域：${selectedArea}`;
+
+    // 更新确认按钮事件
+    const confirmBtn = hintContainer.querySelector('.hint-btn-primary');
+    confirmBtn.onclick = () => {
+      confirmReservation(seatId);
+    };
+
+    hintContainer.classList.add('active');
+  }
+
+  // 显示取消预约确认
+  function showCancelConfirm(seatId) {
+    hintTitle.textContent = '取消预约';
+    hintMessage.textContent = `确认取消座位 ${seatId} 的预约吗？`;
+
+    // 更新确认按钮事件
+    const confirmBtn = hintContainer.querySelector('.hint-btn-primary');
+    confirmBtn.onclick = () => {
+      confirmCancelReservation(seatId);
+    };
+
+    hintContainer.classList.add('active');
+  }
+
+  // 确认预约
+  function confirmReservation(seatId) {
+    // 更新座位状态
+    if (selectedSeat) {
+      selectedSeat.classList.remove('available', 'selected');
+      selectedSeat.classList.add('booked-by-me');
+      selectedSeat.dataset.status = 'booked-by-me';
+      selectedSeat.dataset.userId = currentUserId;
+      selectedSeat.dataset.bookedTime = selectedTime;
+
+      // 更新座位数据
+      const seatIndex = seatData[selectedArea].findIndex(seat => seat.seat === seatId);
+      if (seatIndex !== -1) {
+        seatData[selectedArea][seatIndex].status = 'booked-by-me';
+        seatData[selectedArea][seatIndex].userId = currentUserId;
+        seatData[selectedArea][seatIndex].bookedTime = selectedTime;
+      }
+
+      // 更新按钮状态
+      reserveBtn.disabled = true;
+      cancelBtn.disabled = false;
+      reserveBtn.textContent = '已预约(我的)';
+
+      // 更新座位详情
+      updateSeatDetails(seatData[selectedArea][seatIndex]);
+
+      // 更新可用座位数
+      updateAvailableSeatsCount();
+
+      // 显示成功提示
+      const dateStr = selectedDate.split('-').join('/');
+      showHint('预约成功',
+              `座位 ${seatId} 预约成功！\n预约时间：${dateStr} ${selectedTime}\n楼层：${selectedFloor}楼，区域：${selectedArea}\n请按时到达座位。`);
+    }
+
+    closeHint();
+  }
+
+  // 确认取消预约
+  function confirmCancelReservation(seatId) {
+    // 更新座位状态
+    if (selectedSeat) {
+      selectedSeat.classList.remove('booked-by-me');
+      selectedSeat.classList.add('available');
+      selectedSeat.dataset.status = 'available';
+      selectedSeat.dataset.userId = '';
+      selectedSeat.dataset.bookedTime = '';
+
+      // 更新座位数据
+      const seatIndex = seatData[selectedArea].findIndex(seat => seat.seat === seatId);
+      if (seatIndex !== -1) {
+        seatData[selectedArea][seatIndex].status = 'available';
+        seatData[selectedArea][seatIndex].userId = null;
+        seatData[selectedArea][seatIndex].bookedTime = null;
+      }
+
+      // 更新按钮状态
+      reserveBtn.disabled = false;
+      cancelBtn.disabled = true;
+      reserveBtn.textContent = '预约座位';
+
+      // 更新座位详情
+      updateSeatDetails(seatData[selectedArea][seatIndex]);
+
+      // 更新可用座位数
+      updateAvailableSeatsCount();
+
+      // 显示成功提示
+      showHint('取消成功', `座位 ${seatId} 的预约已取消。`);
+    }
+
+    closeHint();
+  }
+
+  // 显示提示
+  function showHint(title, message) {
+    hintTitle.textContent = title;
+    hintMessage.textContent = message;
+
+    // 更新确认按钮事件
+    const confirmBtn = hintContainer.querySelector('.hint-btn-primary');
+    confirmBtn.onclick = closeHint;
+
+    hintContainer.classList.add('active');
+  }
+
+  // 关闭提示
+  function closeHint() {
+    hintContainer.classList.remove('active');
+  }
+
+  // 页面加载完成后初始化
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

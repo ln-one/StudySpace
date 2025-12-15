@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudySpace - 学习记录</title>
+  <link rel="stylesheet" href="admin-desktop/core/styles/main.css">
+  <link rel="stylesheet" href="admin-desktop/core/components/sidebar/style.css">
+  <link rel="stylesheet" href="admin-desktop/core/layouts/admin-layout/style.css">
+  <style>
+    :root {
+      --page-bg: radial-gradient(circle at 18% 22%, rgba(0, 122, 255, 0.12), transparent 34%), radial-gradient(circle at 78% 18%, rgba(90, 200, 250, 0.12), transparent 36%), radial-gradient(circle at 50% 82%, rgba(0, 122, 255, 0.08), transparent 38%), linear-gradient(180deg, #F2F3F7 0%, #E7E9F2 100%);
+      --sidebar-width: 240px;
+      --navbar-height: 64px;
+
+      --primary:#2d81ff;
+      --primary-light:#f0f7ff;
+      --primary-dark:#1a6ee0;
+
+      --text-main:#1d1d1f;
+      --text-secondary:#6e6e73;
+      --text-tertiary:#8e8e93;
+
+      --border:#e5e5e7;
+      --border-light:#f2f2f7;
+      --bg-sidebar:#f8f9fa;
+      --bg-light:#f5f5f7;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-family-primary);
+      background: var(--page-bg);
+      color: var(--text-main);
+    }
+
+    .admin-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 240px;
+      height: 100%;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .sidebar__header {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar__logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), #4d9eff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .sidebar__title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar__nav {
+      padding: 24px 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar__nav-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: all .2s;
+      font-size: 15px;
+      font-weight: 600;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar__nav-item:hover {
+      background: var(--bg-light);
+      color: var(--text-main);
+    }
+
+    .sidebar__nav-item.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 800;
+    }
+
+    .sidebar__footer {
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar__avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #4d9eff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .sidebar__user-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar__user-id {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .page-content{
+      margin-left:0;
+      padding: var(--spacing-xl) var(--spacing-lg);
+    }
+
+
+    .content-inner {
+      width: min(1700px, calc(100% - var(--sidebar-width) + 140px));
+      margin: 0 auto;
+      display: grid;
+      gap: var(--spacing-lg);
+    }
+
+    .brand-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-lg);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-xl);
+      padding: calc(var(--spacing-md) + 2px) var(--spacing-xl);
+      box-shadow: var(--shadow-md);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--color-primary-gradient);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.02em;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .brand-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title strong { font-size: 18px; letter-spacing: var(--letter-spacing-tight); }
+    .brand-title span { color: var(--color-text-secondary); font-size: 14px; }
+
+    .brand-action {
+      border: 1px solid var(--color-border-secondary);
+      background: rgba(245, 245, 247, 0.9);
+      border-radius: var(--radius-lg);
+      padding: 12px 16px;
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+      transition: transform var(--transition-bounce), box-shadow var(--transition-normal), border-color var(--transition-normal);
+    }
+
+    .brand-action:hover { transform: translateY(-1px); border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
+
+    .app-shell {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      gap: var(--spacing-lg);
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-xxl);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      padding: var(--spacing-lg);
+    }
+
+    .filters-row {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-md);
+      align-items: center;
+    }
+
+    .select-chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px;
+      border-radius: 22px;
+      border: 1px solid var(--color-border-secondary);
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      font-weight: var(--font-weight-semibold);
+      transition: all var(--transition-normal);
+      min-width: 120px;
+      justify-content: space-between;
+    }
+
+    .select-label { display: inline-flex; align-items: center; gap: 8px; }
+
+    .select-chip:hover { border-color: var(--color-primary); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+    .select-chip.is-active { border-color: var(--color-primary); box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.12); }
+
+    .select-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      z-index: 10;
+      min-width: 140px;
+      background: #fff;
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 6px;
+      display: none;
+    }
+
+    .select-menu.open { display: grid; gap: 4px; }
+
+    .select-option {
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background var(--transition-normal), color var(--transition-normal);
+    }
+
+    .select-option:hover {
+      background: rgba(0, 122, 255, 0.08);
+      color: var(--color-primary);
+    }
+
+    /* 自定义时间选择弹窗 */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      padding: 16px;
+    }
+
+    .modal.open { display: flex; }
+
+    .modal__content {
+      background: #fff;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border-secondary);
+      box-shadow: var(--shadow-lg);
+      padding: var(--spacing-lg);
+      width: min(360px, 100%);
+      display: grid;
+      gap: var(--spacing-md);
+    }
+
+    .modal__section {
+      display: grid;
+      gap: var(--spacing-sm);
+    }
+
+    .modal__daterange {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-sm);
+    }
+
+    .modal__daterange input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+    }
+
+    .modal__actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--spacing-sm);
+    }
+
+    .modal__select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .btn-ghost-plain {
+      border: 1px solid var(--color-border-secondary);
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    .btn-primary-solid {
+      border: none;
+      background: var(--color-primary-gradient);
+      color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 10px 16px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .insights-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: var(--spacing-lg);
+    }
+
+    .insights-main {
+      display: grid;
+      gap: var(--spacing-md);
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .kpi-card {
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border-secondary);
+      background: linear-gradient(135deg, #F8FBFF 0%, #F2F6FF 100%);
+      box-shadow: var(--shadow-md);
+      display: grid;
+      gap: var(--spacing-sm);
+      min-height: 140px;
+    }
+
+    .kpi-card h4 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: var(--letter-spacing-tight);
+      color: var(--color-text-secondary);
+    }
+
+    .kpi-card strong {
+      font-size: 28px;
+      letter-spacing: var(--letter-spacing-tight);
+    }
+
+    .kpi-card small { color: var(--color-text-secondary); }
+
+    .chart-large {
+      border-radius: var(--radius-xxl);
+      border: 1px solid var(--color-border-secondary);
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: var(--shadow-lg);
+      padding: var(--spacing-xl);
+      min-height: 430px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--color-text-secondary);
+      font-size: 16px;
+    }
+
+    .insights-side {
+      display: grid;
+      gap: var(--spacing-md);
+    }
+
+    .side-card {
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-xl);
+      background: rgba(245, 245, 247, 0.9);
+      padding: var(--spacing-lg);
+      box-shadow: var(--shadow-md);
+      min-height: 200px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .side-card h4 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: var(--letter-spacing-tight);
+    }
+
+    .side-card p {
+      margin: 0;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0, 122, 255, 0.12);
+      color: var(--color-primary);
+      border: 1px solid rgba(0, 122, 255, 0.18);
+      font-size: 12px;
+      font-weight: var(--font-weight-semibold);
+      width: fit-content;
+    }
+
+    @media (max-width: 1080px) {
+      .page-content { margin-left: 0; padding: var(--spacing-lg); }
+      .content-inner { width: 100%; }
+      .brand-bar { align-items: flex-start; flex-direction: column; width: 100%; }
+      .app-shell { grid-template-columns: 1fr; width: 100%; }
+      .insights-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .filters-row { flex-direction: column; align-items: stretch; }
+      .select-chip { width: 100%; justify-content: space-between; }
+      .chart-large { min-height: 240px; }
+    }
+    </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar__header">
+        <div class="sidebar__logo">S</div>
+        <div class="sidebar__title">StudySpace</div>
+      </div>
+
+      <nav class="sidebar__nav">
+        <a href="桌面端-用户端-任务.html" class="sidebar__nav-item">任务</a>
+        <a href="calendar_day.html" class="sidebar__nav-item">日历</a>
+        <a href="桌面端-用户端-学习记录.html" class="sidebar__nav-item active" aria-current="page">学习记录</a>
+        <a href="桌面-用户端-座位预约.html" class="sidebar__nav-item">座位预约</a>
+        <a href="桌面端-用户端-设置.html" class="sidebar__nav-item">个人设置</a>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="sidebar__avatar">用</div>
+        <div>
+          <div class="sidebar__user-name">StudyUser123</div>
+          <div class="sidebar__user-id">ID: 887654321</div>
+        </div>
+      </div>
+    </aside>
+
+
+    <div class="admin-layout__main">
+      <div class="page-content">
+        <div class="content-inner">
+          <header class="brand-bar">
+            <div class="brand-left">
+              <div class="brand-logo">SS</div>
+              <div class="brand-title">
+                <strong>StudySpace 学习记录</strong>
+                <span>查看本周学习投入与习惯，坚持稳步提升</span>
+              </div>
+            </div>
+            <button class="brand-action" type="button" onclick="window.location.href='桌面端-用户端-任务.html'">返回任务面板</button>
+          </header>
+
+          <section class="panel">
+            <div class="filters-row">
+              <div class="select-chip is-active" data-key="week" data-scope="week"><span class="select-label">本周</span> <span>▾</span>
+                <div class="select-menu">
+                  <div class="select-option" data-key="week" data-label="本周">本周</div>
+                  <div class="select-option" data-key="week" data-label="上周">上周</div>
+                  <div class="select-option" data-key="custom" data-label="自定义" data-scope="week" data-modal="true">自定义</div>
+                </div>
+              </div>
+              <div class="select-chip" data-key="month" data-scope="month"><span class="select-label">本月</span> <span>▾</span>
+                <div class="select-menu">
+                  <div class="select-option" data-key="month" data-label="本月">本月</div>
+                  <div class="select-option" data-key="month" data-label="上月">上月</div>
+                  <div class="select-option" data-key="custom" data-label="自定义" data-scope="month" data-modal="true">自定义</div>
+                </div>
+              </div>
+              <div class="select-chip" data-key="term" data-scope="term"><span class="select-label">本学期</span> <span>▾</span>
+                <div class="select-menu">
+                  <div class="select-option" data-key="term" data-label="本学期">本学期</div>
+                  <div class="select-option" data-key="term" data-label="上学期">上学期</div>
+                  <div class="select-option" data-key="custom" data-label="自定义" data-scope="term" data-modal="true">自定义</div>
+                </div>
+              </div>
+              <div class="select-chip" data-key="custom" data-scope="range"><span class="select-label">选择时间区间</span> <span>📅</span>
+                <div class="select-menu">
+                  <div class="select-option" data-key="custom" data-label="最近7天" data-scope="range">最近7天</div>
+                  <div class="select-option" data-key="custom" data-label="最近30天" data-scope="range">最近30天</div>
+                  <div class="select-option" data-key="custom" data-label="自定义" data-scope="range" data-modal="true">自定义</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="insights-grid">
+              <div class="insights-main">
+                <div class="kpi-row">
+                  <div class="kpi-card">
+                    <h4>总学习时间</h4>
+                    <strong id="totalHours">28.4 h</strong>
+                    <small id="totalHoursDesc">较上周 +12%</small>
+                  </div>
+                  <div class="kpi-card">
+                    <h4>座位预定数量</h4>
+                    <strong id="seatBookings">12 次</strong>
+                    <small id="seatBookingsDesc">本月已预约 4/6 周</small>
+                  </div>
+                  <div class="kpi-card">
+                    <h4>番茄钟学习时间</h4>
+                    <strong id="pomodoroTime">18.2 h</strong>
+                    <small id="pomodoroDesc">完成 24 轮 · 平均 27 分钟</small>
+                  </div>
+                </div>
+
+                <div class="chart-large">
+                  <canvas id="dailyChart" style="width:100%;height:240px;"></canvas>
+                  <div id="dailyChartEmpty" style="color:var(--color-text-secondary);">每日学习时长可视化（折线/柱状图占位）</div>
+                </div>
+              </div>
+
+              <div class="insights-side">
+                <div class="side-card">
+                  <h4>周总结</h4>
+                  <p id="weeklySummary">保持稳定输出，晨间 8-10 点效率最高，晚间 21 点后下降明显。</p>
+                  <span class="tag" id="weeklyTag">本周效率 +8%</span>
+                </div>
+                <div class="side-card">
+                  <h4>座位使用分布可视化</h4>
+                  <canvas id="seatChart" style="width:100%;height:120px;"></canvas>
+                  <p id="seatUsageText">常用：A 区 12 号 · B 区 8 号，工作日覆盖率 80%。</p>
+                </div>
+                <div class="side-card">
+                  <h4>番茄钟趋势可视化</h4>
+                  <canvas id="pomoChart" style="width:100%;height:120px;"></canvas>
+                  <p id="pomodoroTrendText">高峰：周二、周四；需提升周末稳定性。</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 自定义时间选择弹窗 -->
+  <div class="modal" id="customModal">
+    <div class="modal__content">
+      <strong>选择时间范围</strong>
+
+      <div class="modal__section" id="selectSection">
+        <select class="modal__select" id="customSelect"></select>
+      </div>
+
+      <div class="modal__section" id="rangeSection" style="display:none;">
+        <div class="modal__daterange">
+          <input type="date" id="startDate">
+          <input type="date" id="endDate">
+        </div>
+        <small style="color:var(--color-text-secondary);">请选择开始与结束日期</small>
+      </div>
+
+      <div class="modal__actions">
+        <button class="btn-ghost-plain" type="button" id="modalCancel">取消</button>
+        <button class="btn-primary-solid" type="button" id="modalConfirm">确定</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    // 数据来源：简化自管理员端学习记录 index 中的趋势与热力数据
+    const datasets = {
+      week: {
+        label: '本周',
+        kpi: { total: 28.4, totalDesc: '较上周 +12%', seat: 12, seatDesc: '本月已预约 4/6 周', pomo: 18.2, pomoDesc: '完成 24 轮 · 平均 27 分钟' },
+        daily: [4.2, 5.1, 4.8, 5.6, 4.9, 3.8, 3.0],
+        summary: '保持稳定输出，晨间 8-10 点效率最高，晚间 21 点后下降明显。',
+        summaryTag: '本周效率 +8%',
+        seatUsage: '常用：A 区 12 号 · B 区 8 号，工作日覆盖率 80%。',
+        seatData: [50, 30, 20], // A/B/C 占比
+        seatLabels: ['A区12号', 'B区8号', '其他'],
+        pomoTrend: '高峰：周二、周四；需提升周末稳定性。',
+        pomoData: [6, 8, 7, 9, 6, 4, 3] // 周一到周日番茄数
+      },
+      month: {
+        label: '本月',
+        kpi: { total: 112.5, totalDesc: '较上月 +9%', seat: 46, seatDesc: '本月已预约 5/6 周', pomo: 74.6, pomoDesc: '完成 96 轮 · 平均 28 分钟' },
+        daily: [3.8,4.5,4.2,5.3,4.7,4.0,3.6,4.9,5.5,4.3,4.1,5.0,4.8,4.6,3.9,5.1,4.7,4.2,4.0,5.2,4.8,4.1,3.7,4.9,5.3,4.4,4.0,4.6,4.8,5.1],
+        summary: '本月晨间块持续高效，周末有波动，建议保持 4 次以上番茄/日。',
+        summaryTag: '本月效率 +9%',
+        seatUsage: '常用：A 区 12 号 · B 区 8 号，周覆盖率 82%。',
+        seatData: [46, 28, 26],
+        seatLabels: ['A区12号', 'B区8号', '其他'],
+        pomoTrend: '高峰：周二、周四；周末需提升稳定性。',
+        pomoData: [28, 32, 30, 34, 25, 18, 14]
+      },
+      term: {
+        label: '本学期',
+        kpi: { total: 620.0, totalDesc: '较上一学期 +6%', seat: 182, seatDesc: '已预约 16/18 周', pomo: 398.0, pomoDesc: '完成 520 轮 · 平均 27 分钟' },
+        daily: [4.2,4.5,4.0,5.2,4.8,3.6,3.4,4.9,5.1,4.6,4.3,5.0,4.7,4.2],
+        summary: '学期投入稳定，前半学期略高于后半，建议周末补齐 2-3h 阅读。',
+        summaryTag: '本学期效率 +6%',
+        seatUsage: '常用：A 区 12 号 · B 区 8 号 · C 区 5 号，覆盖率 78%。',
+        seatData: [48, 30, 22],
+        seatLabels: ['A区12号', 'B区8号', 'C区5号'],
+        pomoTrend: '高峰：周二、周四；周末保持 3 轮以上。',
+        pomoData: [42, 46, 44, 48, 38, 28, 22]
+      },
+      custom: {
+        label: '自定义',
+        kpi: { total: 14.0, totalDesc: '区间对比 +3%', seat: 6, seatDesc: '区间内预约 2/2 周', pomo: 9.6, pomoDesc: '完成 12 轮 · 平均 26 分钟' },
+        daily: [3.0,3.5,2.8,3.2,1.5,0.0,0.0],
+        summary: '区间内工作日表现良好，周末未学习，建议保持短时复盘。',
+        summaryTag: '区间效率 +3%',
+        seatUsage: '常用：A 区 12 号，工作日覆盖率 70%。',
+        seatData: [70, 18, 12],
+        seatLabels: ['A区12号', 'B区8号', '其他'],
+        pomoTrend: '高峰集中周二至周四，周末缺少番茄记录。',
+        pomoData: [6,7,6,8,4,2,1]
+      }
+    };
+
+    const state = { current: 'week', labels: { week: '本周', month: '本月', term: '本学期', range: '选择时间区间' } };
+
+    const els = {
+      totalHours: document.getElementById('totalHours'),
+      totalHoursDesc: document.getElementById('totalHoursDesc'),
+      seatBookings: document.getElementById('seatBookings'),
+      seatBookingsDesc: document.getElementById('seatBookingsDesc'),
+      pomodoroTime: document.getElementById('pomodoroTime'),
+      pomodoroDesc: document.getElementById('pomodoroDesc'),
+      weeklySummary: document.getElementById('weeklySummary'),
+      weeklyTag: document.getElementById('weeklyTag'),
+      seatUsageText: document.getElementById('seatUsageText'),
+      pomodoroTrendText: document.getElementById('pomodoroTrendText'),
+      dailyChart: document.getElementById('dailyChart'),
+      dailyChartEmpty: document.getElementById('dailyChartEmpty'),
+      seatChart: document.getElementById('seatChart'),
+      pomoChart: document.getElementById('pomoChart'),
+      filterButtons: Array.from(document.querySelectorAll('.select-chip')),
+      modal: document.getElementById('customModal'),
+      modalSelect: document.getElementById('customSelect'),
+      modalConfirm: document.getElementById('modalConfirm'),
+      modalCancel: document.getElementById('modalCancel'),
+      rangeSection: document.getElementById('rangeSection'),
+      selectSection: document.getElementById('selectSection'),
+      startDate: document.getElementById('startDate'),
+      endDate: document.getElementById('endDate')
+    };
+
+    function renderKpis(data) {
+      els.totalHours.textContent = `${data.kpi.total} h`;
+      els.totalHoursDesc.textContent = data.kpi.totalDesc;
+      els.seatBookings.textContent = `${data.kpi.seat} 次`;
+      els.seatBookingsDesc.textContent = data.kpi.seatDesc;
+      els.pomodoroTime.textContent = `${data.kpi.pomo} h`;
+      els.pomodoroDesc.textContent = data.kpi.pomoDesc;
+      els.weeklySummary.textContent = data.summary;
+      els.weeklyTag.textContent = data.summaryTag;
+      els.seatUsageText.textContent = data.seatUsage;
+      els.pomodoroTrendText.textContent = data.pomoTrend;
+    }
+
+    function renderChart(data) {
+      const canvas = els.dailyChart;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      if (!data.daily || !data.daily.length) {
+        els.dailyChartEmpty.style.display = 'block';
+        return;
+      }
+      els.dailyChartEmpty.style.display = 'none';
+
+      const padding = { top: 20, right: 20, bottom: 28, left: 40 };
+      const width = rect.width - padding.left - padding.right;
+      const height = rect.height - padding.top - padding.bottom;
+      const maxVal = Math.max(...data.daily, 1);
+
+      // grid
+      ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+      ctx.lineWidth = 1;
+      const steps = 4;
+      ctx.font = '12px -apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif';
+      ctx.fillStyle = '#86868B';
+      for (let i = 0; i <= steps; i++) {
+        const y = padding.top + (height / steps) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(padding.left + width, y);
+        ctx.stroke();
+        const val = Math.round((maxVal - (maxVal / steps) * i) * 10) / 10;
+        ctx.fillText(`${val}h`, 4, y + 4);
+      }
+
+      const barWidth = width / data.daily.length;
+      data.daily.forEach((val, idx) => {
+        const x = padding.left + barWidth * idx + barWidth * 0.2;
+        const barH = (val / maxVal) * height;
+        const y = padding.top + height - barH;
+        const gw = barWidth * 0.6;
+        const grad = ctx.createLinearGradient(x, y, x, y + barH);
+        grad.addColorStop(0, '#7AB8FF');
+        grad.addColorStop(1, '#C9E2FF');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        const r = 6;
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + gw - r, y);
+        ctx.quadraticCurveTo(x + gw, y, x + gw, y + r);
+        ctx.lineTo(x + gw, y + barH);
+        ctx.lineTo(x, y + barH);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.fill();
+
+        ctx.fillStyle = '#1D1D1F';
+        ctx.font = '600 12px -apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${val}h`, x + gw / 2, y - 6);
+      });
+    }
+
+    function renderSeatChart(data) {
+      const canvas = els.seatChart;
+      if (!canvas || !data.seatData) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      const total = data.seatData.reduce((a, b) => a + b, 0) || 1;
+      const center = { x: rect.width / 2, y: rect.height / 2 };
+      const radius = Math.min(rect.width, rect.height) / 2 - 6;
+      let start = -Math.PI / 2;
+      const colors = ['#4DA3FF', '#7AC7FF', '#C9E8FF'];
+
+      data.seatData.forEach((val, idx) => {
+        const angle = (val / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(center.x, center.y);
+        ctx.fillStyle = colors[idx % colors.length];
+        ctx.arc(center.x, center.y, radius, start, start + angle);
+        ctx.closePath();
+        ctx.fill();
+        start += angle;
+      });
+    }
+
+    function renderPomoChart(data) {
+      const canvas = els.pomoChart;
+      if (!canvas || !data.pomoData) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      const padding = { top: 12, right: 8, bottom: 22, left: 30 };
+      const width = rect.width - padding.left - padding.right;
+      const height = rect.height - padding.top - padding.bottom;
+      const maxVal = Math.max(...data.pomoData, 1);
+      const barWidth = width / data.pomoData.length;
+      const days = ['一','二','三','四','五','六','日'];
+
+      ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+      ctx.beginPath();
+      ctx.moveTo(padding.left, rect.height - padding.bottom);
+      ctx.lineTo(rect.width - padding.right, rect.height - padding.bottom);
+      ctx.stroke();
+
+      data.pomoData.forEach((val, idx) => {
+        const x = padding.left + barWidth * idx + barWidth * 0.2;
+        const barH = (val / maxVal) * height;
+        const y = padding.top + height - barH;
+        const gw = barWidth * 0.6;
+        const grad = ctx.createLinearGradient(x, y, x, y + barH);
+        grad.addColorStop(0, '#F7C999');   /* 暖色低饱和顶部 */
+        grad.addColorStop(1, '#FDE7C8');   /* 暖色低饱和底部 */
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, y, gw, barH);
+        ctx.fillStyle = '#1D1D1F';
+        ctx.font = '600 12px -apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(val, x + gw / 2, y - 4);
+        ctx.fillStyle = '#86868B';
+        ctx.fillText(days[idx], x + gw / 2, rect.height - padding.bottom + 14);
+      });
+    }
+
+    function closeAllMenus() {
+      document.querySelectorAll('.select-menu').forEach(menu => menu.classList.remove('open'));
+    }
+
+    function setActive(key) {
+      els.filterButtons.forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.key === key);
+      });
+    }
+
+    function applyDataset(key, labelOverride, scopeOverride) {
+      const data = datasets[key] || datasets[state.current];
+      if (!data) return;
+      state.current = key;
+      setActive(key);
+      // 更新显示文本
+      els.filterButtons.forEach(chip => {
+        const labelEl = chip.querySelector('.select-label');
+        const scope = chip.dataset.scope;
+        if (chip.dataset.key === key && labelOverride && scopeOverride === scope) {
+          labelEl.textContent = labelOverride;
+          state.labels[scope] = labelOverride;
+        } else {
+          labelEl.textContent = state.labels[scope] || labelEl.textContent;
+        }
+      });
+      renderKpis(data);
+      renderChart(data);
+      renderSeatChart(data);
+      renderPomoChart(data);
+    }
+
+    // 绑定筛选按钮和菜单
+    let pendingScope = null;
+
+    function updateModalOptions(scope) {
+      const select = els.modalSelect;
+      select.innerHTML = '';
+      const optionSets = {
+        week: ['本周', '上周', '最近7天', '自定义'],
+        month: ['本月', '上月', '最近30天', '自定义'],
+        term: ['本学期', '上学期', '最近两学期', '自定义'],
+        range: ['最近7天', '最近30天', '自定义']
+      };
+      const list = optionSets[scope] || optionSets.range;
+      list.forEach(text => {
+        const opt = document.createElement('option');
+        opt.textContent = text;
+        select.appendChild(opt);
+      });
+      select.value = list[0];
+      // 范围模式显示日期选择
+      if (scope === 'range') {
+        els.rangeSection.style.display = 'grid';
+        els.selectSection.style.display = 'none';
+        const today = new Date();
+        const prior = new Date();
+        prior.setDate(today.getDate() - 6);
+        els.startDate.value = prior.toISOString().slice(0,10);
+        els.endDate.value = today.toISOString().slice(0,10);
+      } else {
+        els.rangeSection.style.display = 'none';
+        els.selectSection.style.display = 'grid';
+      }
+    }
+    els.filterButtons.forEach(chip => {
+      const menu = chip.querySelector('.select-menu');
+      chip.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = menu?.classList.contains('open');
+        closeAllMenus();
+        if (menu) menu.classList.toggle('open', !isOpen);
+      });
+      menu?.querySelectorAll('.select-option').forEach(opt => {
+        opt.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const key = opt.dataset.key || 'custom';
+          const label = opt.dataset.label || opt.textContent.trim();
+          const scope = opt.dataset.scope || chip.dataset.scope;
+          const needModal = opt.dataset.modal === 'true' || label === '自定义';
+          if (needModal) {
+            pendingScope = scope;
+            updateModalOptions(scope);
+            els.modal.classList.add('open');
+          } else {
+            applyDataset(key, label, scope);
+          }
+          closeAllMenus();
+        });
+      });
+    });
+
+    document.addEventListener('click', closeAllMenus);
+
+    els.modalCancel.addEventListener('click', () => {
+      pendingScope = null;
+      els.modal.classList.remove('open');
+    });
+
+    els.modalConfirm.addEventListener('click', () => {
+      if (!pendingScope) {
+        els.modal.classList.remove('open');
+        return;
+      }
+      const selLabel = els.modalSelect.value;
+      applyDataset('custom', selLabel, pendingScope);
+      els.modal.classList.remove('open');
+      pendingScope = null;
+    });
+
+    window.addEventListener('resize', () => {
+      const data = datasets[state.current];
+      renderChart(data);
+      renderSeatChart(data);
+      renderPomoChart(data);
+    });
+    // 初始化
+    applyDataset('week');
+  </script>
+</body>
+</html>

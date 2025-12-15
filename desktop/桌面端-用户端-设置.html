@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudySpace - 个人设置</title>
+
+  <style>
+    /* 全局变量 */
+    :root {
+      --primary: #2d81ff;
+      --primary-light: #f0f7ff;
+      --primary-dark: #1a6ee0;
+      --success: #4cd964;
+      --success-light: #e8f9eb;
+      --danger: #ff3b30;
+      --danger-light: #ffe6e6;
+      --warning: #ff9500;
+      --text-main: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary: #8e8e93;
+      --border: #e5e5e7;
+      --border-light: #f2f2f7;
+      --bg-light: #f5f5f7;
+      --bg-white: #fff;
+      --bg-sidebar: #f8f9fa;
+      --bg-card: #ffffff;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+      --glass-bg: rgba(255, 255, 255, 0.95);
+      --glass-border: rgba(229, 229, 231, 0.5);
+      --glass-blur: blur(10px);
+    }
+
+    /* 基础样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7ec 100%);
+      color: var(--text-main);
+      display: flex;
+    }
+
+    /* 整体布局 */
+    .app-container {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    /* 左侧导航栏 */
+    .sidebar {
+      width: 240px;
+      height: 100%;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 100;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .sidebar__header {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar__logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), #4d9eff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .sidebar__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar__nav {
+      padding: 24px 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar__nav-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      position: relative;
+      font-size: 15px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+    }
+
+    .sidebar__nav-item:hover {
+      background: var(--bg-light);
+      color: var(--text-main);
+    }
+
+    .sidebar__nav-item.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 600;
+    }
+
+    .sidebar__nav-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 16px;
+    }
+
+    .sidebar__nav-text {
+      flex: 1;
+    }
+
+    .sidebar__footer {
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sidebar__footer:hover {
+      background: var(--bg-light);
+    }
+
+    .sidebar__avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #4d9eff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .sidebar__user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sidebar__user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar__user-id {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 24px;
+      position: relative;
+    }
+
+    /* 顶部搜索栏 */
+    .search-header {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .search-header__title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-header__title-icon {
+      color: var(--primary);
+      font-size: 22px;
+    }
+
+    .search-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-input {
+      flex: 1;
+      height: 44px;
+      padding: 0 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--bg-white);
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(45, 129, 255, 0.1);
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-white);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* 设置内容区域 */
+    .settings-container {
+      flex: 1;
+      display: flex;
+      gap: 24px;
+      min-height: 0;
+    }
+
+    /* 左侧设置项列表 */
+    .settings-sidebar {
+      width: 280px;
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .settings-sidebar__header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .settings-sidebar__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .settings-sidebar__subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .settings-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .settings-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .settings-list::-webkit-scrollbar-track {
+      background: var(--bg-light);
+      border-radius: 3px;
+    }
+
+    .settings-list::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    .settings-item {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border-light);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .settings-item:hover {
+      background: var(--bg-light);
+    }
+
+    .settings-item.active {
+      background: var(--primary-light);
+      border-left: 3px solid var(--primary);
+    }
+
+    .settings-item__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--bg-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .settings-item__info {
+      flex: 1;
+    }
+
+    .settings-item__name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .settings-item__desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .settings-item__arrow {
+      color: var(--text-tertiary);
+      font-size: 14px;
+    }
+
+    .settings-item.active .settings-item__arrow {
+      color: var(--primary);
+    }
+
+    /* 右侧设置详情 */
+    .settings-detail {
+      flex: 1;
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .settings-detail__header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .settings-detail__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .settings-detail__title-icon {
+      color: var(--primary);
+    }
+
+    .settings-detail__content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    .settings-detail__content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .settings-detail__content::-webkit-scrollbar-track {
+      background: var(--bg-light);
+      border-radius: 4px;
+    }
+
+    .settings-detail__content::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .settings-detail__content::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
+    }
+
+    /* 用户信息卡片 */
+    .user-profile-card {
+      background: linear-gradient(135deg, var(--primary-light), rgba(255, 255, 255, 0.9));
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .user-profile-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .user-profile__avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #4d9eff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 32px;
+      font-weight: 700;
+      flex-shrink: 0;
+      border: 4px solid white;
+      box-shadow: 0 4px 12px rgba(45, 129, 255, 0.2);
+    }
+
+    .user-profile__info {
+      flex: 1;
+    }
+
+    .user-profile__name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .user-profile__id {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .user-profile__stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 12px;
+    }
+
+    .user-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-stat__value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .user-stat__label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .user-profile__edit {
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-white);
+      transition: all 0.2s;
+    }
+
+    .user-profile__edit:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+
+    /* 快速设置区域 */
+    .quick-settings {
+      margin-bottom: 32px;
+    }
+
+    .quick-settings__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      padding-left: 4px;
+    }
+
+    .quick-settings__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .quick-setting-item {
+      background: var(--bg-light);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quick-setting-item:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .quick-setting-item__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--primary);
+      margin-bottom: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .quick-setting-item__name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .quick-setting-item__desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* 更多设置区域 */
+    .more-settings {
+      background: var(--bg-light);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .more-settings__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      padding-left: 4px;
+    }
+
+    .setting-option {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .setting-option:hover {
+      background: rgba(255, 255, 255, 0.5);
+      padding-left: 12px;
+      padding-right: 12px;
+      margin: 0 -12px;
+      border-radius: var(--radius-md);
+    }
+
+    .setting-option:last-child {
+      border-bottom: none;
+    }
+
+    .setting-option__info {
+      flex: 1;
+    }
+
+    .setting-option__name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .setting-option__desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .setting-option__right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-tertiary);
+    }
+
+    /* 开关样式 */
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 26px;
+      border-radius: 13px;
+      background: var(--border);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      transition: left 0.3s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .switch.active {
+      background: var(--primary);
+    }
+
+    .switch.active::after {
+      left: 29px;
+    }
+
+    /* 按钮样式 */
+    .btn {
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      background: var(--bg-white);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: var(--bg-light);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-text {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+    }
+
+    /* 模态框样式 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .modal__header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .modal__close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-light);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .modal__close:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .modal__body {
+      padding: 24px;
+      max-height: calc(90vh - 140px);
+      overflow-y: auto;
+    }
+
+    .modal__footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* 动画 */
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 1200px) {
+      .settings-container {
+        flex-direction: column;
+      }
+
+      .settings-sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .app-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .sidebar__nav {
+        flex-direction: row;
+        padding: 0;
+        margin: 0 20px;
+      }
+
+      .sidebar__nav-item {
+        padding: 14px 16px;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+      }
+
+      .sidebar__nav-item.active {
+        border-left: none;
+        border-bottom-color: var(--primary);
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .user-profile-card {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .user-profile__stats {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .quick-settings__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-area {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .search-input {
+        width: 100%;
+      }
+
+      .filter-buttons {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <!-- 左侧导航栏 -->
+  <aside class="sidebar">
+    <div class="sidebar__header">
+      <div class="sidebar__logo">S</div>
+      <div class="sidebar__title">StudySpace</div>
+    </div>
+
+    <nav class="sidebar__nav">
+      <a href="桌面端-用户端-任务.html" class="sidebar__nav-item" id="navTask">
+<!--        <div class="sidebar__nav-icon">📋</div>-->
+        <span class="sidebar__nav-text">任务</span>
+      </a>
+      <a href="calendar_day.html " class="sidebar__nav-item" id="navCalendar">
+<!--        <div class="sidebar__nav-icon">📅</div>-->
+        <span class="sidebar__nav-text">日历</span>
+      </a>
+      <a href="桌面端-用户端-学习记录.html" class="sidebar__nav-item" id="navRecord">
+<!--        <div class="sidebar__nav-icon">📊</div>-->
+        <span class="sidebar__nav-text">学习记录</span>
+      </a>
+      <a href="桌面-用户端-座位预约.html" class="sidebar__nav-item" id="navReserve">
+<!--        <div class="sidebar__nav-icon">💺</div>-->
+        <span class="sidebar__nav-text">座位预约</span>
+      </a>
+      <a href="桌面端-用户端-设置.html" class="sidebar__nav-item active" id="navSettings">
+<!--        <div class="sidebar__nav-icon">⚙️</div>-->
+        <span class="sidebar__nav-text">个人设置</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer" id="userProfileBtn">
+      <div class="sidebar__avatar">用</div>
+      <div class="sidebar__user-info">
+        <div class="sidebar__user-name">StudyUser123</div>
+        <div class="sidebar__user-id">ID: 887654321</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <div class="main-content">
+    <!-- 顶部搜索栏 -->
+    <div class="search-header">
+      <div class="search-header__title">
+        <div class="search-header__title-icon">⚙️</div>
+        <span>个人设置</span>
+      </div>
+
+      <div class="search-area">
+        <input type="text" class="search-input" placeholder="搜索设置项...">
+        <div class="filter-buttons">
+          <button class="filter-btn active">全部</button>
+          <button class="filter-btn">常用</button>
+          <button class="filter-btn">系统</button>
+          <button class="filter-btn">隐私</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 设置内容区域 -->
+    <div class="settings-container">
+      <!-- 左侧设置项列表 -->
+      <div class="settings-sidebar">
+        <div class="settings-sidebar__header">
+          <div class="settings-sidebar__title">设置分类</div>
+          <div class="settings-sidebar__subtitle">点击查看详细设置</div>
+        </div>
+
+        <div class="settings-list">
+          <div class="settings-item active" data-setting="profile">
+            <div class="settings-item__icon">👤</div>
+            <div class="settings-item__info">
+              <div class="settings-item__name">个人资料</div>
+              <div class="settings-item__desc">头像、昵称、个人简介</div>
+            </div>
+            <div class="settings-item__arrow">→</div>
+          </div>
+
+          <div class="settings-item" data-setting="account">
+            <div class="settings-item__icon">🔐</div>
+            <div class="settings-item__info">
+              <div class="settings-item__name">账号与安全</div>
+              <div class="settings-item__desc">密码、手机绑定、登录设备</div>
+            </div>
+            <div class="settings-item__arrow">→</div>
+          </div>
+
+          <div class="settings-item" data-setting="notification">
+            <div class="settings-item__icon">🔔</div>
+            <div class="settings-item__info">
+              <div class="settings-item__name">通知设置</div>
+              <div class="settings-item__desc">消息提醒、推送设置</div>
+            </div>
+            <div class="settings-item__arrow">→</div>
+          </div>
+
+          <div class="settings-item" data-setting="privacy">
+            <div class="settings-item__icon">🛡️</div>
+            <div class="settings-item__info">
+              <div class="settings-item__name">隐私设置</div>
+              <div class="settings-item__desc">隐私保护、数据权限</div>
+            </div>
+            <div class="settings-item__arrow">→</div>
+          </div>
+
+          <div class="settings-item" data-setting="display">
+            <div class="settings-item__icon">🎨</div>
+            <div class="settings-item__info">
+              <div class="settings-item__name">显示设置</div>
+              <div class="settings-item__desc">主题、字体、布局</div>
+            </div>
+            <div class="settings-item__arrow">→</div>
+          </div>
+
+          <div class="settings-item" data-setting="data">
+            <div class="settings-item__icon">💾</div>
+            <div class="settings-item__info">
+              <div class="settings-item__name">数据管理</div>
+              <div class="settings-item__desc">备份、导出、清除数据</div>
+            </div>
+            <div class="settings-item__arrow">→</div>
+          </div>
+
+          <div class="settings-item" data-setting="help">
+            <div class="settings-item__icon">❓</div>
+            <div class="settings-item__info">
+              <div class="settings-item__name">帮助与反馈</div>
+              <div class="settings-item__desc">帮助中心、问题反馈</div>
+            </div>
+            <div class="settings-item__arrow">→</div>
+          </div>
+
+          <div class="settings-item" data-setting="about">
+            <div class="settings-item__icon">ℹ️</div>
+            <div class="settings-item__info">
+              <div class="settings-item__name">关于</div>
+              <div class="settings-item__desc">版本信息、检查更新</div>
+            </div>
+            <div class="settings-item__arrow">→</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧设置详情 -->
+      <div class="settings-detail">
+        <div class="settings-detail__header">
+          <div class="settings-detail__title">
+            <div class="settings-detail__title-icon">👤</div>
+            <span id="settingTitle">个人资料</span>
+          </div>
+          <div class="btn btn-text" id="editProfileBtn">
+            <span>编辑</span>
+          </div>
+        </div>
+
+        <div class="settings-detail__content" id="settingContent">
+          <!-- 默认显示个人资料内容 -->
+          <div class="user-profile-card" id="profileCard">
+            <div class="user-profile__avatar">用</div>
+            <div class="user-profile__info">
+              <div class="user-profile__name">StudyUser123</div>
+              <div class="user-profile__id">ID: 887654321 | 邮箱: user@example.com</div>
+              <div class="user-profile__stats">
+                <div class="user-stat">
+                  <div class="user-stat__value">120</div>
+                  <div class="user-stat__label">学习时长(小时)</div>
+                </div>
+                <div class="user-stat">
+                  <div class="user-stat__value">45</div>
+                  <div class="user-stat__label">完成任务</div>
+                </div>
+                <div class="user-stat">
+                  <div class="user-stat__value">18</div>
+                  <div class="user-stat__label">预约次数</div>
+                </div>
+              </div>
+            </div>
+            <div class="user-profile__edit">
+              <span>修改资料</span>
+              <span>→</span>
+            </div>
+          </div>
+
+          <!-- 快速设置区域 -->
+          <div class="quick-settings">
+            <div class="quick-settings__title">常用设置</div>
+            <div class="quick-settings__grid">
+              <div class="quick-setting-item" data-setting="notification">
+                <div class="quick-setting-item__icon">🔔</div>
+                <div class="quick-setting-item__name">通知设置</div>
+                <div class="quick-setting-item__desc">自定义消息提醒方式</div>
+              </div>
+              <div class="quick-setting-item" data-setting="display">
+                <div class="quick-setting-item__icon">🎨</div>
+                <div class="quick-setting-item__name">显示设置</div>
+                <div class="quick-setting-item__desc">主题、字体、布局</div>
+              </div>
+              <div class="quick-setting-item" data-setting="privacy">
+                <div class="quick-setting-item__icon">🛡️</div>
+                <div class="quick-setting-item__name">隐私设置</div>
+                <div class="quick-setting-item__desc">隐私保护、数据权限</div>
+              </div>
+              <div class="quick-setting-item" data-setting="data">
+                <div class="quick-setting-item__icon">💾</div>
+                <div class="quick-setting-item__name">数据管理</div>
+                <div class="quick-setting-item__desc">备份、导出、清除数据</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 更多设置区域 -->
+          <div class="more-settings">
+            <div class="more-settings__title">更多设置</div>
+            <div class="setting-option" data-setting="account">
+              <div class="setting-option__info">
+                <div class="setting-option__name">账号与安全</div>
+                <div class="setting-option__desc">密码修改、手机绑定、登录设备管理</div>
+              </div>
+              <div class="setting-option__right">→</div>
+            </div>
+            <div class="setting-option" data-setting="help">
+              <div class="setting-option__info">
+                <div class="setting-option__name">帮助与反馈</div>
+                <div class="setting-option__desc">常见问题、问题反馈、联系客服</div>
+              </div>
+              <div class="setting-option__right">→</div>
+            </div>
+            <div class="setting-option" data-setting="about">
+              <div class="setting-option__info">
+                <div class="setting-option__name">关于 StudySpace</div>
+                <div class="setting-option__desc">版本信息、检查更新、用户协议</div>
+              </div>
+              <div class="setting-option__right">→</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑个人资料模态框 -->
+<div class="modal-overlay" id="editProfileModal">
+  <div class="modal">
+    <div class="modal__header">
+      <div class="modal__title">编辑个人资料</div>
+      <div class="modal__close" id="closeEditProfileModal">×</div>
+    </div>
+    <div class="modal__body">
+      <div style="margin-bottom: 20px;">
+        <div style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px;">头像</div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #4d9eff); display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: 700;">用</div>
+          <div>
+            <button class="btn">上传新头像</button>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 8px;">支持 JPG、PNG 格式，文件小于 2MB</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <div style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px;">昵称</div>
+        <input type="text" class="search-input" style="width: 100%;" value="StudyUser123">
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <div style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px;">个人简介</div>
+        <textarea class="search-input" style="width: 100%; height: 100px; resize: vertical; padding: 12px 16px;">热爱学习，追求效率，每天进步一点点。</textarea>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <div style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px;">邮箱</div>
+        <input type="email" class="search-input" style="width: 100%;" value="user@example.com">
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn" id="cancelEditBtn">取消</button>
+      <button class="btn btn-primary" id="saveProfileBtn">保存更改</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 全局变量
+  let currentSetting = 'profile';
+
+  // 设置项内容模板
+  const settingTemplates = {
+    profile: {
+      title: '个人资料',
+      content: `
+        <div class="user-profile-card" id="profileCard">
+          <div class="user-profile__avatar">用</div>
+          <div class="user-profile__info">
+            <div class="user-profile__name">StudyUser123</div>
+            <div class="user-profile__id">ID: 887654321 | 邮箱: user@example.com</div>
+            <div class="user-profile__stats">
+              <div class="user-stat">
+                <div class="user-stat__value">120</div>
+                <div class="user-stat__label">学习时长(小时)</div>
+              </div>
+              <div class="user-stat">
+                <div class="user-stat__value">45</div>
+                <div class="user-stat__label">完成任务</div>
+              </div>
+              <div class="user-stat">
+                <div class="user-stat__value">18</div>
+                <div class="user-stat__label">预约次数</div>
+              </div>
+            </div>
+          </div>
+          <div class="user-profile__edit">
+            <span>修改资料</span>
+            <span>→</span>
+          </div>
+        </div>
+
+        <div class="quick-settings">
+          <div class="quick-settings__title">常用设置</div>
+          <div class="quick-settings__grid">
+            <div class="quick-setting-item" data-setting="notification">
+              <div class="quick-setting-item__icon">🔔</div>
+              <div class="quick-setting-item__name">通知设置</div>
+              <div class="quick-setting-item__desc">自定义消息提醒方式</div>
+            </div>
+            <div class="quick-setting-item" data-setting="display">
+              <div class="quick-setting-item__icon">🎨</div>
+              <div class="quick-setting-item__name">显示设置</div>
+              <div class="quick-setting-item__desc">主题、字体、布局</div>
+            </div>
+            <div class="quick-setting-item" data-setting="privacy">
+              <div class="quick-setting-item__icon">🛡️</div>
+              <div class="quick-setting-item__name">隐私设置</div>
+              <div class="quick-setting-item__desc">隐私保护、数据权限</div>
+            </div>
+            <div class="quick-setting-item" data-setting="data">
+              <div class="quick-setting-item__icon">💾</div>
+              <div class="quick-setting-item__name">数据管理</div>
+              <div class="quick-setting-item__desc">备份、导出、清除数据</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="more-settings">
+          <div class="more-settings__title">更多设置</div>
+          <div class="setting-option" data-setting="account">
+            <div class="setting-option__info">
+              <div class="setting-option__name">账号与安全</div>
+              <div class="setting-option__desc">密码修改、手机绑定、登录设备管理</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" data-setting="help">
+            <div class="setting-option__info">
+              <div class="setting-option__name">帮助与反馈</div>
+              <div class="setting-option__desc">常见问题、问题反馈、联系客服</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" data-setting="about">
+            <div class="setting-option__info">
+              <div class="setting-option__name">关于 StudySpace</div>
+              <div class="setting-option__desc">版本信息、检查更新、用户协议</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+      `
+    },
+    account: {
+      title: '账号与安全',
+      content: `
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">登录与安全</div>
+          <div class="setting-option" id="changePasswordBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">修改密码</div>
+              <div class="setting-option__desc">定期修改密码可提高账号安全性</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="bindPhoneBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">绑定手机号</div>
+              <div class="setting-option__desc">未绑定 | 绑定后可快速找回密码</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="loginDevicesBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">登录设备管理</div>
+              <div class="setting-option__desc">查看并管理所有登录的设备</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">账号保护</div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">两步验证</div>
+              <div class="setting-option__desc">开启后登录需要验证码</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch"></div>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">异常登录提醒</div>
+              <div class="setting-option__desc">检测到异常登录时发送提醒</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch active"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">账号注销</div>
+          <div class="setting-option" id="deleteAccountBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">注销账号</div>
+              <div class="setting-option__desc">永久删除账号及所有数据</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+      `
+    },
+    notification: {
+      title: '通知设置',
+      content: `
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">消息通知</div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">任务提醒</div>
+              <div class="setting-option__desc">任务截止提醒、任务完成提醒</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch active"></div>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">座位预约提醒</div>
+              <div class="setting-option__desc">预约成功、即将开始、预约到期提醒</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch active"></div>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">学习提醒</div>
+              <div class="setting-option__desc">学习时长目标、学习计划提醒</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">推送设置</div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">系统通知</div>
+              <div class="setting-option__desc">系统更新、维护通知</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch active"></div>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">活动通知</div>
+              <div class="setting-option__desc">平台活动、优惠通知</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch"></div>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">声音提醒</div>
+              <div class="setting-option__desc">接收通知时播放声音</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch active"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">免打扰设置</div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">夜间免打扰</div>
+              <div class="setting-option__desc">22:00 - 07:00 期间不发送通知</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch"></div>
+            </div>
+          </div>
+        </div>
+      `
+    },
+    privacy: {
+      title: '隐私设置',
+      content: `
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">隐私保护</div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">显示在线状态</div>
+              <div class="setting-option__desc">向其他用户显示您的在线状态</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch active"></div>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">显示学习时长</div>
+              <div class="setting-option__desc">在个人资料中显示学习时长</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch active"></div>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">显示完成的任务</div>
+              <div class="setting-option__desc">在个人资料中显示完成的任务数</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">数据权限</div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">数据收集与使用</div>
+              <div class="setting-option__desc">允许收集匿名数据以改进服务</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch active"></div>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">个性化推荐</div>
+              <div class="setting-option__desc">基于您的学习数据推荐内容</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch active"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">隐私管理</div>
+          <div class="setting-option" id="privacyPolicyBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">隐私政策</div>
+              <div class="setting-option__desc">查看完整的隐私政策</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="clearHistoryBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">清除搜索记录</div>
+              <div class="setting-option__desc">清除所有搜索历史记录</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+      `
+    },
+    display: {
+      title: '显示设置',
+      content: `
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">主题设置</div>
+          <div style="display: flex; gap: 16px; margin-bottom: 20px;">
+            <div style="flex: 1; text-align: center; cursor: pointer;">
+              <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #f5f7fa 0%, #e4e7ec 100%); border-radius: var(--radius-md); border: 2px solid var(--primary); margin-bottom: 8px;"></div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--primary);">浅色模式</div>
+            </div>
+            <div style="flex: 1; text-align: center; cursor: pointer;">
+              <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: var(--radius-md); border: 2px solid var(--border); margin-bottom: 8px;"></div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--text-secondary);">深色模式</div>
+            </div>
+            <div style="flex: 1; text-align: center; cursor: pointer;">
+              <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #e8f5e8 0%, #d0e6d0 100%); border-radius: var(--radius-md); border: 2px solid var(--border); margin-bottom: 8px;"></div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--text-secondary);">护眼模式</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">字体设置</div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">字体大小</div>
+              <div class="setting-option__desc">中等 (默认)</div>
+            </div>
+            <div class="setting-option__right">
+              <select style="border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; background: var(--bg-white);">
+                <option>小</option>
+                <option selected>中等</option>
+                <option>大</option>
+                <option>特大</option>
+              </select>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">字体样式</div>
+              <div class="setting-option__desc">系统默认</div>
+            </div>
+            <div class="setting-option__right">
+              <select style="border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; background: var(--bg-white);">
+                <option selected>系统默认</option>
+                <option>苹方</option>
+                <option>思源黑体</option>
+                <option>微软雅黑</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">布局设置</div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">侧边栏宽度</div>
+              <div class="setting-option__desc">中等 (240px)</div>
+            </div>
+            <div class="setting-option__right">
+              <select style="border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; background: var(--bg-white);">
+                <option>窄 (200px)</option>
+                <option selected>中等 (240px)</option>
+                <option>宽 (280px)</option>
+              </select>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">动画效果</div>
+              <div class="setting-option__desc">页面切换和交互动画</div>
+            </div>
+            <div class="setting-option__right">
+              <div class="switch active"></div>
+            </div>
+          </div>
+        </div>
+      `
+    },
+    data: {
+      title: '数据管理',
+      content: `
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">数据备份</div>
+          <div class="setting-option" id="backupDataBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">备份数据</div>
+              <div class="setting-option__desc">备份任务、日历、学习记录等数据</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="restoreDataBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">恢复数据</div>
+              <div class="setting-option__desc">从备份文件恢复数据</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">数据导出</div>
+          <div class="setting-option" id="exportTasksBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">导出任务数据</div>
+              <div class="setting-option__desc">导出为 Excel 或 CSV 格式</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="exportRecordsBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">导出学习记录</div>
+              <div class="setting-option__desc">导出学习时长和统计数据</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="exportReservationsBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">导出预约记录</div>
+              <div class="setting-option__desc">导出座位预约历史</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">数据清除</div>
+          <div class="setting-option" id="clearCacheBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">清除缓存</div>
+              <div class="setting-option__desc">清除临时文件，释放存储空间</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="clearAllDataBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">清除所有数据</div>
+              <div class="setting-option__desc">清除所有个人数据，保留账号</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+      `
+    },
+    help: {
+      title: '帮助与反馈',
+      content: `
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">帮助中心</div>
+          <div class="quick-settings__grid" style="margin-bottom: 0;">
+            <div class="quick-setting-item" id="faqBtn">
+              <div class="quick-setting-item__icon">❓</div>
+              <div class="quick-setting-item__name">常见问题</div>
+              <div class="quick-setting-item__desc">查看常见问题与解答</div>
+            </div>
+            <div class="quick-setting-item" id="userGuideBtn">
+              <div class="quick-setting-item__icon">📖</div>
+              <div class="quick-setting-item__name">使用指南</div>
+              <div class="quick-setting-item__desc">产品功能使用说明</div>
+            </div>
+            <div class="quick-setting-item" id="videoTutorialBtn">
+              <div class="quick-setting-item__icon">🎬</div>
+              <div class="quick-setting-item__name">视频教程</div>
+              <div class="quick-setting-item__desc">观看视频学习使用技巧</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">问题反馈</div>
+          <div class="setting-option" id="feedbackBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">问题反馈</div>
+              <div class="setting-option__desc">报告问题或提出建议</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="contactSupportBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">联系客服</div>
+              <div class="setting-option__desc">在线客服或电话联系</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">社区与支持</div>
+          <div class="setting-option" id="communityBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">用户社区</div>
+              <div class="setting-option__desc">与其他用户交流讨论</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="suggestFeatureBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">功能建议</div>
+              <div class="setting-option__desc">提出您希望新增的功能</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+      `
+    },
+    about: {
+      title: '关于',
+      content: `
+        <div style="text-align: center; margin-bottom: 32px;">
+          <div style="width: 100px; height: 100px; border-radius: 20px; background: linear-gradient(135deg, var(--primary), #4d9eff); display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 42px; font-weight: 700; margin-bottom: 20px;">S</div>
+          <div style="font-size: 24px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">StudySpace</div>
+          <div style="font-size: 16px; color: var(--text-secondary); margin-bottom: 24px;">版本 2.1.0 (Build 2025.12.14)</div>
+          <button class="btn btn-primary" style="margin-bottom: 32px;" id="checkUpdateBtn">检查更新</button>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">应用信息</div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">开发者</div>
+              <div class="setting-option__desc">StudySpace 开发团队</div>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">官方网站</div>
+              <div class="setting-option__desc">www.studyspace.com</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option">
+            <div class="setting-option__info">
+              <div class="setting-option__name">技术支持邮箱</div>
+              <div class="setting-option__desc">support@studyspace.com</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">法律条款</div>
+          <div class="setting-option" id="userAgreementBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">用户协议</div>
+              <div class="setting-option__desc">查看用户使用协议</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="privacyPolicyBtn2">
+            <div class="setting-option__info">
+              <div class="setting-option__name">隐私政策</div>
+              <div class="setting-option__desc">查看隐私政策详情</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+          <div class="setting-option" id="disclaimerBtn">
+            <div class="setting-option__info">
+              <div class="setting-option__name">免责声明</div>
+              <div class="setting-option__desc">查看免责声明</div>
+            </div>
+            <div class="setting-option__right">→</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 14px; color: var(--text-secondary); text-align: center; padding: 20px; border-top: 1px solid var(--border-light);">
+            © 2025 StudySpace. 保留所有权利。
+          </div>
+        </div>
+      `
+    }
+  };
+
+  // DOM元素
+  const settingItems = document.querySelectorAll('.settings-item');
+  const settingTitle = document.getElementById('settingTitle');
+  const settingContent = document.getElementById('settingContent');
+  const editProfileBtn = document.getElementById('editProfileBtn');
+  const editProfileModal = document.getElementById('editProfileModal');
+  const closeEditProfileModal = document.getElementById('closeEditProfileModal');
+  const cancelEditBtn = document.getElementById('cancelEditBtn');
+  const saveProfileBtn = document.getElementById('saveProfileBtn');
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const searchInput = document.querySelector('.search-input');
+  const userProfileBtn = document.getElementById('userProfileBtn');
+  const profileCard = document.getElementById('profileCard');
+
+  // 初始化函数
+  function init() {
+    // 初始化设置项点击事件
+    settingItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const settingType = item.dataset.setting;
+        changeSetting(settingType);
+      });
+    });
+
+    // 初始化编辑个人资料按钮
+    editProfileBtn.addEventListener('click', () => {
+      openEditProfileModal();
+    });
+
+    // 初始化关闭模态框按钮
+    closeEditProfileModal.addEventListener('click', closeEditProfileModalFunc);
+    cancelEditBtn.addEventListener('click', closeEditProfileModalFunc);
+
+    // 初始化保存个人资料按钮
+    saveProfileBtn.addEventListener('click', saveProfile);
+
+    // 初始化筛选按钮
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // 这里可以添加筛选逻辑
+      });
+    });
+
+    // 初始化搜索功能
+    searchInput.addEventListener('input', searchSettings);
+
+    // 初始化用户信息卡片点击
+    userProfileBtn.addEventListener('click', () => {
+      changeSetting('profile');
+    });
+
+    // 初始化个人资料卡片点击
+    if (profileCard) {
+      profileCard.addEventListener('click', () => {
+        openEditProfileModal();
+      });
+    }
+
+    // 初始化快速设置项点击事件 - 页面加载时绑定
+    bindQuickSettingEvents();
+  }
+
+  // 绑定快速设置项点击事件
+  function bindQuickSettingEvents() {
+    const quickSettingItems = document.querySelectorAll('.quick-setting-item');
+    quickSettingItems.forEach(item => {
+      // 移除之前的事件监听器（防止重复绑定）
+      item.removeEventListener('click', quickSettingClickHandler);
+      // 添加新的事件监听器
+      item.addEventListener('click', quickSettingClickHandler);
+    });
+  }
+
+  // 快速设置项点击处理函数
+  function quickSettingClickHandler() {
+    const settingType = this.dataset.setting;
+    changeSetting(settingType);
+  }
+
+  // 绑定更多设置项点击事件
+  function bindMoreSettingEvents() {
+    const moreSettingOptions = document.querySelectorAll('.more-settings .setting-option');
+    moreSettingOptions.forEach(option => {
+      // 移除之前的事件监听器（防止重复绑定）
+      option.removeEventListener('click', moreSettingClickHandler);
+      // 添加新的事件监听器
+      option.addEventListener('click', moreSettingClickHandler);
+    });
+  }
+
+  // 更多设置项点击处理函数
+  function moreSettingClickHandler() {
+    const settingType = this.dataset.setting;
+    changeSetting(settingType);
+  }
+
+  // 切换设置项
+  function changeSetting(settingType) {
+    // 更新当前设置项
+    currentSetting = settingType;
+
+    // 更新左侧设置项激活状态
+    settingItems.forEach(item => {
+      if (item.dataset.setting === settingType) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+
+    // 更新标题和内容
+    if (settingTemplates[settingType]) {
+      settingTitle.textContent = settingTemplates[settingType].title;
+      settingContent.innerHTML = settingTemplates[settingType].content;
+
+      // 重新绑定新内容中的事件
+      setTimeout(() => {
+        bindSettingContentEvents(settingType);
+        // 重新绑定快速设置项和更多设置项事件
+        if (settingType === 'profile') {
+          bindQuickSettingEvents();
+          bindMoreSettingEvents();
+        }
+      }, 10);
+    }
+  }
+
+  // 绑定设置内容中的事件
+  function bindSettingContentEvents(settingType) {
+    // 根据不同的设置类型绑定事件
+    switch(settingType) {
+      case 'profile':
+        const profileCard = document.getElementById('profileCard');
+        if (profileCard) {
+          profileCard.addEventListener('click', () => {
+            openEditProfileModal();
+          });
+        }
+        // 重新绑定快速设置项和更多设置项
+        bindQuickSettingEvents();
+        bindMoreSettingEvents();
+        break;
+
+      case 'account':
+        // 绑定账号设置中的按钮事件
+        const changePasswordBtn = document.getElementById('changePasswordBtn');
+        const bindPhoneBtn = document.getElementById('bindPhoneBtn');
+        const loginDevicesBtn = document.getElementById('loginDevicesBtn');
+        const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+
+        if (changePasswordBtn) changePasswordBtn.addEventListener('click', () => showAlert('修改密码', '修改密码功能正在开发中...'));
+        if (bindPhoneBtn) bindPhoneBtn.addEventListener('click', () => showAlert('绑定手机号', '绑定手机号功能正在开发中...'));
+        if (loginDevicesBtn) loginDevicesBtn.addEventListener('click', () => showAlert('登录设备管理', '登录设备管理功能正在开发中...'));
+        if (deleteAccountBtn) deleteAccountBtn.addEventListener('click', () => showAlert('注销账号', '注销账号功能正在开发中...'));
+
+        // 绑定开关事件
+        bindSwitchEvents();
+        break;
+
+      case 'notification':
+      case 'privacy':
+      case 'display':
+        // 绑定开关事件
+        bindSwitchEvents();
+        break;
+
+      case 'data':
+        // 绑定数据管理中的按钮事件
+        const backupDataBtn = document.getElementById('backupDataBtn');
+        const restoreDataBtn = document.getElementById('restoreDataBtn');
+        const exportTasksBtn = document.getElementById('exportTasksBtn');
+        const exportRecordsBtn = document.getElementById('exportRecordsBtn');
+        const exportReservationsBtn = document.getElementById('exportReservationsBtn');
+        const clearCacheBtn = document.getElementById('clearCacheBtn');
+        const clearAllDataBtn = document.getElementById('clearAllDataBtn');
+
+        if (backupDataBtn) backupDataBtn.addEventListener('click', () => showAlert('备份数据', '数据备份功能正在开发中...'));
+        if (restoreDataBtn) restoreDataBtn.addEventListener('click', () => showAlert('恢复数据', '数据恢复功能正在开发中...'));
+        if (exportTasksBtn) exportTasksBtn.addEventListener('click', () => showAlert('导出任务数据', '任务数据导出功能正在开发中...'));
+        if (exportRecordsBtn) exportRecordsBtn.addEventListener('click', () => showAlert('导出学习记录', '学习记录导出功能正在开发中...'));
+        if (exportReservationsBtn) exportReservationsBtn.addEventListener('click', () => showAlert('导出预约记录', '预约记录导出功能正在开发中...'));
+        if (clearCacheBtn) clearCacheBtn.addEventListener('click', () => showAlert('清除缓存', '缓存清除功能正在开发中...'));
+        if (clearAllDataBtn) clearAllDataBtn.addEventListener('click', () => showAlert('清除所有数据', '数据清除功能正在开发中...'));
+        break;
+
+      case 'help':
+        // 绑定帮助与反馈中的按钮事件
+        const faqBtn = document.getElementById('faqBtn');
+        const userGuideBtn = document.getElementById('userGuideBtn');
+        const videoTutorialBtn = document.getElementById('videoTutorialBtn');
+        const feedbackBtn = document.getElementById('feedbackBtn');
+        const contactSupportBtn = document.getElementById('contactSupportBtn');
+        const communityBtn = document.getElementById('communityBtn');
+        const suggestFeatureBtn = document.getElementById('suggestFeatureBtn');
+
+        if (faqBtn) faqBtn.addEventListener('click', () => showAlert('常见问题', '常见问题功能正在开发中...'));
+        if (userGuideBtn) userGuideBtn.addEventListener('click', () => showAlert('使用指南', '使用指南功能正在开发中...'));
+        if (videoTutorialBtn) videoTutorialBtn.addEventListener('click', () => showAlert('视频教程', '视频教程功能正在开发中...'));
+        if (feedbackBtn) feedbackBtn.addEventListener('click', () => showAlert('问题反馈', '问题反馈功能正在开发中...'));
+        if (contactSupportBtn) contactSupportBtn.addEventListener('click', () => showAlert('联系客服', '联系客服功能正在开发中...'));
+        if (communityBtn) communityBtn.addEventListener('click', () => showAlert('用户社区', '用户社区功能正在开发中...'));
+        if (suggestFeatureBtn) suggestFeatureBtn.addEventListener('click', () => showAlert('功能建议', '功能建议功能正在开发中...'));
+        break;
+
+      case 'about':
+        // 绑定关于页面中的按钮事件
+        const checkUpdateBtn = document.getElementById('checkUpdateBtn');
+        const userAgreementBtn = document.getElementById('userAgreementBtn');
+        const privacyPolicyBtn2 = document.getElementById('privacyPolicyBtn2');
+        const disclaimerBtn = document.getElementById('disclaimerBtn');
+
+        if (checkUpdateBtn) checkUpdateBtn.addEventListener('click', () => showAlert('检查更新', '已是最新版本！'));
+        if (userAgreementBtn) userAgreementBtn.addEventListener('click', () => showAlert('用户协议', '用户协议功能正在开发中...'));
+        if (privacyPolicyBtn2) privacyPolicyBtn2.addEventListener('click', () => showAlert('隐私政策', '隐私政策功能正在开发中...'));
+        if (disclaimerBtn) disclaimerBtn.addEventListener('click', () => showAlert('免责声明', '免责声明功能正在开发中...'));
+        break;
+    }
+  }
+
+  // 绑定开关事件
+  function bindSwitchEvents() {
+    const switches = document.querySelectorAll('.switch');
+    switches.forEach(switchEl => {
+      switchEl.addEventListener('click', () => {
+        switchEl.classList.toggle('active');
+        // 这里可以添加保存开关状态的逻辑
+      });
+    });
+  }
+
+  // 打开编辑个人资料模态框
+  function openEditProfileModal() {
+    editProfileModal.classList.add('active');
+  }
+
+  // 关闭编辑个人资料模态框
+  function closeEditProfileModalFunc() {
+    editProfileModal.classList.remove('active');
+  }
+
+  // 保存个人资料
+  function saveProfile() {
+    // 这里可以添加保存个人资料的逻辑
+    alert('个人资料已保存！');
+    closeEditProfileModalFunc();
+  }
+
+  // 搜索设置项
+  function searchSettings() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+
+    if (!searchTerm) {
+      // 显示所有设置项
+      settingItems.forEach(item => {
+        item.style.display = 'flex';
+      });
+      return;
+    }
+
+    // 筛选设置项
+    settingItems.forEach(item => {
+      const itemName = item.querySelector('.settings-item__name').textContent.toLowerCase();
+      const itemDesc = item.querySelector('.settings-item__desc').textContent.toLowerCase();
+
+      if (itemName.includes(searchTerm) || itemDesc.includes(searchTerm)) {
+        item.style.display = 'flex';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  }
+
+  // 显示提示信息
+  function showAlert(title, message) {
+    alert(`${title}\n\n${message}`);
+  }
+
+  // 页面加载完成后初始化
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

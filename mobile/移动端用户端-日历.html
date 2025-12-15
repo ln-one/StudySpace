@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>StudySpace - 日历</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2d81ff;
+            --primary-light: #f0f7ff;
+            --success: #4cd964;
+            --text-main: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --border: #e5e5e7;
+            --bg-light: #f5f5f7;
+            --bg-white: #fff;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --shadow-sm: 0 2px 20px rgba(0,0,0,0.06);
+            --shadow-md: 0 8px 32px rgba(0,0,0,0.12);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(229, 229, 231, 0.5);
+            --glass-blur: blur(20px);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; height: 100%; overflow: hidden; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at 18% 22%, rgba(0, 122, 255, 0.12), transparent 34%),
+            radial-gradient(circle at 78% 18%, rgba(90, 200, 250, 0.12), transparent 36%),
+            radial-gradient(circle at 50% 82%, rgba(0, 122, 255, 0.08), transparent 38%),
+            linear-gradient(180deg, #F2F3F7 0%, #E7E9F2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        .page { width: min(430px, 100%); height: calc(100vh - 40px); display: flex; flex-direction: column; }
+        .app-container { width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); border: 1px solid var(--glass-border); border-radius: 46px; padding: 18px 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); overflow: hidden; display: flex; flex-direction: column; }
+        .status-bar { height: 44px; background: var(--bg-white); display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 15px; font-weight: 600; color: var(--text-main); border-bottom: 1px solid var(--border); }
+        .status-bar__icons { display: flex; gap: 6px; align-items: center; }
+        .top-bar { height: 56px; background: var(--bg-white); display: flex; align-items: center; padding: 0 18px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
+        .top-bar__avatar { width: 38px; height: 38px; border-radius: 18px; background: linear-gradient(135deg, var(--primary), #64b5ff); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin-right: 12px; box-shadow: 0 4px 12px rgba(45, 129, 255, 0.18); }
+        .top-bar__title { flex: 1; font-size: 18px; font-weight: 800; text-align: center; }
+        .top-bar__action { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--primary-light); color: var(--primary); font-weight: 700; text-decoration: none; }
+
+        .main-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 16px; background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0)); }
+        .main-content::-webkit-scrollbar { display: none; }
+
+        .card { background: var(--glass-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 20px; margin-bottom: 16px; border: 1px solid var(--glass-border); backdrop-filter: var(--glass-blur); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .section-title { font-size: 17px; font-weight: 800; }
+        .badge { padding: 6px 10px; border-radius: 12px; background: var(--primary-light); color: var(--primary); font-weight: 700; font-size: 12px; }
+
+        .week-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+        .day { border: 1px solid var(--border); border-radius: 12px; padding: 10px 6px; text-align: center; background: #fff; position: relative; box-shadow: inset 0 0 0 0 rgba(0,0,0,0); transition: transform 0.2s, box-shadow 0.2s; }
+        .day:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .day.active { border-color: var(--primary); box-shadow: 0 6px 18px rgba(45,129,255,0.16); }
+        .day-name { color: var(--text-secondary); font-size: 12px; }
+        .day-num { font-weight: 800; font-size: 18px; margin-top: 2px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); display: inline-block; margin-top: 6px; }
+
+        .event-list { display: flex; flex-direction: column; gap: 12px; }
+        .event-item { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; background: #fff; box-shadow: inset 0 0 0 0 rgba(0,0,0,0); }
+        .event-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; color: var(--text-secondary); font-size: 13px; }
+        .event-title { font-weight: 700; margin-bottom: 4px; }
+        .event-desc { color: var(--text-secondary); font-size: 13px; }
+
+        .quick-actions { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+        .ghost-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border); text-decoration: none; color: var(--text-main); background: #fff; font-weight: 700; }
+        .ghost-btn.primary { background: linear-gradient(135deg, var(--primary), #64b5ff); color: #fff; border: none; box-shadow: var(--shadow-sm); }
+
+        .bottom-nav {
+            height: 76px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            z-index: 1000;
+            padding: 10px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .bottom-nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+            opacity: 0.3;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-light);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item__icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            transition: all 0.3s;
+            font-size: 22px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-item.active .nav-item__icon {
+            background: linear-gradient(135deg, var(--primary), #64b5ff);
+            color: white;
+            transform: translateY(-12px);
+            box-shadow: 0 10px 28px rgba(45, 129, 255, 0.25);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="app-container">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-bar__icons">
+                <i class="fa-solid fa-signal"></i>
+                <i class="fa-solid fa-wifi"></i>
+                <i class="fa-solid fa-battery-three-quarters"></i>
+            </div>
+        </div>
+
+        <div class="top-bar">
+            <div class="top-bar__avatar">C</div>
+            <div class="top-bar__title">周视图日历</div>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">本周 · 10/14 - 10/20</div>
+                    </div>
+                    <span class="badge">同步开启</span>
+                </div>
+                <div class="week-strip">
+                    <div class="day">
+                        <div class="day-name">周一</div>
+                        <div class="day-num">14</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-name">周二</div>
+                        <div class="day-num">15</div>
+                        <span class="dot"></span>
+                    </div>
+                    <div class="day active">
+                        <div class="day-name">周三</div>
+                        <div class="day-num">16</div>
+                        <span class="dot"></span>
+                    </div>
+                    <div class="day">
+                        <div class="day-name">周四</div>
+                        <div class="day-num">17</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-name">周五</div>
+                        <div class="day-num">18</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-name">周六</div>
+                        <div class="day-num">19</div>
+                    </div>
+                    <div class="day">
+                        <div class="day-name">周日</div>
+                        <div class="day-num">20</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">今日安排 · 周三</div>
+                    </div>
+                </div>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span>09:00 - 10:30</span>
+                            <span class="badge" style="background:#eafaf1;color:#1b8a3d;">自习</span>
+                        </div>
+                        <div class="event-title">《计算机网络》第三章练习</div>
+                        <div class="event-desc">图书馆 3 楼 · 30 题巩固</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span>14:00 - 15:00</span>
+                            <span class="badge">讨论</span>
+                        </div>
+                        <div class="event-title">课程大作业需求对齐</div>
+                        <div class="event-desc">腾讯会议 · 分工与时间表</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span>19:00 - 20:00</span>
+                            <span class="badge" style="background:#fff3e8;color:#c76b00;">提醒</span>
+                        </div>
+                        <div class="event-title">晚间自习座位确认</div>
+                        <div class="event-desc">入场前 15 分钟提醒</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">其他日期</div>
+                    </div>
+                </div>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span>周四 · 10:00</span>
+                            <span class="badge" style="background:#fff; color: var(--text-main); border:1px solid var(--border);">提交</span>
+                        </div>
+                        <div class="event-title">论文初稿上传</div>
+                        <div class="event-desc">截止前 2 小时推送提醒</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-meta">
+                            <span>周五 · 08:30</span>
+                            <span class="badge" style="background:#eafaf1;color:#1b8a3d;">签到</span>
+                        </div>
+                        <div class="event-title">早间签到 + 日程回顾</div>
+                        <div class="event-desc">保持连续打卡，自动同步任务</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bottom-nav" id="bottomNav">
+            <a class="nav-item" href="移动用户端-任务.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-clipboard-list"></i></div>
+                <div>任务</div>
+            </a>
+            <a class="nav-item active" href="移动端用户端-日历.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-calendar-day"></i></div>
+                <div>日历</div>
+            </a>
+            <a class="nav-item" href="移动用户端-设置番茄钟.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-clock"></i></div>
+                <div>番茄钟</div>
+            </a>
+            <a class="nav-item" href="移动用户端-学习记录.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-book-open"></i></div>
+                <div>学习记录</div>
+            </a>
+            <a class="nav-item" href="移动用户端-座位预约.html" style="text-decoration: none; color: inherit;">
+                <div class="nav-item__icon"><i class="fas fa-couch"></i></div>
+                <div>座位预约</div>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
