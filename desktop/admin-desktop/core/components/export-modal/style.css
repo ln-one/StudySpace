@@ -1,0 +1,226 @@
+/* 导出弹窗样式 */
+.export-options {
+  padding: 0;
+}
+
+.export-section {
+  margin-bottom: 32px;
+}
+
+.export-section:last-child {
+  margin-bottom: 0;
+}
+
+.export-section__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 0 0 16px 0;
+}
+
+/* 导出格式选择 */
+.export-format-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.export-format-option {
+  cursor: pointer;
+}
+
+.export-format-option input[type="radio"] {
+  display: none;
+}
+
+.export-format-card {
+  padding: 20px 16px;
+  border: 2px solid #f0f0f0;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.2s;
+  background: white;
+}
+
+.export-format-option:hover .export-format-card {
+  border-color: #007aff;
+  background: #f0f8ff;
+}
+
+.export-format-option input[type="radio"]:checked + .export-format-card {
+  border-color: #007aff;
+  background: #007aff;
+  color: white;
+}
+
+.export-format-icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.export-format-name {
+  font-weight: 600;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.export-format-desc {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* 导出内容选择 */
+.export-content-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 12px 16px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.checkbox-option:hover {
+  background: #f5f5f7;
+}
+
+.checkbox-option input[type="checkbox"] {
+  margin-right: 12px;
+  width: 18px;
+  height: 18px;
+  accent-color: #007aff;
+}
+
+.checkbox-label {
+  font-size: 14px;
+  color: #1d1d1f;
+}
+
+/* 筛选条件 */
+.export-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-label {
+  font-size: 14px;
+  color: #1d1d1f;
+  min-width: 80px;
+  font-weight: 500;
+}
+
+.filter-select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d2d2d7;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+.date-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.filter-date {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d2d2d7;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.filter-date:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+/* 导出进度 */
+.export-progress {
+  padding: 40px 20px;
+}
+
+.export-progress__icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.export-progress__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 0 0 8px 0;
+}
+
+.export-progress__desc {
+  font-size: 14px;
+  color: #86868b;
+  margin: 0 0 32px 0;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #007aff, #00c7ff);
+  border-radius: 4px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.export-progress__status {
+  font-size: 14px;
+  color: #007aff;
+  font-weight: 500;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .export-format-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-label {
+    min-width: auto;
+  }
+  
+  .date-range {
+    flex-direction: column;
+  }
+}

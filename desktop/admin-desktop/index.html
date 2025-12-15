@@ -10,6 +10,166 @@
   <link rel="stylesheet" href="core/components/navbar/style.css">
   <link rel="stylesheet" href="core/components/search-bar/style.css">
   <link rel="stylesheet" href="core/components/button/style.css">
+  <style>
+    /* 侧边栏底部用户区域 */
+    .sidebar__footer {
+      padding: 16px;
+      border-top: 1px solid var(--color-border-secondary);
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .sidebar__user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--color-border-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .sidebar__user:hover {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar__user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      background: var(--color-primary-gradient);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: var(--font-weight-semibold);
+      font-size: 14px;
+    }
+
+    .sidebar__user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sidebar__user-name {
+      font-size: 14px;
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar__user-role {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+    }
+
+    .sidebar__user-menu {
+      color: var(--color-text-tertiary);
+      font-size: 12px;
+    }
+
+    /* 用户下拉菜单 */
+    .user-dropdown {
+      position: absolute;
+      bottom: 100%;
+      left: 16px;
+      right: 16px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all var(--transition-fast);
+      z-index: 100;
+    }
+
+    .user-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .user-dropdown__item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+
+    .user-dropdown__item:first-child {
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .user-dropdown__item:last-child {
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+
+    .user-dropdown__item:hover {
+      background: var(--color-bg-hover);
+    }
+
+    .user-dropdown__item--danger {
+      color: var(--color-error);
+    }
+
+    .user-dropdown__divider {
+      height: 1px;
+      background: var(--color-border-secondary);
+      margin: 4px 0;
+    }
+
+    /* 导航栏右侧增强 */
+    .navbar__right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .navbar__notification {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      background: rgba(0, 0, 0, 0.04);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      border: none;
+      font-size: 18px;
+    }
+
+    .navbar__notification:hover {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .navbar__notification-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-error);
+      border: 2px solid rgba(251, 251, 253, 0.9);
+    }
+
+    .navbar__time {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      font-weight: var(--font-weight-medium);
+    }
+  </style>
 </head>
 <body>
   <div class="admin-layout">
@@ -20,24 +180,44 @@
       </div>
       <nav class="sidebar__nav">
         <a href="modules/dashboard/pages/overview.html" class="sidebar__nav-item sidebar__nav-item--active" data-page="dashboard">
-          <span class="sidebar__nav-text">预约管理</span>
+          <span class="sidebar__nav-text">📊 预约管理</span>
         </a>
         <a href="modules/seat-management/pages/seat-list.html" class="sidebar__nav-item" data-page="seat-management">
-          <span class="sidebar__nav-text">座位管理</span>
+          <span class="sidebar__nav-text">💺 座位管理</span>
         </a>
         <a href="modules/study-record/pages/index.html" class="sidebar__nav-item" data-page="study-record">
-          <span class="sidebar__nav-text">学习记录</span>
+          <span class="sidebar__nav-text">📚 学习记录</span>
         </a>
         <a href="modules/user-management/pages/index.html" class="sidebar__nav-item" data-page="user-management">
-          <span class="sidebar__nav-text">用户管理</span>
+          <span class="sidebar__nav-text">👥 用户管理</span>
         </a>
         <a href="modules/announcement/pages/index.html" class="sidebar__nav-item" data-page="announcement">
-          <span class="sidebar__nav-text">公告通知</span>
+          <span class="sidebar__nav-text">📢 公告通知</span>
         </a>
         <a href="modules/settings/pages/index.html" class="sidebar__nav-item" data-page="settings">
-          <span class="sidebar__nav-text">管理员设置</span>
+          <span class="sidebar__nav-text">⚙️ 管理员设置</span>
         </a>
       </nav>
+      
+      <!-- 侧边栏底部用户区域 -->
+      <div class="sidebar__footer">
+        <div class="sidebar__user" id="userBtn">
+          <div class="sidebar__user-avatar">管</div>
+          <div class="sidebar__user-info">
+            <div class="sidebar__user-name">管理员</div>
+            <div class="sidebar__user-role">超级管理员</div>
+          </div>
+          <span class="sidebar__user-menu">▼</span>
+        </div>
+        <!-- 用户下拉菜单 -->
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-dropdown__item">👤 个人信息</div>
+          <div class="user-dropdown__item">🔐 修改密码</div>
+          <div class="user-dropdown__item">⚙️ 系统设置</div>
+          <div class="user-dropdown__divider"></div>
+          <div class="user-dropdown__item user-dropdown__item--danger" id="logoutBtn">🚪 退出登录</div>
+        </div>
+      </div>
     </aside>
 
     <!-- 主内容区 -->
@@ -45,9 +225,15 @@
       <!-- 顶部导航 - 毛玻璃效果 -->
       <header class="navbar navbar--fixed">
         <div class="search-bar">
-          <input type="text" class="search-bar__input" placeholder="搜索">
+          <input type="text" class="search-bar__input" placeholder="搜索功能、用户、座位...">
+          <button class="search-bar__btn" title="搜索">搜索</button>
         </div>
-        <div class="navbar__actions">
+        <div class="navbar__right">
+          <span class="navbar__time" id="currentTime"></span>
+          <button class="navbar__notification">
+            🔔
+            <span class="navbar__notification-badge"></span>
+          </button>
           <button class="navbar__filter-btn">筛选</button>
         </div>
       </header>
@@ -118,5 +304,98 @@
       50% { transform: translateY(-10px); }
     }
   </style>
+
+  <script>
+    // 用户下拉菜单
+    const userBtn = document.getElementById('userBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    userBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', () => {
+      userDropdown.classList.remove('show');
+    });
+
+    // 退出登录
+    logoutBtn.addEventListener('click', () => {
+      if (confirm('确定要退出登录吗？')) {
+        window.location.href = 'pages/login.html';
+      }
+    });
+
+    // 显示当前时间
+    function updateTime() {
+      const now = new Date();
+      const options = { 
+        month: 'short', 
+        day: 'numeric',
+        weekday: 'short',
+        hour: '2-digit', 
+        minute: '2-digit'
+      };
+      document.getElementById('currentTime').textContent = now.toLocaleString('zh-CN', options);
+    }
+    updateTime();
+    setInterval(updateTime, 60000);
+
+    // ========== Toast 提示 ==========
+    function showToast(message, type = 'info') {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.innerHTML = `<span>${message}</span>`;
+      toast.style.cssText = `position: fixed; top: 80px; left: 50%; transform: translateX(-50%); padding: 12px 24px; background: ${type === 'success' ? '#34C759' : type === 'error' ? '#FF3B30' : '#007AFF'}; color: white; border-radius: 12px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; animation: toastIn 0.3s ease;`;
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
+    }
+    const toastStyle = document.createElement('style');
+    toastStyle.textContent = `@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }`;
+    document.head.appendChild(toastStyle);
+
+    // ========== 搜索框交互 ==========
+    document.querySelector('.search-bar__input')?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && e.target.value.trim()) {
+        showToast(`正在搜索: "${e.target.value.trim()}"`, 'info');
+      }
+    });
+
+    // ========== 通知按钮 ==========
+    document.querySelector('.navbar__notification')?.addEventListener('click', () => {
+      showToast('您有 3 条未读通知', 'info');
+    });
+
+    // ========== 筛选按钮 ==========
+    document.querySelector('.navbar__filter-btn')?.addEventListener('click', () => {
+      showToast('筛选面板已打开', 'info');
+    });
+
+    // ========== 用户菜单项交互 ==========
+    document.querySelectorAll('.user-dropdown__item:not(.user-dropdown__item--danger)').forEach(item => {
+      item.addEventListener('click', function() {
+        const text = this.textContent.trim();
+        if (text.includes('个人信息')) {
+          showToast('正在打开个人信息...', 'info');
+        } else if (text.includes('修改密码')) {
+          showToast('正在打开修改密码...', 'info');
+        } else if (text.includes('系统设置')) {
+          window.location.href = 'modules/settings/pages/index.html';
+        }
+        userDropdown.classList.remove('show');
+      });
+    });
+
+    // ========== 欢迎卡片按钮悬停效果 ==========
+    document.querySelector('.welcome-card .btn')?.addEventListener('mouseenter', function() {
+      this.querySelector('span').style.transform = 'translateX(5px)';
+      this.querySelector('span').style.transition = 'transform 0.3s ease';
+    });
+    document.querySelector('.welcome-card .btn')?.addEventListener('mouseleave', function() {
+      this.querySelector('span').style.transform = 'translateX(0)';
+    });
+  </script>
 </body>
 </html>

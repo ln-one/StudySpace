@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="../../../core/components/button/style.css">
   <link rel="stylesheet" href="../../../core/components/filter-dropdown/style.css">
   <link rel="stylesheet" href="../../../core/components/data-card/style.css">
+  <link rel="stylesheet" href="../../../core/components/announcement-modal/style.css">
   <link rel="stylesheet" href="../styles/announcement.css">
 </head>
 <body>
@@ -22,33 +23,52 @@
       </div>
       <nav class="sidebar__nav">
         <a href="../../dashboard/pages/overview.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">预约管理</span>
+          <span class="sidebar__nav-text">📊 预约管理</span>
         </a>
         <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">座位管理</span>
+          <span class="sidebar__nav-text">💺 座位管理</span>
         </a>
         <a href="../../study-record/pages/index.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">学习记录</span>
+          <span class="sidebar__nav-text">📚 学习记录</span>
         </a>
         <a href="../../user-management/pages/index.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">用户管理</span>
+          <span class="sidebar__nav-text">👥 用户管理</span>
         </a>
         <a href="index.html" class="sidebar__nav-item sidebar__nav-item--active">
-          <span class="sidebar__nav-text">公告通知</span>
+          <span class="sidebar__nav-text">📢 公告通知</span>
         </a>
         <a href="../../settings/pages/index.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">管理员设置</span>
+          <span class="sidebar__nav-text">⚙️ 管理员设置</span>
         </a>
       </nav>
+      
+      <!-- 侧边栏底部用户区域 -->
+      <div class="sidebar__footer">
+        <div class="sidebar__user" id="userBtn">
+          <div class="sidebar__user-avatar">管</div>
+          <div class="sidebar__user-info">
+            <span class="sidebar__user-name">管理员</span>
+            <span class="sidebar__user-role">超级管理员</span>
+          </div>
+          <span class="sidebar__user-menu">▼</span>
+        </div>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-dropdown__item">👤 个人信息</div>
+          <div class="user-dropdown__item">🔐 修改密码</div>
+          <div class="user-dropdown__divider"></div>
+          <div class="user-dropdown__item user-dropdown__item--danger" id="logoutBtn">🚪 退出登录</div>
+        </div>
+      </div>
     </aside>
 
     <div class="admin-layout__main">
       <header class="navbar navbar--fixed">
         <div class="search-bar">
           <input type="text" class="search-bar__input" placeholder="搜索公告标题...">
+          <button class="search-bar__btn" title="搜索">搜索</button>
         </div>
         <div class="navbar__actions">
-          <button class="btn btn--primary btn--sm" onclick="openModal('newAnnouncementModal')">+ 发布公告</button>
+          <button class="btn btn--primary btn--sm" onclick="announcementModal.showNewAnnouncement()">+ 发布公告</button>
         </div>
       </header>
 
@@ -554,6 +574,187 @@
         this.closest('.type-option').classList.add('type-option--active');
       });
     });
+
+    // 用户下拉菜单
+    const userBtn = document.getElementById('userBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    userBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.sidebar__footer')) {
+        userDropdown?.classList.remove('show');
+      }
+    });
+
+    logoutBtn?.addEventListener('click', () => {
+      if (confirm('确定要退出登录吗？')) {
+        window.location.href = '../../../pages/login.html';
+      }
+    });
+
+    // ========== Toast 提示 ==========
+    function showToast(message, type = 'info') {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.innerHTML = `<span>${message}</span>`;
+      toast.style.cssText = `position: fixed; top: 80px; left: 50%; transform: translateX(-50%); padding: 12px 24px; background: ${type === 'success' ? '#34C759' : type === 'error' ? '#FF3B30' : '#007AFF'}; color: white; border-radius: 12px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; animation: toastIn 0.3s ease;`;
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
+    }
+    const toastStyle = document.createElement('style');
+    toastStyle.textContent = `@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }`;
+    document.head.appendChild(toastStyle);
+
+    // ========== 数据卡片点击 ==========
+    document.querySelectorAll('.data-card').forEach(card => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function() {
+        const title = this.querySelector('.data-card__title')?.textContent;
+        showToast(`正在查看${title}详情...`, 'info');
+      });
+    });
+
+    // ========== 公告操作按钮 ==========
+    document.querySelectorAll('.announcement-item__actions .action-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const text = this.textContent.trim();
+        const item = this.closest('.announcement-item');
+        const title = item?.querySelector('.announcement-item__title')?.textContent || '公告';
+        
+        if (text === '编辑') {
+          showToast(`正在编辑: ${title}`, 'info');
+        } else if (text === '置顶' || text === '取消置顶') {
+          showToast(text === '置顶' ? '公告已置顶' : '已取消置顶', 'success');
+          this.textContent = text === '置顶' ? '取消置顶' : '置顶';
+        } else if (text === '下线') {
+          if (confirm(`确定要下线公告"${title}"吗？`)) {
+            showToast('公告已下线', 'success');
+            item?.remove();
+          }
+        } else if (text === '立即发布') {
+          if (confirm(`确定要立即发布"${title}"吗？`)) {
+            showToast('公告已发布', 'success');
+            const status = item?.querySelector('.announcement-status');
+            if (status) {
+              status.textContent = '已发布';
+              status.className = 'announcement-status announcement-status--published';
+            }
+          }
+        } else if (text === '删除') {
+          if (confirm(`确定要删除"${title}"吗？`)) {
+            showToast('公告已删除', 'error');
+            item?.remove();
+          }
+        }
+      });
+    });
+
+    // ========== 消息模板操作 ==========
+    document.querySelectorAll('.message-template__actions .action-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const text = this.textContent.trim();
+        const template = this.closest('.message-template');
+        const name = template?.querySelector('.message-template__name')?.textContent;
+        
+        if (text === '编辑') {
+          showToast(`正在编辑模板: ${name}`, 'info');
+        } else if (text === '禁用') {
+          showToast(`模板"${name}"已禁用`, 'success');
+          this.textContent = '启用';
+          template?.classList.add('message-template--disabled');
+        } else if (text === '启用') {
+          showToast(`模板"${name}"已启用`, 'success');
+          this.textContent = '禁用';
+          template?.classList.remove('message-template--disabled');
+        }
+      });
+    });
+
+    // ========== 新建模板按钮 ==========
+    document.querySelector('.message-section__header .btn')?.addEventListener('click', () => {
+      showToast('正在打开新建模板表单...', 'info');
+    });
+
+    // ========== 历史记录操作 ==========
+    document.querySelectorAll('.history-table .action-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const text = this.textContent.trim();
+        const row = this.closest('tr');
+        const title = row?.querySelector('.title-cell')?.textContent;
+        
+        if (text === '查看') {
+          showToast(`正在查看: ${title}`, 'info');
+        } else if (text === '复用') {
+          showToast(`正在复用公告模板...`, 'info');
+          setTimeout(() => openModal('newAnnouncementModal'), 500);
+        }
+      });
+    });
+
+    // ========== 导出记录按钮 ==========
+    document.querySelectorAll('.filter-bar .btn--secondary').forEach(btn => {
+      if (btn.textContent.includes('导出')) {
+        btn.addEventListener('click', () => {
+          showToast('正在导出历史记录...', 'info');
+          setTimeout(() => showToast('导出成功！', 'success'), 1500);
+        });
+      }
+    });
+
+    // ========== 弹窗发布按钮 ==========
+    document.querySelector('.modal__footer .btn--primary')?.addEventListener('click', function() {
+      const title = document.querySelector('.modal__body .form-input')?.value;
+      const content = document.querySelector('.modal__body .form-textarea')?.value;
+      
+      if (!title?.trim()) {
+        showToast('请输入公告标题', 'error');
+        return;
+      }
+      if (!content?.trim()) {
+        showToast('请输入公告内容', 'error');
+        return;
+      }
+      
+      this.textContent = '发布中...';
+      this.disabled = true;
+      
+      setTimeout(() => {
+        showToast('公告发布成功！', 'success');
+        closeModal('newAnnouncementModal');
+        this.textContent = '发布公告';
+        this.disabled = false;
+      }, 1000);
+    });
+
+    // ========== 分页按钮 ==========
+    document.querySelectorAll('.pagination__btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        if (!this.disabled && !this.textContent.includes('...')) {
+          document.querySelectorAll('.pagination__btn').forEach(b => b.classList.remove('pagination__btn--active'));
+          if (!isNaN(this.textContent)) this.classList.add('pagination__btn--active');
+          showToast(`正在加载第 ${this.textContent} 页...`, 'info');
+        }
+      });
+    });
+
+    // 刷新公告列表
+    function refreshAnnouncementList() {
+      Toast.info('正在刷新公告列表...');
+      setTimeout(() => {
+        Toast.success('公告列表已刷新');
+      }, 1000);
+    }
   </script>
+
+  <!-- 功能脚本 -->
+  <script src="../../../core/components/toast/toast.js"></script>
+  <script src="../../../core/components/modal/modal.js"></script>
+  <script src="../../../core/components/announcement-modal/announcement-modal.js"></script>
 </body>
 </html>

@@ -23,24 +23,42 @@
       </div>
       <nav class="sidebar__nav">
         <a href="../../dashboard/pages/overview.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">预约管理</span>
+          <span class="sidebar__nav-text">📊 预约管理</span>
         </a>
         <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">座位管理</span>
+          <span class="sidebar__nav-text">💺 座位管理</span>
         </a>
         <a href="index.html" class="sidebar__nav-item sidebar__nav-item--active">
-          <span class="sidebar__nav-text">学习记录</span>
+          <span class="sidebar__nav-text">📚 学习记录</span>
         </a>
         <a href="../../user-management/pages/index.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">用户管理</span>
+          <span class="sidebar__nav-text">👥 用户管理</span>
         </a>
         <a href="../../announcement/pages/index.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">公告通知</span>
+          <span class="sidebar__nav-text">📢 公告通知</span>
         </a>
         <a href="../../settings/pages/index.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">管理员设置</span>
+          <span class="sidebar__nav-text">⚙️ 管理员设置</span>
         </a>
       </nav>
+      
+      <!-- 侧边栏底部用户区域 -->
+      <div class="sidebar__footer">
+        <div class="sidebar__user" id="userBtn">
+          <div class="sidebar__user-avatar">管</div>
+          <div class="sidebar__user-info">
+            <span class="sidebar__user-name">管理员</span>
+            <span class="sidebar__user-role">超级管理员</span>
+          </div>
+          <span class="sidebar__user-menu">▼</span>
+        </div>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-dropdown__item">👤 个人信息</div>
+          <div class="user-dropdown__item">🔐 修改密码</div>
+          <div class="user-dropdown__divider"></div>
+          <div class="user-dropdown__item user-dropdown__item--danger" id="logoutBtn">🚪 退出登录</div>
+        </div>
+      </div>
     </aside>
 
     <!-- 主内容区 -->
@@ -49,6 +67,7 @@
       <header class="navbar navbar--fixed">
         <div class="search-bar">
           <input type="text" class="search-bar__input" placeholder="搜索学生...">
+          <button class="search-bar__btn" title="搜索">搜索</button>
         </div>
         <div class="navbar__actions">
           <button class="navbar__filter-btn">
@@ -900,6 +919,129 @@
       drawHeatmap();
     });
     window.addEventListener('resize', drawTrendChart);
+
+    // 用户下拉菜单
+    const userBtn = document.getElementById('userBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    userBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.sidebar__footer')) {
+        userDropdown?.classList.remove('show');
+      }
+    });
+
+    logoutBtn?.addEventListener('click', () => {
+      if (confirm('确定要退出登录吗？')) {
+        window.location.href = '../../../pages/login.html';
+      }
+    });
+
+    // ========== Toast 提示 ==========
+    function showToast(message, type = 'info') {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.innerHTML = `<span>${message}</span>`;
+      toast.style.cssText = `position: fixed; top: 80px; left: 50%; transform: translateX(-50%); padding: 12px 24px; background: ${type === 'success' ? '#34C759' : type === 'error' ? '#FF3B30' : '#007AFF'}; color: white; border-radius: 12px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; animation: toastIn 0.3s ease;`;
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
+    }
+    const toastStyle = document.createElement('style');
+    toastStyle.textContent = `@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }`;
+    document.head.appendChild(toastStyle);
+
+    // ========== 导出报表按钮 ==========
+    document.querySelector('.export-btn')?.addEventListener('click', function() {
+      this.textContent = '导出中...';
+      this.disabled = true;
+      showToast('正在生成报表...', 'info');
+      setTimeout(() => {
+        showToast('报表导出成功！', 'success');
+        this.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a.5.5 0 0 1 .5.5v9.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 11.293V1.5A.5.5 0 0 1 8 1z"/><path d="M2 13.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg> 导出报表';
+        this.disabled = false;
+      }, 1500);
+    });
+
+    // ========== 数据卡片点击 ==========
+    document.querySelectorAll('.data-card').forEach(card => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function() {
+        const title = this.querySelector('.data-card__title')?.textContent;
+        showToast(`正在查看${title}详情...`, 'info');
+      });
+    });
+
+    // ========== 图表切换按钮 ==========
+    document.querySelectorAll('.chart-card__action-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const parent = this.closest('.chart-card__actions') || this.closest('.chart-card__title');
+        if (parent) {
+          parent.querySelectorAll('.chart-card__action-btn').forEach(b => b.classList.remove('chart-card__action-btn--active'));
+          this.classList.add('chart-card__action-btn--active');
+        }
+        const text = this.textContent.trim();
+        if (text === '查看全部') {
+          showToast('正在加载完整排行榜...', 'info');
+        } else {
+          showToast(`已切换到${text}视图`, 'success');
+          drawTrendChart();
+        }
+      });
+    });
+
+    // ========== 排行榜项点击 ==========
+    document.querySelectorAll('.ranking-item').forEach(item => {
+      item.style.cursor = 'pointer';
+      item.addEventListener('click', function() {
+        const name = this.querySelector('.ranking-item__name')?.textContent;
+        showToast(`正在查看 ${name} 的学习详情...`, 'info');
+      });
+    });
+
+    // ========== 热力图单元格点击 ==========
+    document.querySelectorAll('.heatmap-cell').forEach(cell => {
+      cell.style.cursor = 'pointer';
+      cell.addEventListener('click', function() {
+        const value = this.dataset.value;
+        showToast(`该时段使用率: ${value}%`, 'info');
+      });
+    });
+
+    // ========== 表格操作按钮 ==========
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const name = row?.querySelector('.user-cell__name')?.textContent;
+        showToast(`正在查看 ${name} 的学习详情...`, 'info');
+      });
+    });
+
+    // ========== 表格行点击 ==========
+    document.querySelectorAll('.records-table tbody tr').forEach(row => {
+      row.style.cursor = 'pointer';
+      row.addEventListener('click', function(e) {
+        if (!e.target.closest('.action-btn')) {
+          const name = this.querySelector('.user-cell__name')?.textContent;
+          showToast(`正在查看 ${name} 的学习详情...`, 'info');
+        }
+      });
+    });
+
+    // ========== 导出 Excel 按钮 ==========
+    document.querySelectorAll('.chart-card__actions .chart-card__action-btn').forEach(btn => {
+      if (btn.textContent.includes('导出')) {
+        btn.addEventListener('click', function() {
+          showToast('正在导出 Excel...', 'info');
+          setTimeout(() => showToast('Excel 导出成功！', 'success'), 1500);
+        });
+      }
+    });
   </script>
 </body>
 </html>

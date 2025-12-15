@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="../../../core/components/filter-dropdown/style.css">
   <link rel="stylesheet" href="../../../core/components/form-controls/style.css">
   <link rel="stylesheet" href="../../../core/components/button/style.css">
+  <link rel="stylesheet" href="../../../core/components/toast/style.css">
   <link rel="stylesheet" href="../styles/seat-list.css">
 </head>
 <body>
@@ -23,24 +24,42 @@
       </div>
       <nav class="sidebar__nav">
         <a href="../../dashboard/pages/overview.html" class="sidebar__nav-item" data-page="dashboard">
-          <span class="sidebar__nav-text">预约管理</span>
+          <span class="sidebar__nav-text">📊 预约管理</span>
         </a>
         <a href="seat-list.html" class="sidebar__nav-item sidebar__nav-item--active" data-page="seat-management">
-          <span class="sidebar__nav-text">座位管理</span>
+          <span class="sidebar__nav-text">💺 座位管理</span>
         </a>
         <a href="../../study-record/pages/index.html" class="sidebar__nav-item" data-page="study-record">
-          <span class="sidebar__nav-text">学习记录</span>
+          <span class="sidebar__nav-text">📚 学习记录</span>
         </a>
         <a href="../../user-management/pages/index.html" class="sidebar__nav-item" data-page="user-management">
-          <span class="sidebar__nav-text">用户管理</span>
+          <span class="sidebar__nav-text">👥 用户管理</span>
         </a>
         <a href="../../announcement/pages/index.html" class="sidebar__nav-item" data-page="announcement">
-          <span class="sidebar__nav-text">公告通知</span>
+          <span class="sidebar__nav-text">📢 公告通知</span>
         </a>
         <a href="../../settings/pages/index.html" class="sidebar__nav-item" data-page="settings">
-          <span class="sidebar__nav-text">管理员设置</span>
+          <span class="sidebar__nav-text">⚙️ 管理员设置</span>
         </a>
       </nav>
+      
+      <!-- 侧边栏底部用户区域 -->
+      <div class="sidebar__footer">
+        <div class="sidebar__user" id="userBtn">
+          <div class="sidebar__user-avatar">管</div>
+          <div class="sidebar__user-info">
+            <span class="sidebar__user-name">管理员</span>
+            <span class="sidebar__user-role">超级管理员</span>
+          </div>
+          <span class="sidebar__user-menu">▼</span>
+        </div>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-dropdown__item">👤 个人信息</div>
+          <div class="user-dropdown__item">🔐 修改密码</div>
+          <div class="user-dropdown__divider"></div>
+          <div class="user-dropdown__item user-dropdown__item--danger" id="logoutBtn">🚪 退出登录</div>
+        </div>
+      </div>
     </aside>
 
     <!-- 主内容区 -->
@@ -49,8 +68,11 @@
       <header class="navbar navbar--fixed">
         <div class="search-bar">
           <input type="text" class="search-bar__input" placeholder="搜索座位...">
+          <button class="search-bar__btn" title="搜索">搜索</button>
         </div>
-        <div class="navbar__actions">
+        <div class="navbar__right">
+          <span class="navbar__time" id="currentTime"></span>
+          <button class="navbar__notification">🔔<span class="navbar__notification-badge"></span></button>
           <button class="navbar__filter-btn">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
               <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
@@ -113,8 +135,49 @@
               </div>
             </div>
 
+            <!-- 座位管理工具栏 -->
+            <div class="seat-toolbar">
+              <!-- 左侧：图例 -->
+              <div class="seat-legend">
+                <span class="legend-item"><span class="legend-dot legend-dot--available"></span>可用</span>
+                <span class="legend-item"><span class="legend-dot legend-dot--occupied"></span>使用中</span>
+                <span class="legend-item"><span class="legend-dot legend-dot--reserved"></span>已预约</span>
+                <span class="legend-item"><span class="legend-dot legend-dot--maintenance"></span>维护中</span>
+              </div>
+              
+              <!-- 右侧：编辑按钮 -->
+              <button class="edit-mode-btn" id="toggleEditMode" onclick="toggleEditMode()">
+                <span class="edit-mode-btn__icon">✏️</span>
+                <span class="edit-mode-btn__text">编辑布局</span>
+              </button>
+            </div>
+
+            <!-- 编辑模式面板（默认隐藏） -->
+            <div class="edit-panel" id="editPanel" style="display: none;">
+              <div class="edit-panel__header">
+                <span class="edit-panel__title">🛠️ 编辑模式</span>
+                <span class="edit-panel__badge" id="selectionInfo">已选 <strong id="selectedCount">0</strong> 个</span>
+              </div>
+              <div class="edit-panel__actions">
+                <button class="edit-action-btn edit-action-btn--add" onclick="addSeatAtPosition()">
+                  <span>➕</span> 添加座位
+                </button>
+                <button class="edit-action-btn edit-action-btn--delete" onclick="deleteSelectedSeats()">
+                  <span>🗑️</span> 删除选中
+                </button>
+                <button class="edit-action-btn edit-action-btn--move" onclick="moveSelectedSeats()">
+                  <span>↔️</span> 移动座位
+                </button>
+                <div class="edit-panel__divider"></div>
+                <button class="edit-action-btn edit-action-btn--ghost" onclick="selectAllSeats()">全选</button>
+                <button class="edit-action-btn edit-action-btn--ghost" onclick="clearSelection()">清除选择</button>
+                <div class="edit-panel__divider"></div>
+                <button class="edit-action-btn edit-action-btn--exit" onclick="toggleEditMode()">退出编辑</button>
+              </div>
+            </div>
+
             <!-- 座位网格 -->
-            <div class="seat-grid-container">
+            <div class="seat-grid-container" id="seatGridContainer">
               <div class="seat-grid">
                 <!-- 第1行 -->
                 <div class="seat" data-seat-id="A01" data-status="available">
@@ -423,6 +486,438 @@
       });
       document.getElementById('seatDetailPanel').classList.remove('seat-detail-panel--visible');
     });
+
+    // 用户下拉菜单
+    const userBtn = document.getElementById('userBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    userBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.sidebar__footer')) {
+        userDropdown?.classList.remove('show');
+      }
+    });
+
+    logoutBtn?.addEventListener('click', () => {
+      if (confirm('确定要退出登录吗？')) {
+        window.location.href = '../../../pages/login.html';
+      }
+    });
+
+    // 显示当前时间
+    function updateTime() {
+      const now = new Date();
+      const options = { month: 'short', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' };
+      const timeEl = document.getElementById('currentTime');
+      if (timeEl) timeEl.textContent = now.toLocaleString('zh-CN', options);
+    }
+    updateTime();
+    setInterval(updateTime, 60000);
+
+    // ========== Toast 提示 ==========
+    function showToast(message, type = 'info') {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      
+      const toast = document.createElement('div');
+      toast.className = `toast toast--${type}`;
+      toast.innerHTML = `<span>${message}</span>`;
+      toast.style.cssText = `
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 24px;
+        background: ${type === 'success' ? '#34C759' : type === 'error' ? '#FF3B30' : '#007AFF'};
+        color: white;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        z-index: 9999;
+        animation: toastIn 0.3s ease;
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'toastOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
+    }
+
+    // Toast 动画
+    const toastStyle = document.createElement('style');
+    toastStyle.textContent = `
+      @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+      @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+    `;
+    document.head.appendChild(toastStyle);
+
+    // ========== 搜索框交互 ==========
+    document.querySelector('.search-bar__input')?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && e.target.value.trim()) {
+        showToast(`正在搜索座位: "${e.target.value.trim()}"`, 'info');
+      }
+    });
+
+    // ========== 通知按钮 ==========
+    document.querySelector('.navbar__notification')?.addEventListener('click', () => {
+      showToast('您有 2 条座位维护提醒', 'info');
+    });
+
+    // ========== 筛选按钮 ==========
+    document.querySelector('.navbar__filter-btn')?.addEventListener('click', () => {
+      showToast('高级筛选面板已打开', 'info');
+    });
+
+    // ========== 日期选择器 ==========
+    document.querySelector('.date-picker')?.addEventListener('click', function() {
+      const input = this.querySelector('.date-picker__input');
+      const dates = ['2025/11/29', '2025/11/30', '2025/12/01'];
+      const currentIndex = dates.indexOf(input.value);
+      input.value = dates[(currentIndex + 1) % dates.length];
+      showToast(`已切换到 ${input.value}`, 'success');
+    });
+
+    // ========== 座位图例点击 ==========
+    document.querySelectorAll('.seat-legend__item').forEach(item => {
+      item.style.cursor = 'pointer';
+      item.addEventListener('click', function() {
+        const text = this.querySelector('.seat-legend__text')?.textContent;
+        showToast(`筛选显示: ${text}座位`, 'info');
+      });
+    });
+
+    // ========== 设施复选框变化 ==========
+    document.querySelectorAll('.form-checkbox__input').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const label = this.closest('.form-checkbox').querySelector('.form-checkbox__label')?.textContent;
+        showToast(`${this.checked ? '已启用' : '已禁用'}: ${label}`, 'success');
+      });
+    });
+
+    // ========== 状态选择变化 ==========
+    document.getElementById('reservationStatus')?.addEventListener('change', function() {
+      const statusText = this.options[this.selectedIndex].text;
+      showToast(`状态已更改为: ${statusText}`, 'info');
+    });
+
+    // ========== 座位管理选择变化 ==========
+    document.getElementById('seatManagement')?.addEventListener('change', function() {
+      const text = this.options[this.selectedIndex].text;
+      showToast(`管理状态: ${text}`, 'info');
+    });
+
+    // ========== 用户菜单项交互 ==========
+    document.querySelectorAll('.user-dropdown__item:not(.user-dropdown__item--danger)').forEach(item => {
+      item.addEventListener('click', function() {
+        const text = this.textContent.trim();
+        showToast(`正在打开${text.replace(/[^\u4e00-\u9fa5]/g, '')}...`, 'info');
+        userDropdown.classList.remove('show');
+      });
+    });
+
+    // ========== 编辑模式功能 ==========
+    let isEditMode = false;
+    let selectedSeats = new Set();
+
+    // 切换编辑模式
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const container = document.getElementById('seatGridContainer');
+      const editPanel = document.getElementById('editPanel');
+      const toggleBtn = document.getElementById('toggleEditMode');
+
+      if (isEditMode) {
+        // 进入编辑模式
+        container.classList.add('edit-mode');
+        editPanel.style.display = 'block';
+        toggleBtn.style.display = 'none';
+        Toast.success('🛠️ 编辑模式已开启，点击座位可选择');
+        enableSeatSelection();
+      } else {
+        // 退出编辑模式
+        container.classList.remove('edit-mode');
+        editPanel.style.display = 'none';
+        toggleBtn.style.display = 'flex';
+        clearSelection();
+        disableSeatSelection();
+        Toast.info('编辑模式已关闭');
+      }
+    }
+
+    // 启用座位选择
+    function enableSeatSelection() {
+      document.querySelectorAll('.seat').forEach(seat => {
+        seat.addEventListener('click', handleSeatClick);
+      });
+    }
+
+    // 禁用座位选择
+    function disableSeatSelection() {
+      document.querySelectorAll('.seat').forEach(seat => {
+        seat.removeEventListener('click', handleSeatClick);
+      });
+    }
+
+    // 处理座位点击
+    function handleSeatClick(e) {
+      if (!isEditMode) return;
+      
+      const seat = e.currentTarget;
+      const seatId = seat.dataset.seatId;
+      
+      if (selectedSeats.has(seatId)) {
+        selectedSeats.delete(seatId);
+        seat.classList.remove('selected');
+      } else {
+        selectedSeats.add(seatId);
+        seat.classList.add('selected');
+      }
+      
+      updateSelectionCount();
+    }
+
+    // 更新选择计数
+    function updateSelectionCount() {
+      document.getElementById('selectedCount').textContent = selectedSeats.size;
+    }
+
+    // 全选座位
+    function selectAllSeats() {
+      document.querySelectorAll('.seat').forEach(seat => {
+        const seatId = seat.dataset.seatId;
+        selectedSeats.add(seatId);
+        seat.classList.add('selected');
+      });
+      updateSelectionCount();
+      Toast.info(`已选择 ${selectedSeats.size} 个座位`);
+    }
+
+    // 清除选择
+    function clearSelection() {
+      document.querySelectorAll('.seat.selected').forEach(seat => {
+        seat.classList.remove('selected');
+      });
+      selectedSeats.clear();
+      updateSelectionCount();
+    }
+
+    // 在指定位置添加座位
+    function addSeatAtPosition() {
+      showAddSeatModal();
+    }
+
+    // 显示添加座位弹窗
+    function showAddSeatModal() {
+      const modal = document.createElement('div');
+      modal.className = 'move-seat-modal';
+      modal.id = 'addSeatModal';
+      modal.innerHTML = `
+        <div class="move-seat-modal__content">
+          <h3 class="move-seat-modal__title">添加新座位</h3>
+          <div class="form-group">
+            <label class="form-label">座位编号</label>
+            <input type="text" class="form-input" id="newSeatId" placeholder="如：A33">
+          </div>
+          <div class="form-group">
+            <label class="form-label">座位类型</label>
+            <select class="form-select" id="newSeatType">
+              <option value="standard">标准座位</option>
+              <option value="computer">电脑座位</option>
+              <option value="premium">VIP座位</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">初始状态</label>
+            <select class="form-select" id="newSeatStatus">
+              <option value="available">可用</option>
+              <option value="maintenance">维护中</option>
+            </select>
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+            <button class="btn btn--secondary" onclick="closeAddSeatModal()">取消</button>
+            <button class="btn btn--primary" onclick="confirmAddSeat()">添加座位</button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      setTimeout(() => modal.classList.add('show'), 10);
+      
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeAddSeatModal();
+      });
+    }
+
+    function closeAddSeatModal() {
+      const modal = document.getElementById('addSeatModal');
+      if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => modal.remove(), 300);
+      }
+    }
+
+    function confirmAddSeat() {
+      const seatId = document.getElementById('newSeatId').value.trim().toUpperCase();
+      const seatType = document.getElementById('newSeatType').value;
+      const seatStatus = document.getElementById('newSeatStatus').value;
+      
+      if (!seatId) {
+        Toast.error('请输入座位编号');
+        return;
+      }
+      
+      // 检查是否已存在
+      if (document.querySelector(`[data-seat-id="${seatId}"]`)) {
+        Toast.error('该座位编号已存在');
+        return;
+      }
+      
+      // 创建新座位
+      const seatGrid = document.querySelector('.seat-grid');
+      const newSeat = document.createElement('div');
+      newSeat.className = 'seat';
+      newSeat.dataset.seatId = seatId;
+      newSeat.dataset.status = seatStatus;
+      newSeat.innerHTML = `<span class="seat__label">${seatId}</span>`;
+      
+      // 添加事件监听
+      if (isEditMode) {
+        newSeat.addEventListener('click', handleSeatClick);
+      }
+      
+      seatGrid.appendChild(newSeat);
+      closeAddSeatModal();
+      Toast.success(`座位 ${seatId} 添加成功`);
+    }
+
+    // 删除选中的座位
+    function deleteSelectedSeats() {
+      if (selectedSeats.size === 0) {
+        Toast.warning('请先选择要删除的座位');
+        return;
+      }
+      
+      if (confirm(`确定要删除选中的 ${selectedSeats.size} 个座位吗？\n\n此操作不可恢复。`)) {
+        selectedSeats.forEach(seatId => {
+          const seat = document.querySelector(`[data-seat-id="${seatId}"]`);
+          if (seat) {
+            seat.remove();
+          }
+        });
+        
+        Toast.success(`已删除 ${selectedSeats.size} 个座位`);
+        selectedSeats.clear();
+        updateSelectionCount();
+      }
+    }
+
+    // 移动选中的座位
+    function moveSelectedSeats() {
+      if (selectedSeats.size === 0) {
+        Toast.warning('请先选择要移动的座位');
+        return;
+      }
+      
+      showMoveSeatModal();
+    }
+
+    // 显示移动座位弹窗
+    function showMoveSeatModal() {
+      const modal = document.createElement('div');
+      modal.className = 'move-seat-modal';
+      modal.id = 'moveSeatModal';
+      modal.innerHTML = `
+        <div class="move-seat-modal__content">
+          <h3 class="move-seat-modal__title">移动座位到</h3>
+          <div class="move-options">
+            <div class="move-option" data-target="area-a" onclick="selectMoveTarget(this)">
+              <div class="move-option__icon">🅰️</div>
+              <div class="move-option__title">A区</div>
+            </div>
+            <div class="move-option" data-target="area-b" onclick="selectMoveTarget(this)">
+              <div class="move-option__icon">🅱️</div>
+              <div class="move-option__title">B区</div>
+            </div>
+            <div class="move-option" data-target="area-c" onclick="selectMoveTarget(this)">
+              <div class="move-option__icon">©️</div>
+              <div class="move-option__title">C区</div>
+            </div>
+            <div class="move-option" data-target="area-d" onclick="selectMoveTarget(this)">
+              <div class="move-option__icon">🇩</div>
+              <div class="move-option__title">D区</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">新编号前缀</label>
+            <input type="text" class="form-input" id="newPrefix" placeholder="如：B" value="B">
+            <div class="form-help">座位将重新编号为 B01, B02, ...</div>
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+            <button class="btn btn--secondary" onclick="closeMoveSeatModal()">取消</button>
+            <button class="btn btn--primary" onclick="confirmMoveSeat()">确认移动</button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      setTimeout(() => modal.classList.add('show'), 10);
+      
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeMoveSeatModal();
+      });
+    }
+
+    function selectMoveTarget(element) {
+      document.querySelectorAll('.move-option').forEach(opt => opt.classList.remove('selected'));
+      element.classList.add('selected');
+      
+      // 更新前缀
+      const target = element.dataset.target;
+      const prefix = target.split('-')[1].toUpperCase();
+      document.getElementById('newPrefix').value = prefix;
+    }
+
+    function closeMoveSeatModal() {
+      const modal = document.getElementById('moveSeatModal');
+      if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => modal.remove(), 300);
+      }
+    }
+
+    function confirmMoveSeat() {
+      const prefix = document.getElementById('newPrefix').value.trim().toUpperCase();
+      
+      if (!prefix) {
+        Toast.error('请输入新编号前缀');
+        return;
+      }
+      
+      let index = 1;
+      selectedSeats.forEach(seatId => {
+        const seat = document.querySelector(`[data-seat-id="${seatId}"]`);
+        if (seat) {
+          const newId = prefix + String(index).padStart(2, '0');
+          seat.dataset.seatId = newId;
+          seat.querySelector('.seat__label').textContent = newId;
+          index++;
+        }
+      });
+      
+      closeMoveSeatModal();
+      Toast.success(`已将 ${selectedSeats.size} 个座位移动到 ${prefix} 区`);
+      clearSelection();
+    }
   </script>
+  
+  <!-- 功能脚本 -->
+  <script src="../../../core/components/toast/toast.js"></script>
 </body>
 </html>

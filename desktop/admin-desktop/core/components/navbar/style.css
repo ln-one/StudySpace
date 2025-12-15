@@ -93,3 +93,79 @@
 .navbar__filter-btn:active {
   transform: scale(0.97);
 }
+
+
+/* ========== 导航栏右侧增强 ========== */
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar__notification {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.04);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  font-size: 18px;
+}
+
+.navbar__notification:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.navbar__notification-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-error);
+  border: 2px solid rgba(251, 251, 253, 0.9);
+}
+
+.navbar__time {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.navbar__user-mini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.navbar__user-mini:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.navbar__user-mini-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary-gradient);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+}
+
+.navbar__user-mini-name {
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}

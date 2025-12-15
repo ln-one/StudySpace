@@ -12,6 +12,10 @@
   <link rel="stylesheet" href="../../../core/components/button/style.css">
   <link rel="stylesheet" href="../../../core/components/filter-dropdown/style.css">
   <link rel="stylesheet" href="../../../core/components/data-card/style.css">
+  <link rel="stylesheet" href="../../../core/components/toast/style.css">
+  <link rel="stylesheet" href="../../../core/components/modal/style.css">
+  <link rel="stylesheet" href="../../../core/components/user-modal/style.css">
+  <link rel="stylesheet" href="../../../core/components/export-modal/style.css">
   <link rel="stylesheet" href="../styles/user-management.css">
 </head>
 <body>
@@ -22,34 +26,53 @@
       </div>
       <nav class="sidebar__nav">
         <a href="../../dashboard/pages/overview.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">预约管理</span>
+          <span class="sidebar__nav-text">📊 预约管理</span>
         </a>
         <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">座位管理</span>
+          <span class="sidebar__nav-text">💺 座位管理</span>
         </a>
         <a href="../../study-record/pages/index.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">学习记录</span>
+          <span class="sidebar__nav-text">📚 学习记录</span>
         </a>
         <a href="index.html" class="sidebar__nav-item sidebar__nav-item--active">
-          <span class="sidebar__nav-text">用户管理</span>
+          <span class="sidebar__nav-text">👥 用户管理</span>
         </a>
         <a href="../../announcement/pages/index.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">公告通知</span>
+          <span class="sidebar__nav-text">📢 公告通知</span>
         </a>
         <a href="../../settings/pages/index.html" class="sidebar__nav-item">
-          <span class="sidebar__nav-text">管理员设置</span>
+          <span class="sidebar__nav-text">⚙️ 管理员设置</span>
         </a>
       </nav>
+      
+      <!-- 侧边栏底部用户区域 -->
+      <div class="sidebar__footer">
+        <div class="sidebar__user" id="userBtn">
+          <div class="sidebar__user-avatar">管</div>
+          <div class="sidebar__user-info">
+            <span class="sidebar__user-name">管理员</span>
+            <span class="sidebar__user-role">超级管理员</span>
+          </div>
+          <span class="sidebar__user-menu">▼</span>
+        </div>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-dropdown__item">👤 个人信息</div>
+          <div class="user-dropdown__item">🔐 修改密码</div>
+          <div class="user-dropdown__divider"></div>
+          <div class="user-dropdown__item user-dropdown__item--danger" id="logoutBtn">🚪 退出登录</div>
+        </div>
+      </div>
     </aside>
 
     <div class="admin-layout__main">
       <header class="navbar navbar--fixed">
         <div class="search-bar">
           <input type="text" class="search-bar__input" placeholder="搜索学生姓名、学号...">
+          <button class="search-bar__btn" title="搜索">搜索</button>
         </div>
         <div class="navbar__actions">
-          <button class="btn btn--secondary btn--sm">导出数据</button>
-          <button class="btn btn--primary btn--sm">+ 添加用户</button>
+          <button class="btn btn--secondary btn--sm" onclick="dataExporter.showExportOptions()">导出数据</button>
+          <button class="btn btn--primary btn--sm" onclick="userModal.showAddUser()">+ 添加用户</button>
         </div>
       </header>
 
@@ -561,9 +584,9 @@
         </div>
 
         <div class="detail-actions">
-          <button class="btn btn--secondary btn--sm">编辑信息</button>
-          <button class="btn btn--secondary btn--sm">调整权限</button>
-          <button class="btn btn--danger btn--sm">禁用账户</button>
+          <button class="btn btn--secondary btn--sm" onclick="editCurrentUser()">编辑信息</button>
+          <button class="btn btn--secondary btn--sm" onclick="adjustUserPermission()">调整权限</button>
+          <button class="btn btn--danger btn--sm" onclick="disableCurrentUser()">禁用账户</button>
         </div>
       </div>
     </div>
@@ -598,6 +621,16 @@
 
     // 用户详情面板
     function openUserDetail(name) {
+      // 模拟获取用户数据
+      const userData = {
+        '张晓明': { name: '张晓明', studentId: '2021112573', major: '计算机科学', grade: '大三', email: 'zhangxm@edu.cn', phone: '13800138001', permission: 'vip' },
+        '李思雨': { name: '李思雨', studentId: '2022115847', major: '软件工程', grade: '大二', email: 'lisy@edu.cn', phone: '13800138002', permission: 'normal' },
+        '赵欣怡': { name: '赵欣怡', studentId: '2020114892', major: '人工智能', grade: '大四', email: 'zhaoxy@edu.cn', phone: '13800138003', permission: 'normal' },
+        '陈小刚': { name: '陈小刚', studentId: '2022118956', major: '信息安全', grade: '大二', email: 'chenxg@edu.cn', phone: '13800138004', permission: 'normal' }
+      };
+      
+      currentUserData = userData[name] || null;
+      
       document.getElementById('userDetailPanel').classList.add('detail-panel--open');
       document.getElementById('panelOverlay').classList.add('detail-panel__overlay--visible');
       document.body.style.overflow = 'hidden';
@@ -608,6 +641,231 @@
       document.getElementById('panelOverlay').classList.remove('detail-panel__overlay--visible');
       document.body.style.overflow = '';
     }
+
+    // 用户下拉菜单
+    const userBtn = document.getElementById('userBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    userBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.sidebar__footer')) {
+        userDropdown?.classList.remove('show');
+      }
+    });
+
+    logoutBtn?.addEventListener('click', () => {
+      if (confirm('确定要退出登录吗？')) {
+        window.location.href = '../../../pages/login.html';
+      }
+    });
+
+    // ========== 用户操作功能 ==========
+    let currentUserData = null;
+
+    // 编辑当前用户
+    function editCurrentUser() {
+      if (!currentUserData) {
+        Toast.error('请先选择要编辑的用户');
+        return;
+      }
+      
+      userModal.showEditUser(currentUserData.studentId, currentUserData);
+      closeUserDetail();
+    }
+
+    // 调整用户权限
+    function adjustUserPermission() {
+      if (!currentUserData) {
+        Toast.error('请先选择要调整权限的用户');
+        return;
+      }
+
+      const currentPermission = currentUserData.permission || 'normal';
+      const newPermission = currentPermission === 'normal' ? 'vip' : 'normal';
+      const permissionText = newPermission === 'vip' ? 'VIP用户' : '普通用户';
+      
+      if (confirm(`确定要将 ${currentUserData.name} 的权限调整为 ${permissionText} 吗？`)) {
+        // 模拟API调用
+        setTimeout(() => {
+          Toast.success(`${currentUserData.name} 的权限已调整为 ${permissionText}`);
+          closeUserDetail();
+          // 这里可以刷新用户列表
+        }, 500);
+      }
+    }
+
+    // 禁用当前用户
+    function disableCurrentUser() {
+      if (!currentUserData) {
+        Toast.error('请先选择要禁用的用户');
+        return;
+      }
+
+      if (confirm(`确定要禁用用户 ${currentUserData.name} 吗？\n\n禁用后该用户将无法预约座位。`)) {
+        // 模拟API调用
+        setTimeout(() => {
+          Toast.success(`用户 ${currentUserData.name} 已被禁用`);
+          closeUserDetail();
+          // 这里可以刷新用户列表
+        }, 500);
+      }
+    }
+
+    // 刷新用户列表
+    function refreshUserList() {
+      Toast.info('正在刷新用户列表...');
+      // 这里可以重新加载用户数据
+      setTimeout(() => {
+        Toast.success('用户列表已刷新');
+      }, 1000);
+    }
+
+
+
+    // ========== 导航栏按钮 ==========
+    document.querySelector('.btn--secondary.btn--sm')?.addEventListener('click', () => {
+      showToast('正在导出用户数据...', 'info');
+      setTimeout(() => showToast('数据导出成功！', 'success'), 1500);
+    });
+
+
+
+    // ========== 数据卡片点击 ==========
+    document.querySelectorAll('.data-card').forEach(card => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function() {
+        const title = this.querySelector('.data-card__title')?.textContent;
+        showToast(`正在查看${title}详情...`, 'info');
+      });
+    });
+
+    // ========== 违约处理按钮 ==========
+    document.querySelectorAll('.violation-item__actions .btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const text = this.textContent.trim();
+        const item = this.closest('.violation-item');
+        const userName = item?.querySelector('.violation-item__name')?.textContent || '用户';
+        
+        if (text.includes('发送警告')) {
+          if (confirm(`确定向 ${userName} 发送警告通知吗？`)) {
+            showToast(`已向 ${userName} 发送警告`, 'success');
+            this.textContent = '已发送';
+            this.disabled = true;
+          }
+        } else if (text.includes('禁用账户')) {
+          if (confirm(`确定禁用 ${userName} 的账户吗？`)) {
+            showToast(`${userName} 的账户已被禁用`, 'error');
+          }
+        } else if (text.includes('忽略')) {
+          showToast(`已忽略 ${userName} 的违约记录`, 'success');
+          item?.remove();
+        } else if (text.includes('提前解封')) {
+          if (confirm(`确定提前解封 ${userName} 吗？`)) {
+            showToast(`${userName} 已解封`, 'success');
+          }
+        } else if (text.includes('查看详情')) {
+          showToast(`正在查看 ${userName} 的详细信息...`, 'info');
+        }
+      });
+    });
+
+    // ========== 权限卡片按钮 ==========
+    document.querySelectorAll('.permission-card .btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const card = this.closest('.permission-card');
+        const title = card?.querySelector('.permission-card__title')?.textContent;
+        showToast(`正在编辑${title}权限...`, 'info');
+      });
+    });
+
+    // ========== 批量操作按钮 ==========
+    document.querySelectorAll('.batch-action-item .btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const label = this.closest('.batch-action-item')?.querySelector('.batch-action-item__label')?.textContent;
+        showToast(`请选择要${label}的用户`, 'info');
+      });
+    });
+
+    // ========== 详情面板按钮 ==========
+    document.querySelectorAll('.detail-actions .btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const text = this.textContent.trim();
+        if (text === '编辑信息') {
+          showToast('正在打开编辑表单...', 'info');
+        } else if (text === '调整权限') {
+          showToast('正在打开权限设置...', 'info');
+        } else if (text === '禁用账户') {
+          if (confirm('确定要禁用该用户账户吗？')) {
+            showToast('账户已禁用', 'error');
+            closeUserDetail();
+          }
+        }
+      });
+    });
+
+    // ========== 查看全部记录按钮 ==========
+    document.querySelectorAll('.detail-section .btn--full').forEach(btn => {
+      btn.addEventListener('click', () => {
+        showToast('正在加载完整记录...', 'info');
+      });
+    });
+
+    // ========== 表格操作按钮 ==========
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      if (!btn.classList.contains('action-btn--more')) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const text = this.textContent.trim();
+          if (text === '解封') {
+            if (confirm('确定要解封该用户吗？')) {
+              showToast('用户已解封', 'success');
+              this.textContent = '详情';
+              this.classList.remove('action-btn--primary');
+            }
+          }
+        });
+      }
+    });
+
+    // ========== 更多操作按钮 ==========
+    document.querySelectorAll('.action-btn--more').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showToast('更多操作: 编辑、发送消息、查看记录', 'info');
+      });
+    });
+
+    // ========== 全选复选框 ==========
+    document.querySelector('.checkbox-all')?.addEventListener('change', function() {
+      const checkboxes = document.querySelectorAll('.user-table tbody input[type="checkbox"]');
+      checkboxes.forEach(cb => cb.checked = this.checked);
+      showToast(this.checked ? '已全选' : '已取消全选', 'info');
+    });
+
+    // ========== 分页按钮 ==========
+    document.querySelectorAll('.pagination__btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        if (!this.disabled) {
+          document.querySelectorAll('.pagination__btn').forEach(b => b.classList.remove('pagination__btn--active'));
+          if (!isNaN(this.textContent)) {
+            this.classList.add('pagination__btn--active');
+          }
+          showToast(`正在加载第 ${this.textContent} 页...`, 'info');
+        }
+      });
+    });
   </script>
+
+  <!-- 功能脚本 -->
+  <script src="../../../core/components/toast/toast.js"></script>
+  <script src="../../../core/components/modal/modal.js"></script>
+  <script src="../../../core/components/user-modal/user-modal.js"></script>
+  <script src="../../../core/utils/export.js"></script>
 </body>
 </html>

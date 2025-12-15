@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="../../../core/components/filter-dropdown/style.css">
   <link rel="stylesheet" href="../../../core/components/data-card/style.css">
   <link rel="stylesheet" href="../../../core/components/button/style.css">
+  <link rel="stylesheet" href="../../../core/components/toast/style.css">
+  <link rel="stylesheet" href="../../../core/components/modal/style.css">
   <link rel="stylesheet" href="../styles/overview.css">
 </head>
 <body>
@@ -23,24 +25,44 @@
       </div>
       <nav class="sidebar__nav">
         <a href="overview.html" class="sidebar__nav-item sidebar__nav-item--active" data-page="dashboard">
-          <span class="sidebar__nav-text">预约管理</span>
+          <span class="sidebar__nav-text">📊 预约管理</span>
         </a>
         <a href="../../seat-management/pages/seat-list.html" class="sidebar__nav-item" data-page="seat-management">
-          <span class="sidebar__nav-text">座位管理</span>
+          <span class="sidebar__nav-text">💺 座位管理</span>
         </a>
         <a href="../../study-record/pages/index.html" class="sidebar__nav-item" data-page="study-record">
-          <span class="sidebar__nav-text">学习记录</span>
+          <span class="sidebar__nav-text">📚 学习记录</span>
         </a>
         <a href="../../user-management/pages/index.html" class="sidebar__nav-item" data-page="user-management">
-          <span class="sidebar__nav-text">用户管理</span>
+          <span class="sidebar__nav-text">👥 用户管理</span>
         </a>
         <a href="../../announcement/pages/index.html" class="sidebar__nav-item" data-page="announcement">
-          <span class="sidebar__nav-text">公告通知</span>
+          <span class="sidebar__nav-text">📢 公告通知</span>
         </a>
         <a href="../../settings/pages/index.html" class="sidebar__nav-item" data-page="settings">
-          <span class="sidebar__nav-text">管理员设置</span>
+          <span class="sidebar__nav-text">⚙️ 管理员设置</span>
         </a>
       </nav>
+      
+      <!-- 侧边栏底部用户区域 -->
+      <div class="sidebar__footer">
+        <div class="sidebar__user" id="userBtn">
+          <div class="sidebar__user-avatar">管</div>
+          <div class="sidebar__user-info">
+            <span class="sidebar__user-name">管理员</span>
+            <span class="sidebar__user-role">超级管理员</span>
+          </div>
+          <span class="sidebar__user-menu">▼</span>
+        </div>
+        <!-- 用户下拉菜单 -->
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-dropdown__item">👤 个人信息</div>
+          <div class="user-dropdown__item">🔐 修改密码</div>
+          <div class="user-dropdown__item">⚙️ 系统设置</div>
+          <div class="user-dropdown__divider"></div>
+          <div class="user-dropdown__item user-dropdown__item--danger" id="logoutBtn">🚪 退出登录</div>
+        </div>
+      </div>
     </aside>
 
     <!-- 主内容区 -->
@@ -48,9 +70,15 @@
       <!-- 顶部导航 - 毛玻璃效果 -->
       <header class="navbar navbar--fixed">
         <div class="search-bar">
-          <input type="text" class="search-bar__input" placeholder="搜索">
+          <input type="text" class="search-bar__input" placeholder="搜索功能、用户、座位...">
+          <button class="search-bar__btn" title="搜索">搜索</button>
         </div>
-        <div class="navbar__actions">
+        <div class="navbar__right">
+          <span class="navbar__time" id="currentTime"></span>
+          <button class="navbar__notification">
+            🔔
+            <span class="navbar__notification-badge"></span>
+          </button>
           <button class="navbar__filter-btn">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
               <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
@@ -239,7 +267,7 @@
         <div class="content-card">
           <div class="content-card__header">
             <span class="content-card__title">最新预约记录</span>
-            <button class="btn btn--text btn--sm">查看全部 →</button>
+            <button class="btn btn--text btn--sm" onclick="viewAllReservations()">查看全部 →</button>
           </div>
           <table class="records-table">
             <thead>
@@ -336,6 +364,9 @@
 
   <script src="../../../core/utils/dom.js"></script>
   <script src="../../../core/utils/helpers.js"></script>
+  <script src="../../../core/components/toast/toast.js"></script>
+  <script src="../../../core/components/modal/modal.js"></script>
+  <script src="../../../core/utils/interactions.js"></script>
   <script>
     // 下拉框交互
     function toggleDropdown(id) {
@@ -459,6 +490,242 @@
     
     window.addEventListener('load', drawTrendChart);
     window.addEventListener('resize', drawTrendChart);
+
+    // 用户下拉菜单
+    const userBtn = document.getElementById('userBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    userBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.sidebar__footer')) {
+        userDropdown?.classList.remove('show');
+      }
+    });
+
+    logoutBtn?.addEventListener('click', () => {
+      if (confirm('确定要退出登录吗？')) {
+        window.location.href = '../../../pages/login.html';
+      }
+    });
+
+    // 显示当前时间
+    function updateTime() {
+      const now = new Date();
+      const options = { 
+        month: 'short', 
+        day: 'numeric',
+        weekday: 'short',
+        hour: '2-digit', 
+        minute: '2-digit'
+      };
+      const timeEl = document.getElementById('currentTime');
+      if (timeEl) {
+        timeEl.textContent = now.toLocaleString('zh-CN', options);
+      }
+    }
+    updateTime();
+    setInterval(updateTime, 60000);
+
+    // ========== 通用交互函数 ==========
+    
+    // Toast 提示
+    function showToast(message, type = 'info') {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      
+      const toast = document.createElement('div');
+      toast.className = `toast toast--${type}`;
+      toast.innerHTML = `<span>${message}</span>`;
+      toast.style.cssText = `
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 24px;
+        background: ${type === 'success' ? '#34C759' : type === 'error' ? '#FF3B30' : '#007AFF'};
+        color: white;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        z-index: 9999;
+        animation: toastIn 0.3s ease;
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'toastOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
+    }
+
+    // 添加 Toast 动画样式
+    const toastStyle = document.createElement('style');
+    toastStyle.textContent = `
+      @keyframes toastIn {
+        from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+      }
+      @keyframes toastOut {
+        from { opacity: 1; transform: translateX(-50%) translateY(0); }
+        to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+      }
+    `;
+    document.head.appendChild(toastStyle);
+
+    // ========== 搜索框交互 ==========
+    const searchInput = document.querySelector('.search-bar__input');
+    searchInput?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const query = e.target.value.trim();
+        if (query) {
+          showToast(`正在搜索: "${query}"`, 'info');
+          // 模拟搜索
+          setTimeout(() => {
+            showToast(`找到 ${Math.floor(Math.random() * 20) + 1} 条相关结果`, 'success');
+          }, 800);
+        }
+      }
+    });
+
+    // ========== 通知按钮交互 ==========
+    document.querySelector('.navbar__notification')?.addEventListener('click', () => {
+      showToast('您有 3 条未读通知', 'info');
+    });
+
+    // ========== 筛选按钮交互 ==========
+    document.querySelector('.navbar__filter-btn')?.addEventListener('click', () => {
+      showToast('筛选面板已打开', 'info');
+    });
+
+    // ========== 图表切换按钮 ==========
+    document.querySelectorAll('.chart-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const parent = this.closest('.content-card__actions');
+        parent.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('chart-btn--active'));
+        this.classList.add('chart-btn--active');
+        showToast(`已切换到${this.textContent}视图`, 'success');
+        // 重绘图表
+        drawTrendChart();
+      });
+    });
+
+    // ========== 查看全部按钮 ==========
+    document.querySelectorAll('.btn--text').forEach(btn => {
+      btn.addEventListener('click', () => {
+        showToast('正在加载完整列表...', 'info');
+      });
+    });
+
+    // ========== 表格操作按钮 ==========
+    document.querySelectorAll('.action-link').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const userName = row.querySelector('.user-info__name')?.textContent || '用户';
+        const action = this.textContent;
+        
+        if (action === '处理') {
+          if (confirm(`确定要处理 ${userName} 的违约记录吗？`)) {
+            showToast(`已处理 ${userName} 的违约记录`, 'success');
+            // 更新状态标签
+            const statusTag = row.querySelector('.status-tag');
+            if (statusTag) {
+              statusTag.textContent = '已处理';
+              statusTag.className = 'status-tag status-tag--completed';
+            }
+            this.textContent = '详情';
+          }
+        } else {
+          showToast(`正在查看 ${userName} 的详细信息...`, 'info');
+        }
+      });
+    });
+
+    // ========== 数据卡片点击 ==========
+    document.querySelectorAll('.data-card').forEach(card => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function() {
+        const title = this.querySelector('.data-card__title')?.textContent;
+        showToast(`正在查看${title}详情...`, 'info');
+      });
+    });
+
+    // ========== 日期选择器 ==========
+    document.querySelector('.date-picker')?.addEventListener('click', function() {
+      const input = this.querySelector('.date-picker__input');
+      // 简单的日期切换演示
+      const dates = ['2025/11/29', '2025/11/30', '2025/12/01', '2025/12/02'];
+      const currentIndex = dates.indexOf(input.value);
+      const nextIndex = (currentIndex + 1) % dates.length;
+      input.value = dates[nextIndex];
+      showToast(`已切换到 ${dates[nextIndex]}`, 'success');
+    });
+
+    // ========== 用户下拉菜单项交互 ==========
+    document.querySelectorAll('.user-dropdown__item:not(.user-dropdown__item--danger)').forEach(item => {
+      item.addEventListener('click', function() {
+        const text = this.textContent.trim();
+        if (text.includes('个人信息')) {
+          showToast('正在打开个人信息...', 'info');
+        } else if (text.includes('修改密码')) {
+          showToast('正在打开修改密码...', 'info');
+        } else if (text.includes('系统设置')) {
+          window.location.href = '../../settings/pages/index.html';
+        }
+        userDropdown.classList.remove('show');
+      });
+    });
+
+    // ========== 座位使用率区域点击 ==========
+    document.querySelectorAll('.usage-detail').forEach(detail => {
+      detail.style.cursor = 'pointer';
+      detail.addEventListener('click', function() {
+        const area = this.querySelector('.usage-detail__label')?.textContent;
+        showToast(`正在查看${area}详细座位情况...`, 'info');
+      });
+    });
+
+    // ========== 时段分布点击 ==========
+    document.querySelectorAll('.time-slot').forEach(slot => {
+      slot.style.cursor = 'pointer';
+      slot.addEventListener('click', function() {
+        const time = this.querySelector('.time-slot__time')?.textContent;
+        const count = this.querySelector('.time-slot__count')?.textContent;
+        showToast(`${time} 时段共有 ${count} 预约`, 'info');
+      });
+    });
+
+    // ========== 表格行悬停效果 ==========
+    document.querySelectorAll('.records-table tbody tr').forEach(row => {
+      row.style.cursor = 'pointer';
+      row.addEventListener('click', function(e) {
+        if (!e.target.closest('.action-link')) {
+          const userName = this.querySelector('.user-info__name')?.textContent;
+          showToast(`正在查看 ${userName} 的预约详情...`, 'info');
+        }
+      });
+    });
+
+    // ========== 页面功能 ==========
+    function viewAllReservations() {
+      Toast.info('正在跳转到预约管理页面...');
+      setTimeout(() => {
+        window.location.href = '../../user-management/pages/index.html';
+      }, 500);
+    }
+
+    // 通知按钮点击
+    document.querySelector('.navbar__notification')?.addEventListener('click', () => {
+      Toast.info('暂无新通知');
+    });
   </script>
+
+  <!-- Toast 组件 -->
+  <script src="../../../core/components/toast/toast.js"></script>
 </body>
 </html>
