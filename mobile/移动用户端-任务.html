@@ -246,6 +246,104 @@
             background: var(--primary);
             border-radius: 2px;
         }
+
+        .fab {
+            position: fixed;
+            right: 28px;
+            bottom: 110px;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), #64b5ff);
+            color: #fff;
+            box-shadow: 0 14px 28px rgba(45, 129, 255, 0.22);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .fab:active { transform: translateY(1px); }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 30;
+        }
+
+        .modal-backdrop.active { opacity: 1; pointer-events: auto; }
+
+        .modal {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -46%);
+            width: min(360px, calc(100% - 24px));
+            max-height: 78vh;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            padding: 14px 16px 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 40;
+        }
+
+        .modal.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%); }
+
+        .modal__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .modal__title { font-size: 18px; font-weight: 900; }
+        .modal__close { border: none; background: transparent; font-size: 22px; cursor: pointer; color: var(--text-secondary); }
+
+        .modal__body {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .form { display: grid; gap: 12px; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field.full { grid-column: 1/-1; }
+        .label { font-weight: 800; color: var(--text-main); font-size: 14px; }
+        .input, .select2, .textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            background: #fff;
+            outline: none;
+        }
+        .textarea { min-height: 80px; resize: vertical; }
+        .modal__actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+        .btn { height: 42px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--border); background: #fff; font-weight: 800; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), #64b5ff); color: #fff; border: none; box-shadow: var(--shadow-sm); }
+
+        .task-actions { display: flex; align-items: center; gap: 8px; }
+        .task-complete {
+            border: none;
+            background: #eef8f0;
+            color: #1f9d4a;
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .task-complete i { font-size: 14px; }
     </style>
 </head>
 <body>
@@ -271,45 +369,9 @@
                     <div>
                         <div class="section-title">今日任务</div>
                     </div>
-                    <span class="badge">3 个</span>
+                    <span class="badge" id="todayCount">0 个</span>
                 </div>
-                <div class="task-list">
-                    <div class="task-item">
-                        <div class="task-item__top">
-                            <h4 class="task-title">复习数据结构章节</h4>
-                            <span class="badge">到期 18:00</span>
-                        </div>
-                        <div class="task-meta">
-                            <i class="fa-regular fa-clock"></i><span>预计 45 分钟</span>
-                            <i class="fa-solid fa-circle" style="font-size:6px; color:#d8dbe5;"></i>
-                            <i class="fa-regular fa-calendar"></i><span>已同步到周视图</span>
-                        </div>
-                        <div class="progress"><div class="progress-bar" style="width:60%"></div></div>
-                    </div>
-                    <div class="task-item">
-                        <div class="task-item__top">
-                            <h4 class="task-title">整理周报提纲</h4>
-                            <span class="badge" style="background:#eef4ff;color:var(--text-main);">轻量</span>
-                        </div>
-                        <div class="task-meta">
-                            <i class="fa-regular fa-bell"></i><span>提前 10 分钟提醒</span>
-                            <i class="fa-solid fa-circle" style="font-size:6px; color:#d8dbe5;"></i>
-                            <i class="fa-regular fa-square-check"></i><span>进度 40%</span>
-                        </div>
-                        <div class="progress"><div class="progress-bar" style="width:40%"></div></div>
-                    </div>
-                    <div class="task-item">
-                        <div class="task-item__top">
-                            <h4 class="task-title">阅读《程序员修炼之道》</h4>
-                        </div>
-                        <div class="task-meta">
-                            <i class="fa-regular fa-clock"></i><span>25 分钟番茄钟</span>
-                            <i class="fa-solid fa-circle" style="font-size:6px; color:#d8dbe5;"></i>
-                            <i class="fa-regular fa-note-sticky"></i><span>备注随时同步</span>
-                        </div>
-                        <div class="progress"><div class="progress-bar" style="width:30%"></div></div>
-                    </div>
-                </div>
+                <div class="task-list" id="todayList"></div>
             </div>
 
             <div class="card">
@@ -317,25 +379,9 @@
                     <div>
                         <div class="section-title">待安排</div>
                     </div>
-                    <span class="badge" style="background:#fff3e8; color:#c76b00;">待排</span>
+                    <span class="badge" style="background:#fff3e8; color:#c76b00;" id="pendingCount">待排</span>
                 </div>
-                <div class="task-list">
-                    <div class="task-item" style="background:var(--primary-light); border-color: rgba(45,129,255,0.2);">
-                        <div class="task-item__top">
-                            <h4 class="task-title">安排实验室例会</h4>
-                            <span class="badge" style="background: #fff; color: var(--text-main); border: 1px solid var(--border);">未同步</span>
-                        </div>
-                    </div>
-                    <div class="task-item">
-                        <div class="task-item__top">
-                            <h4 class="task-title">备份学习资料</h4>
-                            <span class="badge" style="background:#eafaf1; color:#1b8a3d;">整理</span>
-                        </div>
-                        <div class="task-meta">
-                            <i class="fa-regular fa-square-check"></i><span>0/3 子任务</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="task-list" id="pendingList"></div>
             </div>
 
         </div>
@@ -362,7 +408,290 @@
                 <div>座位预约</div>
             </a>
         </div>
+
+        <button class="fab" id="fabAdd" aria-label="新建任务"><i class="fa-solid fa-plus"></i></button>
     </div>
 </div>
+<div class="modal-backdrop" id="modalBackdrop"></div>
+<div class="modal" id="taskModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal__header">
+        <div class="modal__title" id="modalTitle">新建任务</div>
+        <button class="modal__close" id="closeModalBtn" aria-label="关闭">&times;</button>
+    </div>
+    <div class="modal__body">
+        <div class="form">
+            <div class="field full">
+                <div class="label">标题</div>
+                <input class="input" id="fTitle" placeholder="输入任务标题" />
+            </div>
+            <div class="field full">
+                <div class="label">截止时间</div>
+                <input class="input" type="datetime-local" id="fEnd" />
+            </div>
+            <div class="field full">
+                <div class="label">标签（用逗号分隔）</div>
+                <input class="input" id="fTags" placeholder="学习计划, 提醒" />
+            </div>
+            <div class="field full">
+                <div class="label">备注</div>
+                <textarea class="textarea" id="fNote" placeholder="补充说明"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal__actions">
+        <button class="btn" id="cancelBtn">取消</button>
+        <button class="btn btn-primary" id="saveBtn">保存</button>
+    </div>
+</div>
+
+<script>
+    const todayList = document.getElementById("todayList");
+    const pendingList = document.getElementById("pendingList");
+    const todayCount = document.getElementById("todayCount");
+    const pendingCount = document.getElementById("pendingCount");
+
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const taskModal = document.getElementById("taskModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const fabAdd = document.getElementById("fabAdd");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const saveBtn = document.getElementById("saveBtn");
+
+    const fTitle = document.getElementById("fTitle");
+    const fEnd = document.getElementById("fEnd");
+    const fTags = document.getElementById("fTags");
+    const fNote = document.getElementById("fNote");
+
+    let modalMode = "create";
+    let editingId = null;
+
+    const tasks = [
+        {
+            id: "t1",
+            title: "复习数据结构章节",
+            start: "2024-05-05T16:00",
+            end: "2024-05-05T18:00",
+            status: "doing",
+            priority: "high",
+            tags: ["同步", "提醒"],
+            progress: 60,
+            note: "已同步到周视图",
+            scheduled: true,
+            meta: [
+                { icon: "fa-regular fa-clock", text: "预计 45 分钟" },
+                { icon: "fa-regular fa-calendar", text: "已同步到周视图" }
+            ]
+        },
+        {
+            id: "t2",
+            title: "整理周报提纲",
+            start: "2024-05-05T15:00",
+            end: "2024-05-05T17:00",
+            status: "todo",
+            priority: "mid",
+            tags: ["提醒"],
+            progress: 40,
+            note: "提前 10 分钟提醒",
+            scheduled: true,
+            meta: [
+                { icon: "fa-regular fa-bell", text: "提前 10 分钟提醒" },
+                { icon: "fa-regular fa-square-check", text: "进度 40%" }
+            ]
+        },
+        {
+            id: "t3",
+            title: "阅读《程序员修炼之道》",
+            start: "2024-05-05T20:00",
+            end: "2024-05-05T20:45",
+            status: "todo",
+            priority: "low",
+            tags: ["番茄钟"],
+            progress: 30,
+            note: "备注随时同步",
+            scheduled: true,
+            meta: [
+                { icon: "fa-regular fa-clock", text: "25 分钟番茄钟" },
+                { icon: "fa-regular fa-note-sticky", text: "备注随时同步" }
+            ]
+        },
+        {
+            id: "t4",
+            title: "安排实验室例会",
+            start: "2024-05-06T09:00",
+            end: "2024-05-06T10:00",
+            status: "todo",
+            priority: "mid",
+            tags: ["未同步"],
+            progress: 0,
+            note: "未同步",
+            scheduled: false,
+            meta: []
+        },
+        {
+            id: "t5",
+            title: "备份学习资料",
+            start: "2024-05-06T14:00",
+            end: "2024-05-06T15:00",
+            status: "doing",
+            priority: "mid",
+            tags: ["整理"],
+            progress: 0,
+            note: "0/3 子任务",
+            scheduled: false,
+            meta: [
+                { icon: "fa-regular fa-square-check", text: "0/3 子任务" }
+            ]
+        }
+    ];
+
+    function formatTime(value) {
+        if (!value) return "";
+        const date = new Date(value);
+        const h = String(date.getHours()).padStart(2, "0");
+        const m = String(date.getMinutes()).padStart(2, "0");
+        return `${h}:${m}`;
+    }
+
+    function badgeStyle(task) {
+        if (!task.end) return "";
+        if (task.priority === "high") return "background:#ffeef0;color:#c20000;";
+        if (task.priority === "low") return "background:#eef4ff;color:var(--text-main);";
+        return "";
+    }
+
+    function createTaskItem(task) {
+        const item = document.createElement("div");
+        item.className = "task-item";
+        if (!task.scheduled) {
+            item.style.background = "var(--primary-light)";
+            item.style.borderColor = "rgba(45,129,255,0.2)";
+        }
+        item.dataset.id = task.id;
+
+        const badgeText = task.end ? `到期 ${formatTime(task.end)}` : ((task.tags && task.tags[0]) || "");
+        item.innerHTML = `
+            <div class="task-item__top">
+                <h4 class="task-title">${task.title}</h4>
+                <div class="task-actions">
+                    <button class="task-complete" type="button" aria-label="完成任务"><i class="fa-solid fa-check"></i><span>完成</span></button>
+                    <span class="badge" style="${badgeStyle(task)}">${badgeText}</span>
+                </div>
+            </div>
+            <div class="task-meta">
+                ${task.meta.map((m, i) => {
+                    return `${i>0 ? '<i class=\"fa-solid fa-circle\" style=\"font-size:6px; color:#d8dbe5;\"></i>' : ''}<i class="${m.icon}"></i><span>${m.text}</span>`;
+                }).join("")}
+            </div>
+            <div class="progress"><div class="progress-bar" style="width:${task.progress || 0}%"></div></div>
+        `;
+
+        item.addEventListener("click", () => openModal("edit", task.id));
+        const completeBtn = item.querySelector(".task-complete");
+        completeBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            completeTask(task.id);
+        });
+        return item;
+    }
+
+    function completeTask(taskId) {
+        const idx = tasks.findIndex(t => t.id === taskId);
+        if (idx === -1) return;
+
+        tasks.splice(idx, 1);
+        if (taskModal.classList.contains("active") && editingId === taskId) {
+            closeModal();
+        }
+        renderTasks();
+    }
+
+    function renderTasks() {
+        todayList.innerHTML = "";
+        pendingList.innerHTML = "";
+        const todays = tasks.filter(t => t.scheduled);
+        const pending = tasks.filter(t => !t.scheduled);
+
+        todays.forEach(task => todayList.appendChild(createTaskItem(task)));
+        pending.forEach(task => pendingList.appendChild(createTaskItem(task)));
+
+        todayCount.textContent = `${todays.length} 个`;
+        pendingCount.textContent = `待排 · ${pending.length} 个`;
+    }
+
+    function openModal(mode, taskId) {
+        modalMode = mode;
+        modalTitle.textContent = mode === "create" ? "新建任务" : "编辑任务";
+
+        if (mode === "edit") {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            editingId = task.id;
+            fTitle.value = task.title;
+            fEnd.value = task.end;
+            fTags.value = (task.tags || []).join(",");
+            fNote.value = task.note || "";
+        } else {
+            editingId = null;
+            fTitle.value = "";
+            fEnd.value = "";
+            fTags.value = "";
+            fNote.value = "";
+        }
+
+        modalBackdrop.classList.add("active");
+        taskModal.classList.add("active");
+        fTitle.focus();
+    }
+
+    function closeModal() {
+        modalBackdrop.classList.remove("active");
+        taskModal.classList.remove("active");
+    }
+
+    function saveTask() {
+        const existing = modalMode === "edit" ? tasks.find(t => t.id === editingId) : null;
+        const baseProgress = existing ? existing.progress : 0;
+        const payload = {
+            title: fTitle.value.trim() || "未命名任务",
+            end: fEnd.value,
+            tags: fTags.value.split(",").map(t => t.trim()).filter(Boolean),
+            note: fNote.value.trim(),
+            meta: []
+        };
+
+        if (baseProgress) payload.meta.push({ icon: "fa-regular fa-square-check", text: `进度 ${baseProgress}%` });
+        if (payload.note) payload.meta.push({ icon: "fa-regular fa-note-sticky", text: payload.note });
+
+        if (modalMode === "create") {
+            const newTask = {
+                id: `t${Date.now()}`,
+                status: "todo",
+                priority: "mid",
+                progress: baseProgress,
+                start: "",
+                scheduled: true,
+                ...payload
+            };
+            tasks.unshift(newTask);
+        } else if (editingId) {
+            const idx = tasks.findIndex(t => t.id === editingId);
+            if (idx > -1) {
+                tasks[idx] = { ...tasks[idx], ...payload };
+            }
+        }
+
+        renderTasks();
+        closeModal();
+    }
+
+    fabAdd.addEventListener("click", () => openModal("create"));
+    closeModalBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", closeModal);
+    saveBtn.addEventListener("click", saveTask);
+
+    renderTasks();
+</script>
 </body>
 </html>
