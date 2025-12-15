@@ -1,1 +1,176 @@
-<!-- Placeholder for 移动用户端-签到 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <title>StudySpace - 签到弹窗</title>
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --secondary: #8b5cf6;
+      --accent: linear-gradient(135deg, var(--primary), var(--secondary));
+      --bg: #f5f7fb;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --shadow: 0 18px 40px rgba(59, 130, 246, 0.16);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--bg);
+      font-family: "PingFang SC", "SF Pro Display", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+    }
+
+    .overlay {
+      width: 100%;
+      height: 100vh;
+      background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.08), transparent 35%),
+        radial-gradient(circle at 80% 30%, rgba(139, 92, 246, 0.08), transparent 36%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.9));
+      display: grid;
+      place-items: center;
+      padding: 22px 16px;
+    }
+
+    .modal {
+      width: min(420px, 100%);
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px 22px 22px;
+      display: grid;
+      gap: 14px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .badge {
+      justify-self: center;
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 0.02em;
+      box-shadow: 0 12px 28px rgba(59, 130, 246, 0.24);
+    }
+
+    h1 {
+      margin: 0;
+      text-align: center;
+      font-size: 22px;
+      letter-spacing: 0.01em;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 10px;
+      background: #f8fafc;
+      border-radius: 14px;
+      border: 1px dashed #dbeafe;
+    }
+
+    .stat {
+      display: grid;
+      gap: 4px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .stat strong {
+      font-size: 18px;
+      color: var(--primary);
+    }
+
+    .actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      padding: 14px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.25);
+    }
+
+    .btn-primary:hover { transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); opacity: 0.9; }
+
+    .btn-ghost {
+      background: #f8fafc;
+      color: var(--text);
+      border: 1px solid #e5e7eb;
+    }
+
+    .footer-hint {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-hint span { color: var(--primary); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="modal" role="dialog" aria-labelledby="checkin-title" aria-modal="true">
+      <div class="badge">✓</div>
+      <h1 id="checkin-title">签到成功</h1>
+      <p>已记录今日签到，继续保持学习节奏！</p>
+      <div class="stats">
+        <div class="stat">
+          <strong>7</strong>
+          <span>连续天数</span>
+        </div>
+        <div class="stat">
+          <strong>128</strong>
+          <span>累计学习时长</span>
+        </div>
+        <div class="stat">
+          <strong>+20</strong>
+          <span>积分奖励</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" type="button">开始今日学习</button>
+        <button class="btn-ghost" type="button">稍后再说</button>
+      </div>
+      <div class="footer-hint">签到时间 <span>08:30</span></div>
+    </div>
+  </div>
+</body>
+</html>
