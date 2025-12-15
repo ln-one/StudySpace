@@ -386,17 +386,6 @@ git commit -m "docs: 更新API文档和使用说明"
 
 本项目采用MIT许可证，详见 [LICENSE](LICENSE) 文件。
 
-## 联系信息
-
-**项目维护**
-- 项目主页: https://github.com/your-username/StudySpace
-- 问题反馈: https://github.com/your-username/StudySpace/issues
-- 技术讨论: https://github.com/your-username/StudySpace/discussions
-
-**技术支持**
-- 邮箱: support@studyspace.com
-- 文档: https://docs.studyspace.com
-- 社区: https://community.studyspace.com
 
 ---
 
