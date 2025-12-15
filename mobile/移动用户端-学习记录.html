@@ -53,7 +53,8 @@
         }
 
         .page {
-            width: min(430px, 100%);
+            /* ✅ 为了对齐图1（番茄钟）的“手机边框”宽度：把最大宽度从 430 提到 480 */
+            width: min(480px, 100%);
             height: calc(100vh - 40px);
             display: flex;
             flex-direction: column;
@@ -116,19 +117,6 @@
         }
 
         .top-bar__title { flex: 1; font-size: 18px; font-weight: 800; text-align: center; }
-
-        .top-bar__action {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            background: var(--primary-light);
-            color: var(--primary);
-            font-weight: 700;
-            text-decoration: none;
-        }
 
         .main-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 16px; background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0)); }
         .main-content::-webkit-scrollbar { display: none; }
